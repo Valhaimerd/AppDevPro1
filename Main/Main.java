@@ -1,5 +1,7 @@
 package Main;
 
+import Bank.BankLauncher;
+
 import java.util.Scanner;
 
 public class Main
@@ -19,6 +21,7 @@ public class Main
 
     public static void main(String[] args)
     {
+        BankLauncher bankLauncher = new BankLauncher();
         while (true)
         {
             showMenuHeader("Main Menu");
@@ -33,18 +36,30 @@ public class Main
                 showMenuHeader("Account Login Menu");
                 showMenu(2, 1);
                 setOption();
-                showMenu(getOption(), 1);
                 // TODO: Complete this portion
             }
             // Bank Option
             else if (getOption() == 2)
             {
                 // TODO: Complete Bank option
+                showMenuHeader("Bank Login Menu");
+                showMenu(3, 1);
+                setOption();
+                if (getOption() == 1) {
+                    // This is not final guys
+                    bankLauncher.bankLogin();
+                    showMenuHeader("Bank Menu");
+                    showMenu(31, 1);
+                    setOption();
+
+                } else continue;
             }
             // Create New Bank
             else if (getOption() == 3)
             {
                 // TODO: Complete this portion...
+                showMenuHeader("Create New Bank");
+                bankLauncher.createNewBank();
             }
             else if (getOption() == 4)
             {
