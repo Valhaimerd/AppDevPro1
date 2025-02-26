@@ -10,8 +10,10 @@ import java.util.ArrayList;
 public class Bank {
     private int ID;
     private String name, passcode;
-    private double DEPOSITLIMIT, WITHDRAWLIMIT, CREDITLIMIT;
-    private double processingFee;
+    private double DEPOSITLIMIT = 50000.0;
+    private double WITHDRAWLIMIT = 50000.0;
+    private double CREDITLIMIT = 100000.0;
+    private double processingFee = 10.00;
     private ArrayList<Account> BANKACCOUNTS;
 
     public Bank(int ID, String name, String passcode) {
