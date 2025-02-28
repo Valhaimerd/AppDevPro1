@@ -43,6 +43,18 @@ public class Bank {
         return passcode;
     }
 
+    public double getProcessingFee() {
+        return processingFee;
+    }
+
+    public double getDEPOSITLIMIT() {
+        return DEPOSITLIMIT;
+    }
+
+    public double getWITHDRAWLIMIT() {
+        return WITHDRAWLIMIT;
+    }
+
     public void setID(int ID) {
         this.ID = ID;
     }
