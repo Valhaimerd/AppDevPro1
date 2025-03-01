@@ -4,8 +4,11 @@ import Accounts.Account;
 import Accounts.CreditAccount;
 import Accounts.SavingsAccount;
 import Main.Field;
+import Main.Main;
+import com.sun.jdi.Value;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Bank {
     private int ID;
@@ -14,7 +17,7 @@ public class Bank {
     private double WITHDRAWLIMIT = 50000.0;
     private double CREDITLIMIT = 100000.0;
     private double processingFee = 10.00;
-    private ArrayList<Account> BANKACCOUNTS;
+    private ArrayList<Account> BANKACCOUNTS = new ArrayList<>();
 
     public Bank(int ID, String name, String passcode) {
         this.ID = ID;
@@ -71,8 +74,13 @@ public class Bank {
         this.passcode = passcode;
     }
 
+    public void sortAccounts() {BANKACCOUNTS.sort(Comparator.comparing(Account::getACCOUNTNUMBER));}
+
     public <T extends  Account> void showAccounts(Class<T> accountType) {
         // TODO Complete this method.
+        BANKACCOUNTS.parallelStream()
+                .filter(accountType::isInstance)
+                .forEach(System.out::println);
     }
 
     public Account getBankAccount(Bank bank, String accountNum) {
@@ -84,12 +92,33 @@ public class Bank {
     }
 
     public ArrayList<Field<String, ?>> createNewAccount() {
-        // TODO Complete this method.
-        return null;
+        ArrayList<Field<String, ?>> accountInfo = new ArrayList<>();
+
+        Field<String, String> accountNumber = new Field<String, String>("Account Number", String.class, null, new Field.StringFieldValidator());
+        Field<String, String> firstName = new Field<String, String>("First Name", String.class, null, new Field.StringFieldValidator());
+        Field<String, String> lastName = new Field<String, String>("Last Name", String.class, null, new Field.StringFieldValidator());
+        Field<String, String> email = new Field<String, String>("Email", String.class, null, new Field.StringFieldValidator());
+        Field<String, Integer> pin = new Field<String, Integer>("Pin", String.class, 4, new Field.StringFieldLengthValidator());
+
+
+        firstName.setFieldValue("Enter First Name: ", false);
+        lastName.setFieldValue("Enter Last Name: ", false);
+        email.setFieldValue("Enter Email: ", true);
+        accountNumber.setFieldValue("Enter Account Number: ", true);
+        pin.setFieldValue("Enter 4-digit PIN: ", true);
+
+        accountInfo.add(accountNumber);
+        accountInfo.add(firstName);
+        accountInfo.add(lastName);
+        accountInfo.add(email);
+        accountInfo.add(pin);
+
+        return accountInfo;
     }
 
     public CreditAccount createNewCreditAccount() {
         // TODO Complete this method.
+
         return null;
     }
 
