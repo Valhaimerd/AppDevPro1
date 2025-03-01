@@ -135,4 +135,9 @@ public class SavingsAccount extends Account implements Withdrawal, Deposit, Fund
             this.balance = 0;
         }
     }
+
+    @Override
+    public String toString() {
+        return "SavingsAccount{accountNumber=" + getACCOUNTNUMBER() + ", balance=" + balance + "}";
+    }
 }
