@@ -100,17 +100,18 @@ public class Bank {
         Field<String, String> email = new Field<String, String>("Email", String.class, null, new Field.StringFieldValidator());
         Field<String, Integer> pin = new Field<String, Integer>("Pin", String.class, 4, new Field.StringFieldLengthValidator());
 
+
+        firstName.setFieldValue("Enter First Name: ", false);
+        lastName.setFieldValue("Enter Last Name: ", false);
+        email.setFieldValue("Enter Email: ", true);
+        accountNumber.setFieldValue("Enter Account Number: ", true);
+        pin.setFieldValue("Enter 4-digit PIN: ", true);
+
         accountInfo.add(accountNumber);
         accountInfo.add(firstName);
         accountInfo.add(lastName);
         accountInfo.add(email);
         accountInfo.add(pin);
-
-        firstName.setFieldValue("Enter First Name: ", false);
-        lastName.setFieldValue("Enter Last Name: ", false);
-        email.setFieldValue("Enter Email: ", false);
-        accountNumber.setFieldValue("Enter Account Number: ", true);
-        pin.setFieldValue("Enter 4-digit PIN: ", true);
 
         return accountInfo;
     }
