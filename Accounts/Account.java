@@ -1,7 +1,6 @@
 package Accounts;
 
 import Bank.Bank;
-
 import java.util.ArrayList;
 
 public abstract class Account {
@@ -69,9 +68,6 @@ public abstract class Account {
         this.pin = pin;
     }
 
-    public String getFullName() {return OWNERLNAME + ", " + OWNERFNAME;}
-
-
     /**
     * Adds a new transaction to the account's transaction history.
     *
@@ -79,25 +75,34 @@ public abstract class Account {
     * @param type        The type of transaction (e.g., deposit, withdrawal).
     * @param description A brief description of the transaction.
     */
+
     public void addNewTransaction(String accountNum, Transaction.Transactions type, String description) {
-        // TODO Complete this method.
-        Transaction transaction = new Transaction(accountNum, type, description);
-        TRANSACTIONS.add(transaction);
+        // TODO Complete this method. (done)
+        TRANSACTIONS.add(new Transaction(accountNum, type, description));
     }
 
-    
+    public ArrayList<Transaction> getTransactionsInfo() {
+        // TODO Complete this method. (done)
+        return TRANSACTIONS;
+    }
+
+    public String getOwnerFullName() {
+        // TODO Complete this method. (done)
+        return OWNERFNAME + " " + OWNERLNAME;
+    }
+
     /**
     * Retrieves the transaction history of the account.
     *
     * @return A string representation of all transactions, or a message indicating no transactions are available.
     */
     public String getTransactionInfo() {
-        // TODO Complete this method.
+        // TODO Complete this method. (done)
         if (TRANSACTIONS.isEmpty()) {
             return "No transactions available.";
         }
         StringBuilder transactionInfo = new StringBuilder("Transaction History:\n");
-        for (Transaction t : TRANSACTIONS) { // Fixed loop variable type
+        for (Transaction t : TRANSACTIONS) {
             transactionInfo.append(t.toString()).append("\n");
         }
         return transactionInfo.toString();
@@ -105,19 +110,19 @@ public abstract class Account {
 
 
     /**
-    * Returns a string representation of the account details, including bank name, 
+    * Returns a string representation of the account details, including bank name,
     * account number, owner's full name, email, and the number of transactions.
     *
     * @return A formatted string with account details.
     */
     @Override
     public String toString() {
-        // TODO Complete this method.
-        return "Account Details:\n" +
-                "Bank: " + bank.getName() + "\n" +
-                "Account Number: " + ACCOUNTNUMBER + "\n" +
-                "Owner: " + getFullName() + "\n" +
-                "Email: " + OWNEREMAIL + "\n" +
-                "Transactions: " + TRANSACTIONS.size();
+        // TODO Complete this method. (done)
+        return "Account{" +
+                "ACCOUNTNUMBER='" + getACCOUNTNUMBER() + '\'' +
+                ", OWNER='" + getOwnerFullName() + '\'' +
+                ", EMAIL='" + getOWNEREMAIL() + '\'' +
+                ", BANK='" + bank.getName() + '\'' +
+                '}';
     }
 }

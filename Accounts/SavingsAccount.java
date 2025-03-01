@@ -15,7 +15,7 @@ public class SavingsAccount extends Account implements Withdrawal, Deposit, Fund
      * @param amount Amount to be adjusted.
      * @return Flag if transaction can proceed.
      */
-    public boolean hasEnoughBalance(double amount) { 
+    public boolean hasEnoughBalance(double amount) {
         // Logically it is correct ignore the warning
         // TODO Complete this method (done)
         return this.balance >= amount;
