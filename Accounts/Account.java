@@ -48,9 +48,6 @@ public abstract class Account {
         this.bank = bank;
     }
 
-    public void setACCOUNTNUMBER(String ACCOUNTNUMBER) {
-        this.ACCOUNTNUMBER = ACCOUNTNUMBER;
-    }
 
     public void setOWNERFNAME(String OWNERFNAME) {
         this.OWNERFNAME = OWNERFNAME;

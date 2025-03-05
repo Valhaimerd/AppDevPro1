@@ -5,7 +5,7 @@ import java.util.Scanner;
 import Bank.BankLauncher;
 
 public class AccountLauncher {
-    private static Account loggedAccount;
+    protected static Account loggedAccount;
     private static Bank assocBank;
 
     /**
@@ -17,11 +17,15 @@ public class AccountLauncher {
         return loggedAccount != null;
     }
 
+    public static Bank getAssocBank() {
+        return assocBank;
+    }
+
     /**
      * Logs in an account. The user must select a bank before logging in.
      * Account existence will depend on the selected bank.
      */
-    public void accountLogin() {
+    public static void accountLogin() {
         // TODO Complete this method.
         assocBank = selectBank();
         if (assocBank == null) {
@@ -76,7 +80,7 @@ public class AccountLauncher {
      * Creates a login session based on the logged user account.
      * @param account the Account that has successfully logged in.
      */
-    public void setLogSession(Account account) {
+    public static void setLogSession(Account account) {
         // TODO Complete this method.
         loggedAccount = account;
         assocBank = account.getBank();
@@ -85,7 +89,7 @@ public class AccountLauncher {
     /**
      * Destroys the log session of the previously logged user account.
      */
-    public void destroyLogSession() {
+    public static void destroyLogSession() {
         // TODO Complete this method.
         loggedAccount = null;
         assocBank = null;
@@ -97,7 +101,7 @@ public class AccountLauncher {
      * @param pin the 4-digit PIN.
      * @return the Account object if the credentials pass verification, null otherwise.
      */
-    public Account checkCredentials(String accountNum, String pin) {
+    public static Account checkCredentials(String accountNum, String pin) {
         // TODO Complete this method.
         Account account = assocBank.getBankAccount(assocBank, accountNum);
         if (account != null && account.getPin().equals(pin)) {
