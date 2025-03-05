@@ -1,6 +1,8 @@
 package Main;
 
+import Accounts.*;
 import Bank.BankLauncher;
+import Bank.Bank;
 
 import java.util.Scanner;
 
@@ -22,21 +24,36 @@ public class Main
     public static void main(String[] args)
     {
         BankLauncher bankLauncher = new BankLauncher();
+
         while (true)
         {
             showMenuHeader("Main Menu");
             showMenu(1);
             setOption();
             // Account Option
-            if (getOption() == 1)
-            {
-                // READ ME: Refer to this code block on how one should properly utilize
-                // showMenuHeader(), showMenu(),
-                // setOption(), and getOption() methods...
+            if (getOption() == 1) {
                 showMenuHeader("Account Login Menu");
                 showMenu(2, 1);
                 setOption();
-                // TODO: Complete this portion
+
+                if (getOption() == 1) {
+                    showMenuHeader("Select a Bank");
+
+                    AccountLauncher accountLauncher = new AccountLauncher();
+
+                    Bank selectedBank = AccountLauncher.selectBank();
+
+                    if (selectedBank == null) {
+                        System.out.println("Invalid selection. Returning to Main Menu.");
+                        continue;
+                    }
+
+                    System.out.println("Logging into an existing account in " + selectedBank.getBankName() + "...");
+                    accountLauncher.accountLogin(); // Proceed to log in
+
+                } else {
+                    System.out.println("Invalid account menu option!");
+                }
             }
             // Bank Option
             else if (getOption() == 2)
@@ -46,13 +63,14 @@ public class Main
                 showMenu(3, 1);
                 setOption();
                 if (getOption() == 1) {
-                    // This is not final guys
+                    showMenuHeader("Logging into a bank...");
                     bankLauncher.bankLogin();
-                    showMenuHeader("Bank Menu");
-                    showMenu(31, 1);
-                    setOption();
-
-                } else continue;
+                } else if (getOption() == 2) {
+                    showMenuHeader("Showing list of registered banks...");
+                    bankLauncher.showBanksMenu();
+                } else {
+                    System.out.println("Invalid bank menu option!");
+                }
             }
             // Create New Bank
             else if (getOption() == 3)
@@ -60,6 +78,7 @@ public class Main
                 // TODO: Complete this portion...
                 showMenuHeader("Create New Bank");
                 bankLauncher.createNewBank();
+                System.out.println("New bank successfully created!");
             }
             else if (getOption() == 4)
             {

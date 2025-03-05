@@ -17,7 +17,7 @@ public class SavingsAccountLauncher extends AccountLauncher {
         // TODO Complete this method.
     }
 
-    protected SavingsAccount getLoggedAccount(){
+    protected static SavingsAccount getLoggedAccount(){
         // TODO Complete this method.
         return null;
     }

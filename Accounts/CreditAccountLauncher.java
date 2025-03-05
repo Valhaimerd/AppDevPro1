@@ -13,7 +13,7 @@ public class CreditAccountLauncher extends AccountLauncher {
         // TODO Complete this method.
     }
 
-    protected CreditAccount getLoggedAccount() {
+    protected static CreditAccount getLoggedAccount() {
         // TODO Complete this method.
         return null;
     }

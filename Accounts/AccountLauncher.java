@@ -1,6 +1,8 @@
 package Accounts;
 
 import Bank.Bank;
+import java.util.Scanner;
+import Bank.BankLauncher;
 
 public class AccountLauncher {
     private static Account loggedAccount;
@@ -15,16 +17,16 @@ public class AccountLauncher {
         // TODO Complete this method.
     }
 
-    private Bank selectBank() {
+    public static Bank selectBank() {
         // TODO Complete this method.
         return null;
     }
 
-    private void setLogSession() {
+    private static void setLogSession() {
         // TODO Complete this method.
     }
 
-    private void destroyLogSession() {
+    public void destroyLogSession() {
         // TODO Complete this method.
     }
 
@@ -33,7 +35,9 @@ public class AccountLauncher {
         return null;
     }
 
-    protected Account getLoggedAccount() {
+    public void setLogSession(Account account){}
+
+    protected static Account getLoggedAccount() {
         // TODO Complete this method.
         return null;
     }
