@@ -7,6 +7,7 @@ import Bank.BankLauncher;
 public class AccountLauncher {
     protected static Account loggedAccount;
     private static Bank assocBank;
+    private static final Scanner scanner = new Scanner(System.in);
 
     /**
      * Verifies if some account is currently logged in.
@@ -27,13 +28,17 @@ public class AccountLauncher {
      */
     public static void accountLogin() {
         // TODO Complete this method.
+        if (isLoggedIn()) {
+            System.out.println("An account is already logged in. Please log out first.");
+            return;
+        }
+
         assocBank = selectBank();
         if (assocBank == null) {
             System.out.println("Invalid bank selection. Login aborted.");
             return;
         }
 
-        Scanner scanner = new Scanner(System.in);
         System.out.print("Enter Account Number: ");
         String accountNum = scanner.nextLine();
         System.out.print("Enter 4-digit PIN: ");
@@ -61,9 +66,9 @@ public class AccountLauncher {
             System.out.println(bank.getID() + ": " + bank.getBankName());
         }
 
-        Scanner scanner = new Scanner(System.in);
         System.out.print("Enter Bank ID: ");
         int bankID = scanner.nextInt();
+        scanner.nextLine();
 
         // Find and return the Bank object
         for (Bank bank : BankLauncher.getBanks()) {
@@ -91,6 +96,12 @@ public class AccountLauncher {
      */
     public static void destroyLogSession() {
         // TODO Complete this method.
+        if (!isLoggedIn()) {
+            System.out.println("No account is currently logged in.");
+            return;
+        }
+
+        System.out.println("Logging out " + loggedAccount.getACCOUNTNUMBER() + "...");
         loggedAccount = null;
         assocBank = null;
     }
