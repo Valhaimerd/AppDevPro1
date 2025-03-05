@@ -8,13 +8,12 @@ import Bank.Bank;
  * including deposits, withdrawals, and fund transfers.
  */
 public class SavingsAccountLauncher extends AccountLauncher {
-
+    private static final Scanner scanner = new Scanner(System.in);
     /**
      * Initializes the savings account menu for user interactions.
      */
     public static void savingsAccountInit() {
         // TODO Complete this method.
-        Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("\nSavings Account Menu:");
             System.out.println("1. Deposit Money");
@@ -55,7 +54,6 @@ public class SavingsAccountLauncher extends AccountLauncher {
             return;
         }
 
-        Scanner scanner = new Scanner(System.in);
         System.out.print("Enter amount to deposit: ");
         double amount = scanner.nextDouble();
 
@@ -77,7 +75,6 @@ public class SavingsAccountLauncher extends AccountLauncher {
             return;
         }
 
-        Scanner scanner = new Scanner(System.in);
         System.out.print("Enter amount to withdraw: ");
         double amount = scanner.nextDouble();
 
@@ -99,7 +96,6 @@ public class SavingsAccountLauncher extends AccountLauncher {
             return;
         }
 
-        Scanner scanner = new Scanner(System.in);
         System.out.print("Enter target Savings Account number: ");
         String targetAccountNum = scanner.nextLine();
 

@@ -8,13 +8,12 @@ import Bank.Bank;
  * including making payments and recompensing loans.
  */
 public class CreditAccountLauncher extends AccountLauncher {
-
+    private static final Scanner scanner = new Scanner(System.in);
     /**
      * Initializes the credit account menu for user interactions.
      */
     public static void creditAccountInit() {
         // TODO Complete this method.
-        Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("\nCredit Account Menu:");
             System.out.println("1. Make a Credit Payment");
@@ -51,7 +50,6 @@ public class CreditAccountLauncher extends AccountLauncher {
             return;
         }
 
-        Scanner scanner = new Scanner(System.in);
         System.out.print("Enter target Savings Account number: ");
         String targetAccountNum = scanner.nextLine();
 
@@ -86,7 +84,6 @@ public class CreditAccountLauncher extends AccountLauncher {
             return;
         }
 
-        Scanner scanner = new Scanner(System.in);
         System.out.print("Enter amount to recompense: ");
         double amount = scanner.nextDouble();
 
