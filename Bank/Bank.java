@@ -116,6 +116,10 @@ public class Bank {
         return accountInfo;
     }
 
+    public String getBankName() {
+        return this.name;
+    }
+
     public CreditAccount createNewCreditAccount() {
         // TODO Complete this method.
 

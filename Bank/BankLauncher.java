@@ -13,6 +13,11 @@ public class BankLauncher {
         return false;
     }
 
+    public Bank getBankById(int bankID) {
+        // TODO Complete this method.
+        return null;
+    }
+
     public void bankInit() {
         // TODO Complete this method.
     }

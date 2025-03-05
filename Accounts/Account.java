@@ -107,8 +107,6 @@ public abstract class Account {
         }
         return transactionInfo.toString();
     }
-
-
     /**
     * Returns a string representation of the account details, including bank name,
     * account number, owner's full name, email, and the number of transactions.
