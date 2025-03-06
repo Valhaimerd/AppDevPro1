@@ -13,18 +13,18 @@ public class BankLauncher {
         return false;
     }
 
-     /**
-     * Retrieves a bank by its name.
-     * @param bankName The name of the bank to find.
-     * @return The bank if found, otherwise null.
+      /**
+     * Retrieves a bank by its ID.
+     * @param bankID The ID of the bank to find.
+     * @return The bank if found, otherwise prints a message and returns null.
      */
-     public Bank getBankByName(String bankName) {
+    public Bank getBankById(int bankID) {
         for (Bank bank : BANKS) {
-            if (bank.getName().equalsIgnoreCase(bankName)) {
+            if (bank.getID() == bankID) {
                 return bank;
             }
         }
-        System.out.println("No bank found with the name: " + bankName);
+        System.out.println("No bank found with the ID: " + bankID);
         return null;
     }
 
