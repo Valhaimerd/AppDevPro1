@@ -119,7 +119,6 @@ public class Bank {
                 "Account Holder Email", String.class, "", new Field.StringFieldValidator());
         email.setFieldValue("Enter Email: ");
 
-        // Account Holder Pin (Required)
         Field<String, Integer> pin = new Field<>(
                 "Pin", String.class, 4, new Field.StringFieldLengthValidator());
         pin.setFieldValue("Enter 4-digit PIN: ");
