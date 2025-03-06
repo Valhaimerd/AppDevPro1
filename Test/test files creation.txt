@@ -15,4 +15,7 @@ Files that need tests:
 
 
 
+Note: Prioritize classes with important Logic (like sa transactions, validation, and ....)
+
+skip lang sa ang uban files if it only contains simple data holders.
 
