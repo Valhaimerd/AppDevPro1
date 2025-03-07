@@ -20,5 +20,22 @@ void setUp() throws SQLException {
                 "description TEXT)");
     }
 }
+@AfterEach
+void tearDown() throws SQLException {
+    // Runs after each test
+    // Closes the database connection
+    conn.close();
 
+    // tig delete sa CSV file if ga exist
+    File file = new File(TEST_CSV);
+    if (file.exists()) {
+        file.delete();
+    }
+}
+
+
+// testTransactionCreation()
+// testSaveAndLoadCSV()
+// testSaveAndLoadDatabase()
+// testInvalidTransactionType()
 }
