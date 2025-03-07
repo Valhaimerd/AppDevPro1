@@ -38,7 +38,13 @@ void tearDown() throws SQLException {
 
 @Test
 void testTransactionCreation() {
+    // Checks if a transaction is created correctly
+    Transaction t = new Transaction("12345", Transaction.Transactions.Deposit, "Salary deposit");
 
+    // Make sure the values match what we set
+    assertEquals("12345", t.accountNumber);
+    assertEquals(Transaction.Transactions.Deposit, t.transactionType);
+    assertEquals("Salary deposit", t.description);
 }
 
 @Test
