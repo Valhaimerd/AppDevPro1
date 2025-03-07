@@ -66,10 +66,10 @@ void testSaveAndLoadCSV() {
 void testSaveAndLoadDatabase() throws SQLException {
     // Creates a transaction and saves it to a CSV file
     Transaction t = new Transaction("67890", Transaction.Transactions.Withdraw, "ATM withdrawal");
-    t.saveToCSV(TEST_CSV);
+    t.saveToDatabase(conn);
 
-    // Loads transactions from the CSV file
-    List<Transaction> transactions = Transaction.loadFromCSV(TEST_CSV);
+    // Loads transactions from the database
+    List<Transaction> transactions = Transaction.loadFromDatabase(conn);
 
     // Checks if the transaction was saved and loaded correctly
     assertFalse(transactions.isEmpty()); 
