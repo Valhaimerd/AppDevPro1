@@ -1,8 +1,6 @@
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
-
 import Accounts.Transaction;
-
 import java.io.*;
 import java.sql.*;
 import java.util.List;
@@ -23,6 +21,7 @@ void setUp() throws SQLException {
                 "description TEXT)");
     }
 }
+
 @AfterEach
 void tearDown() throws SQLException {
     // Runs after each test
@@ -73,7 +72,7 @@ void testSaveAndLoadDatabase() throws SQLException {
     List<Transaction> transactions = Transaction.loadFromCSV(TEST_CSV);
 
     // Checks if the transaction was saved and loaded correctly
-    assertFalse(transactions.isEmpty()); // The list should not be empty
+    assertFalse(transactions.isEmpty()); 
     assertEquals("67890", transactions.get(0).accountNumber);
     assertEquals(Transaction.Transactions.Withdraw, transactions.get(0).transactionType);
     assertEquals("ATM withdrawal", transactions.get(0).description);
