@@ -43,6 +43,18 @@ void testTransactionCreation() {
 
 @Test
 void testSaveAndLoadCSV() {
+    // Creates a transaction and saves it to a CSV file
+    Transaction t = new Transaction("67890", Transaction.Transactions.Withdraw, "ATM withdrawal");
+    t.saveToCSV(TEST_CSV);
+    
+    // Loads transactions from the CSV file
+    List<Transaction> transactions = Transaction.loadFromCSV(TEST_CSV);
+    
+    // Checks if the transaction was saved and loaded correctly
+    assertFalse(transactions.isEmpty()); 
+    assertEquals("67890", transactions.get(0).accountNumber);
+    assertEquals(Transaction.Transactions.Withdraw, transactions.get(0).transactionType);
+    assertEquals("ATM withdrawal", transactions.get(0).description);
 }
 
 @Test
