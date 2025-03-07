@@ -1,5 +1,8 @@
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
+
+import Accounts.Transaction;
+
 import java.io.*;
 import java.sql.*;
 import java.util.List;
@@ -33,9 +36,26 @@ void tearDown() throws SQLException {
     }
 }
 
+@Test
+void testTransactionCreation() {
 
-// testTransactionCreation()
-// testSaveAndLoadCSV()
-// testSaveAndLoadDatabase()
-// testInvalidTransactionType()
+}
+
+@Test
+void testSaveAndLoadCSV() {
+}
+
+@Test
+void testSaveAndLoadDatabase() throws SQLException {
+
+}
+
+@Test
+void testInvalidTransactionType() {
+    // Making sure nga if mag use ug invalid transaction type mag cause syga error
+    assertThrows(IllegalArgumentException.class, () -> {
+        Transaction.Transactions.valueOf("InvalidType"); // This should fail
+    });
+}
+
 }
