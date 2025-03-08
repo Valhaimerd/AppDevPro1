@@ -1,7 +1,7 @@
-package Bank;
+package Main;
 
 import Accounts.Account;
-
+import Bank.Bank;
 import java.util.ArrayList;
 import java.util.Comparator;
 
