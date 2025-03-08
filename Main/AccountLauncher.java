@@ -19,7 +19,11 @@ public class AccountLauncher {
     }
 
     public static Bank getAssocBank() {
-        return assocBank;
+        return this.assocBank;
+    }
+
+    public void setAssocBank(Bank assocBank) {
+        this.assocBank = assocBank;
     }
 
     /**

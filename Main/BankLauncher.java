@@ -1,4 +1,4 @@
-package Bank;
+package Main;
 
 import Accounts.Account;
 
@@ -31,7 +31,7 @@ public class BankLauncher {
     private void newAccounts() {
         // TODO Complete this method.
     }
-    public void bankLogin() {
+    public static void bankLogin() {
         // TODO Complete this method.
     }
 
@@ -42,7 +42,7 @@ public class BankLauncher {
         // TODO Complete this method.
     }
 
-    public void createNewBank() {
+    public static void createNewBank() {
         // TODO Complete this method.
     }
     public void showBanksMenu() {
