@@ -1,7 +1,10 @@
-package Accounts;
+package Main;
 
 import java.util.Scanner;
-import Bank.Bank;
+
+import Accounts.Account;
+import Accounts.IllegalAccountType;
+import Accounts.SavingsAccount;
 
 /**
  * SavingsAccountLauncher handles interactions with Savings Accounts,

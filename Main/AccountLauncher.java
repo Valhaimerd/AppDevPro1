@@ -1,8 +1,8 @@
-package Accounts;
+package Main;
 
+import Accounts.Account;
 import Bank.Bank;
 import java.util.Scanner;
-import Bank.BankLauncher;
 
 public class AccountLauncher {
     protected static Account loggedAccount;
