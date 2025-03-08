@@ -2,112 +2,131 @@ package Accounts;
 
 import Bank.Bank;
 
+/**
+ * CreditAccount class representing a bank account that operates on credit.
+ * It allows credit transactions while ensuring credit limits are enforced.
+ */
 public class CreditAccount extends Account implements Payment, Recompense {
-    private double loan;
 
+    private double loanBalance;  // The current outstanding loan
 
     /**
      * Constructor for CreditAccount.
-     * @param bank The bank associated with this account.
-     * @param ACCOUNTNUMBER The account number of this credit account.
-     * @param OWNERFNAME Owner's first name.
-     * @param OWNERLNAME Owner's last name.
-     * @param OWNEREMAIL Owner's email address.
-     * @param pin The PIN for account security.
-     * @param loan Initial loan amount.
+     *
+     * @param bank        The bank associated with this credit account.
+     * @param accountNumber The unique account number.
+     * @param ownerFname Owner's first name.
+     * @param ownerLname Owner's last name.
+     * @param email       Owner's email address.
+     * @param pin         Security PIN for authentication.
      */
-    public CreditAccount(Bank bank, String ACCOUNTNUMBER, String OWNERFNAME, String OWNERLNAME, String OWNEREMAIL, String pin, double loan) {
-        super(bank, ACCOUNTNUMBER, OWNERFNAME, OWNERLNAME, OWNEREMAIL, pin);
-        this.loan = loan;
+    public CreditAccount(Bank bank, String accountNumber, String ownerFname, String ownerLname,
+                         String email, String pin) {
+        super(bank, accountNumber, ownerFname, ownerLname, email, pin);
+        this.loanBalance = 0.0; // Start with no credit used
     }
 
     /**
-     * Returns the loan statement of this credit account.
-     * @return A string representation of the loan amount.
+     * Gets the current loan statement.
+     *
+     * @return Formatted loan statement.
      */
     public String getLoanStatement() {
-        // TODO Complete this method. (done)
-        return "Loan Amount: " + loan;
-    }
-
-    /**
-     * Checks if the account can proceed with a credit transaction.
-     * @param amountAdjustment The amount of credit to be adjusted.
-     * @return True if the transaction can proceed, false otherwise.
-     */
-    private boolean canCredit(double amountAdjustment) {
-        // TODO Complete this method. (done)
-        return (loan + amountAdjustment) <= getBank().getCREDITLIMIT();
-    }
-
-    /**
-     * Adjusts the loan amount, ensuring it does not go below zero.
-     * @param amountAdjustment The amount to adjust the loan balance.
-     */
-    private void adjustLoanAmount(double amountAdjustment) {
-        // TODO Complete this method. (done)
-        this.loan = Math.max(0, this.loan + amountAdjustment);
-    }
-
-    /**
-     * Pays an amount to another account.
-     * @param account The target account to receive payment.
-     * @param amount The amount to be paid.
-     * @return True if the transaction was successful, false otherwise.
-     * @throws IllegalAccountType if the target account is also a CreditAccount.
-     */
-
-    @Override
-    public boolean pay(Account account, double amount) throws IllegalAccountType {
-        // TODO Complete this method. (done)
-        if (account instanceof CreditAccount) {
-            throw new IllegalAccountType("Credit Accounts cannot pay to other Credit Accounts.");
-        }
-
-        if (this.loan >= amount) {
-            this.loan -= amount;
-
-            // Ensure the payment is only made to a SavingsAccount
-            if (account instanceof SavingsAccount) {
-                ((SavingsAccount) account).cashDeposit(amount);
-            } else {
-                throw new IllegalAccountType("Credit Accounts can only pay to Savings Accounts.");
-            }
-
-            this.addNewTransaction(account.getACCOUNTNUMBER(), Transaction.Transactions.Payment, "Payment of " + amount);
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Recompenses some amount to reduce the loan balance.
-     * @param amount The amount to recompense.
-     * @return True if the recompense was successful, false otherwise.
-     */
-    @Override
-    public boolean recompense(double amount) {
-        // TODO Complete this method. (done)
-        if (amount <= loan) {
-            adjustLoanAmount(-amount);
-            this.addNewTransaction(this.getACCOUNTNUMBER(), Transaction.Transactions.Recompense, "Recompensed " + amount);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Provides a string representation of the credit account.
-     * @return A formatted string containing account details.
-     */
-    @Override
-    public String toString() {
-        // TODO Complete this method. (done)
         return "CreditAccount{" +
-                "Account Number='" + getACCOUNTNUMBER() + '\'' +
-                ", Owner='" + getOwnerFullName() + '\'' +
-                ", Loan Amount=" + loan +
+                "Account Number='" + accountNumber + '\'' +
+                ", Owner='" + ownerFname + " " + ownerLname + '\'' +
+                ", Loan Balance=$" + String.format("%.2f", loanBalance) +
                 '}';
+    }
+
+    /**
+     * Checks if the account can take additional credit without exceeding the bank's limit.
+     *
+     * @param amountAdjustment The amount to be credited.
+     * @return True if the credit transaction can proceed, otherwise false.
+     */
+    public boolean canCredit(double amountAdjustment) {
+        double creditLimit = bank.getCreditLimit(); // Retrieve credit limit from the bank
+        return (loanBalance + amountAdjustment) <= creditLimit;
+    }
+
+    /**
+     * Adjusts the loan balance of the credit account.
+     *
+     * @param amountAdjustment The amount to adjust.
+     *                         - Positive values increase the loan balance (credit usage).
+     *                         - Negative values decrease the loan balance (repayment).
+     */
+    public void adjustLoanAmount(double amountAdjustment) {
+        this.loanBalance += amountAdjustment;
+        if (this.loanBalance < 0) {
+            this.loanBalance = 0; // Ensure loan balance never goes negative
+        }
+    }
+
+    /**
+     * Pays a certain amount to a SavingsAccount.
+     * CreditAccount **cannot pay another CreditAccount**.
+     *
+     * @param recipient The target account to pay into.
+     * @param amount    The amount to pay.
+     * @return True if the payment was successful, false otherwise.
+     * @throws IllegalArgumentException If trying to pay to another CreditAccount.
+     */
+    public boolean pay(Account recipient, double amount) {
+        if (!(recipient instanceof SavingsAccount)) {
+            throw new IllegalArgumentException("Credit Accounts can only pay to Savings Accounts.");
+        }
+
+        // Check if the Credit Account is allowed to increase loan
+        if (!canCredit(amount)) {
+            System.out.println("Payment failed: Not enough credit available.");
+            return false;
+        }
+
+        // Increase loan balance (because payment is borrowing money)
+        adjustLoanAmount(amount);
+
+        // Add the paid amount to the recipient's balance
+        SavingsAccount savingsRecipient = (SavingsAccount) recipient;
+        savingsRecipient.adjustAccountBalance(amount);
+
+        // Log the transaction for both accounts
+        addNewTransaction(recipient.getAccountNumber(), Transaction.Transactions.PAYMENT,
+                "Paid $" + String.format("%.2f", amount) + " to " + recipient.getAccountNumber());
+
+        savingsRecipient.addNewTransaction(this.accountNumber, Transaction.Transactions.RECEIVE_TRANSFER,
+                "Received $" + String.format("%.2f", amount) + " from Credit Account " + this.accountNumber);
+
+        System.out.println("Payment successful. New loan balance: $" + loanBalance);
+        return true;
+    }
+
+    /**
+     * Recompense the bank by reducing the recorded loan balance.
+     *
+     * @param amount The amount to recompense.
+     * @return True if successful, false otherwise.
+     */
+    public boolean recompense(double amount) {
+        if (amount <= 0 || amount > loanBalance) {
+            return false; // Invalid amount or exceeding owed loan
+        }
+
+        // Deduct from the loan balance and log the recompense
+        adjustLoanAmount(-amount);
+        addNewTransaction(accountNumber, Transaction.Transactions.COMPENSATION,
+                "Recompensed $" + String.format("%.2f", amount) + " to the bank.");
+
+        return true;
+    }
+
+    /**
+     * Retrieves the current loan balance.
+     *
+     * @return The outstanding loan amount.
+     */
+    public double getLoanBalance() {
+        return loanBalance;
     }
 }
