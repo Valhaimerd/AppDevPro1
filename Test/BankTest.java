@@ -38,6 +38,13 @@ public class BankTest {
     }
         @Test
     void testCreateNewCreditAccount() {
+        // Create a credit account
+        CreditAccount account = bank.createNewCreditAccount();
+
+        // The account should not be null
+        assertNotNull(account);
+        // The account should be added to the bank
+        assertTrue(bank.getBankAccounts().contains(account));
     }
 
     @Test
