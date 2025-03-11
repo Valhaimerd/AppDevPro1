@@ -80,6 +80,14 @@ public class BankTest {
     // this will test the GetBankAccount method/function
     @Test
     void testGetBankAccount() {
+        Account mockAccount = new SavingsAccount(bank, "12345", "John", "Doe", "john@example.com", "1234", 1000);
+        bank.addNewAccount(mockAccount);
+
+        Optional<Account> retrievedAccount = bank.getBankAccount("12345");
+
+        // The account should be found
+        assertTrue(retrievedAccount.isPresent());
+        assertEquals("12345", retrievedAccount.get().getAccountNumber());
     }
 
 
@@ -87,5 +95,10 @@ public class BankTest {
     // this will test the GetBankAccountNotFounf method/function
     @Test
     void testGetBankAccountNotFound() {
+        // will try to find an account that doesn't exist
+        Optional<Account> retrievedAccount = bank.getBankAccount("99999");
+
+        // 404 account 
+        assertFalse(retrievedAccount.isPresent());
     }
 }
