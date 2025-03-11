@@ -1,93 +1,102 @@
 package Accounts;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.io.*;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * The Transaction class records details of a specific account transaction.
- * Transactions are immutable once created.
+ * Class containing Transaction enums.
  */
 public class Transaction {
 
-    // Enum for transaction types
     public enum Transactions {
-        DEPOSIT,
-        WITHDRAWAL,
-        FUNDTRANSFER,
-        RECEIVE_TRANSFER,
-        EXTERNAL_TRANSFER,
-        PAYMENT,
-        COMPENSATION
+        Deposit,
+        Withdraw,
+        FundTransfer,
+        Payment,
+        Recompense
     }
 
-    private final String sourceAccount; // The account that initiated the transaction
-    private final Transactions transactionType; // The type of transaction
-    private final String description; // Description of the transaction
-    private final LocalDateTime timestamp; // Timestamp of when the transaction occurred
-
     /**
-     * Constructor for Transaction.
-     *
-     * @param sourceAccount The account number initiating the transaction.
-     * @param transactionType The type of transaction.
-     * @param description A brief description of the transaction.
+     * Account number that triggered this transaction.
      */
-    public Transaction(String sourceAccount, Transactions transactionType, String description) {
-        this.sourceAccount = sourceAccount;
+    public String accountNumber;
+    /**
+     * Type of transcation that was triggered.
+     */
+    public Transactions transactionType;
+    /**
+     * Description of the transaction.
+     */
+    public String description;
+
+    public Transaction(String accountNumber, Transactions transactionType, String description) {
+        this.accountNumber = accountNumber;
         this.transactionType = transactionType;
         this.description = description;
-        this.timestamp = LocalDateTime.now(); // Auto-generate timestamp upon creation
     }
 
     /**
-     * Retrieves the account number that initiated this transaction.
-     *
-     * @return Source account number.
+     * Saves transaction details to a CSV file.
      */
-    public String getSourceAccount() {
-        return sourceAccount;
+    public synchronized void saveToCSV(String filePath) {
+        try (FileWriter fw = new FileWriter(filePath, true);
+             BufferedWriter bw = new BufferedWriter(fw);
+             PrintWriter out = new PrintWriter(bw)) {
+            out.println(accountNumber + "," + transactionType + "," + description);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
-     * Retrieves the type of this transaction.
-     *
-     * @return Transaction type.
+     * Loads transactions from a CSV file.
      */
-    public Transactions getTransactionType() {
-        return transactionType;
+    public static List<Transaction> loadFromCSV(String filePath) {
+        List<Transaction> transactions = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(",");
+                transactions.add(new Transaction(data[0], Transactions.valueOf(data[1]), data[2]));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return transactions;
     }
 
     /**
-     * Retrieves the description of this transaction.
-     *
-     * @return Transaction description.
+     * Saves transaction details to an SQLite database.
      */
-    public String getDescription() {
-        return description;
+    public synchronized void saveToDatabase(Connection conn) {
+        String sql = "INSERT INTO Transactions (accountNumber, transactionType, description) VALUES (?, ?, ?)";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, accountNumber);
+            pstmt.setString(2, transactionType.name());
+            pstmt.setString(3, description);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
-     * Retrieves the timestamp when this transaction occurred.
-     *
-     * @return Transaction timestamp.
+     * Loads transactions from an SQLite database.
      */
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    /**
-     * Provides a formatted string representation of this transaction.
-     *
-     * @return Formatted transaction details.
-     */
-    @Override
-    public String toString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return "Transaction{" +
-                "Time=" + getTimestamp().format(formatter) +
-                ", Source='" + getSourceAccount() + '\'' +
-                ", Type=" + getTransactionType() +
-                ", Description='" + getDescription() + '\'' +
-                '}';
+    public static List<Transaction> loadFromDatabase(Connection conn) {
+        List<Transaction> transactions = new ArrayList<>();
+        String sql = "SELECT accountNumber, transactionType, description FROM Transactions";
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                transactions.add(new Transaction(rs.getString("accountNumber"),
+                        Transactions.valueOf(rs.getString("transactionType")),
+                        rs.getString("description")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return transactions;
     }
 }
