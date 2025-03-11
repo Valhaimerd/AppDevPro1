@@ -66,6 +66,14 @@ public class BankTest {
     // this will test the AccountExists method/function
     @Test
     void testAccountExists() {
+        Account mockAccount = new SavingsAccount(bank, "12345", "John", "Doe", "john@example.com", "1234", 1000);
+        bank.addNewAccount(mockAccount);
+
+        // The method should return true because the account was added
+        assertTrue(Bank.accountExists(bank, "12345"));
+
+        // It should return false if an account doesn't exist
+        assertFalse(Bank.accountExists(bank, "99999"));
     }
 
 
