@@ -26,6 +26,8 @@ public class BankTest {
         bank = new Bank(1, "Test Bank");
     }
 
+
+    // this tests the createNewSavingsAccount method/function
     @Test
     void testCreateNewSavingsAccount() {
         // Create a savings account
@@ -36,7 +38,10 @@ public class BankTest {
         // The account should be added to the bank
         assertTrue(bank.getBankAccounts().contains(account));
     }
-        @Test
+
+
+    // this tests the createNewCreditAccount method/function
+    @Test
     void testCreateNewCreditAccount() {
         // Create a credit account
         CreditAccount account = bank.createNewCreditAccount();
@@ -47,18 +52,31 @@ public class BankTest {
         assertTrue(bank.getBankAccounts().contains(account));
     }
 
+
+    // this will test the AddNewAccount method/function
     @Test
     void testAddNewAccount() {
+        Account mockAccount = new SavingsAccount(bank, "12345", "John", "Doe", "john@example.com", "1234", 1000);
+        bank.addNewAccount(mockAccount);
+
+        // The bank should contain the new account
+        assertTrue(bank.getBankAccounts().contains(mockAccount));
     }
 
+    // this will test the AccountExists method/function
     @Test
     void testAccountExists() {
     }
 
+
+    // this will test the GetBankAccount method/function
     @Test
     void testGetBankAccount() {
     }
 
+
+
+    // this will test the GetBankAccountNotFounf method/function
     @Test
     void testGetBankAccountNotFound() {
     }
