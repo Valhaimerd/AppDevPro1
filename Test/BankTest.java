@@ -3,6 +3,8 @@ package Bank;
 import Accounts.Account;
 import Accounts.CreditAccount;
 import Accounts.SavingsAccount;
+import Bank.Bank;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -33,5 +35,24 @@ public class BankTest {
         assertNotNull(account);
         // The account should be added to the bank
         assertTrue(bank.getBankAccounts().contains(account));
+    }
+        @Test
+    void testCreateNewCreditAccount() {
+    }
+
+    @Test
+    void testAddNewAccount() {
+    }
+
+    @Test
+    void testAccountExists() {
+    }
+
+    @Test
+    void testGetBankAccount() {
+    }
+
+    @Test
+    void testGetBankAccountNotFound() {
     }
 }
