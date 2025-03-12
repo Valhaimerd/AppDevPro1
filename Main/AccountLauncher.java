@@ -1,8 +1,6 @@
 package Main;
 
-import Accounts.Account;
-import Accounts.CreditAccount;
-import Accounts.SavingsAccount;
+import Accounts.*;
 import Bank.Bank;
 
 import java.util.Optional;
@@ -40,6 +38,8 @@ public class AccountLauncher {
         switch (accountTypeOption) {
             case 1 -> accountType = CreditAccount.class;
             case 2 -> accountType = SavingsAccount.class;
+            case 3 -> accountType = StudentAccount.class;
+            case 4 -> accountType = BusinessAccount.class;
             default -> {
                 System.out.println("Invalid option. Returning to main menu.");
                 return;

@@ -85,7 +85,7 @@ public class Bank {
 
         Field<String, String> emailField = new Field<String, String>("Email", String.class, null, new Field.StringFieldValidator());
 
-        Field<String, Integer> pinField = new Field<String, Integer>("PIN", String.class, 4, new Field.StringFieldLengthValidator());
+        Field<String, Integer> pinField = new Field<String, Integer>("PIN", String.class, 4, new Field.PinFieldValidator());
 
         // Array of fields to prompt user input
         Field<?, ?>[] fields = {accountNumberField, firstNameField, lastNameField, emailField, pinField};
