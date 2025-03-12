@@ -29,7 +29,7 @@ public enum Menu {
     /**
      * Accounts.Account type selection menu. Used when creating New Accounts for every Bank.Bank.
      */
-    AccountTypeSelection(new String[]{ "Credit Account", "Savings Account", "Student Account", "Business Account" }, 33),
+    AccountTypeSelection(new String[]{ "Credit Account", "Savings Account" }, 33),
     /**
      * CreditAccount type selection menu. Used when logging in as a CreditAccount.
      */
