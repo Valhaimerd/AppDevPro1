@@ -163,4 +163,14 @@ public class Field<T, E> {
             return null;
         }
     }
+
+    public static class PinFieldValidator implements FieldValidator<String, Integer> {
+        @Override
+        public String validate(String value, Integer threshold) {
+            if (value == null || !value.matches("\\d{" + threshold + "}")) {
+                return "Invalid PIN! Please enter exactly " + threshold + " digits.";
+            }
+            return null; // Valid PIN
+        }
+    }
 }
