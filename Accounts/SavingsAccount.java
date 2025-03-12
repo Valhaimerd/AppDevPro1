@@ -87,7 +87,7 @@ public class SavingsAccount extends Account implements Withdrawal, Deposit, Fund
 
         // Adjust balance and log transaction
         adjustAccountBalance(amount);
-        addNewTransaction(accountNumber, Transaction.Transactions.DEPOSIT,
+        addNewTransaction(accountNumber, Transaction.Transactions.Deposit,
                 "Deposited $" + String.format("%.2f", amount));
 
         return true;
@@ -107,7 +107,7 @@ public class SavingsAccount extends Account implements Withdrawal, Deposit, Fund
 
         // Adjust balance and log transaction
         adjustAccountBalance(-amount);
-        addNewTransaction(accountNumber, Transaction.Transactions.WITHDRAWAL,
+        addNewTransaction(accountNumber, Transaction.Transactions.Withdraw,
                 "Withdrew $" + String.format("%.2f", amount));
 
         return true;
@@ -138,9 +138,9 @@ public class SavingsAccount extends Account implements Withdrawal, Deposit, Fund
         ((SavingsAccount) recipient).adjustAccountBalance(amount);
 
         // Log transactions for both accounts
-        addNewTransaction(recipient.getAccountNumber(), Transaction.Transactions.FUNDTRANSFER,
+        addNewTransaction(recipient.getAccountNumber(), Transaction.Transactions.FundTransfer,
                 "Transferred $" + String.format("%.2f", amount) + " to " + recipient.getAccountNumber());
-        recipient.addNewTransaction(accountNumber, Transaction.Transactions.RECEIVE_TRANSFER,
+        recipient.addNewTransaction(accountNumber, Transaction.Transactions.FundTransfer,
                 "Received $" + String.format("%.2f", amount) + " from " + accountNumber);
 
         return true;
@@ -174,11 +174,11 @@ public class SavingsAccount extends Account implements Withdrawal, Deposit, Fund
         ((SavingsAccount) recipient).adjustAccountBalance(amount);
 
         // Log transactions for both accounts
-        addNewTransaction(recipient.getAccountNumber(), Transaction.Transactions.EXTERNAL_TRANSFER,
+        addNewTransaction(recipient.getAccountNumber(), Transaction.Transactions.FundTransfer,
                 "Transferred $" + String.format("%.2f", amount) + " to " + recipient.getAccountNumber() +
                         " at " + recipientBank.getBankName() + " (Fee: $" + bank.getProcessingFee() + ")");
 
-        recipient.addNewTransaction(accountNumber, Transaction.Transactions.RECEIVE_TRANSFER,
+        recipient.addNewTransaction(accountNumber, Transaction.Transactions.FundTransfer,
                 "Received $" + String.format("%.2f", amount) + " from " + accountNumber +
                         " at " + bank.getBankName());
 

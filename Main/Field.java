@@ -27,6 +27,10 @@ public class Field<T, E> {
         return this.fieldValue;
     }
 
+    public String getFieldName() {
+        return fieldName;
+    }
+
     /**
      * Set the value for this field. Can be validated using a field validator.
      * <br>
@@ -53,7 +57,7 @@ public class Field<T, E> {
      * and user suddenly inputs a String that cannot be cast into double or Integer.,
      */
     public void setFieldValue(String phrase, boolean inlineInput)
-    throws ClassCastException, NumberFormatException {
+            throws ClassCastException, NumberFormatException {
         String tempval = null;
         while(true) {
             try {

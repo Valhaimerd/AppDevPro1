@@ -23,7 +23,7 @@ public class BusinessAccount extends CreditAccount {
      */
     public BusinessAccount(Bank bank, String accountNumber, String ownerFname, String ownerLname,
                            String email, String pin, double initialLoan) {
-        super(bank, accountNumber, ownerFname, ownerLname, email, pin, initialLoan);
+        super(bank, accountNumber, ownerFname, ownerLname, email, pin);
     }
 
     /**
@@ -32,7 +32,7 @@ public class BusinessAccount extends CreditAccount {
      * @return The business credit limit.
      */
     public double getBusinessCreditLimit() {
-        return super.getBank().getCREDITLIMIT() * BUSINESS_CREDIT_LIMIT_MULTIPLIER;
+        return super.getBank().getCreditLimit() * BUSINESS_CREDIT_LIMIT_MULTIPLIER;
     }
 
     /**
@@ -68,11 +68,11 @@ public class BusinessAccount extends CreditAccount {
         savingsRecipient.adjustAccountBalance(amount);
 
         // Log the transaction
-        addNewTransaction(recipient.getACCOUNTNUMBER(), Transaction.Transactions.FundTransfer,
-                String.format("Paid $%.2f to %s (Business Transaction)", amount, recipient.getACCOUNTNUMBER()));
+        addNewTransaction(recipient.getAccountNumber(), Transaction.Transactions.FundTransfer,
+                String.format("Paid $%.2f to %s (Business Transaction)", amount, recipient.getAccountNumber()));
 
-        savingsRecipient.addNewTransaction(getACCOUNTNUMBER(), Transaction.Transactions.FundTransfer,
-                String.format("Received $%.2f from Business Account %s", amount, getACCOUNTNUMBER()));
+        savingsRecipient.addNewTransaction(getAccountNumber(), Transaction.Transactions.FundTransfer,
+                String.format("Received $%.2f from Business Account %s", amount, getAccountNumber()));
 
         System.out.println("Business payment successful. New loan balance: $" + getLoan());
         return true;
@@ -93,7 +93,7 @@ public class BusinessAccount extends CreditAccount {
         updateLoan(-amount); // Deduct from loan balance
 
         // Log recompense transaction
-        addNewTransaction(getACCOUNTNUMBER(), Transaction.Transactions.Recompense,
+        addNewTransaction(getAccountNumber(), Transaction.Transactions.Recompense,
                 String.format("Recompensed $%.2f to the bank from Business Account.", amount));
 
         return true;
@@ -101,8 +101,8 @@ public class BusinessAccount extends CreditAccount {
     @Override
     public String toString() {
         return "BusinessAccount{" +
-                "Account Number='" + getACCOUNTNUMBER() + '\'' +
-                ", Owner='" + getOwnerFullName() + '\'' +
+                "Account Number='" + getAccountNumber() + '\'' +
+                ", Owner='" + getOwnerFullname() + '\'' +
                 ", Loan Amount=" + getLoan() + // Use the getter method
                 ", Business Credit Limit=" + getBusinessCreditLimit() +
                 '}';
