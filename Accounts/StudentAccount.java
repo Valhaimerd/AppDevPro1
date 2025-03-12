@@ -35,7 +35,7 @@ public class StudentAccount extends SavingsAccount {
 
         // Adjust balance and log transaction
         adjustAccountBalance(-amount);
-        addNewTransaction(this.getACCOUNTNUMBER(), Transaction.Transactions.Withdraw,
+        addNewTransaction(this.getAccountNumber(), Transaction.Transactions.Withdraw,
                 "Withdrew $" + String.format("%.2f", amount) + " from Student Account.");
         return true;
     }
@@ -48,9 +48,9 @@ public class StudentAccount extends SavingsAccount {
      * @return True if transfer is successful, false otherwise.
      */
     @Override
-    public boolean transfer(Account recipient, double amount) throws IllegalAccountType {
+    public boolean transfer(Account recipient, double amount) {
         if (!(recipient instanceof SavingsAccount)) {
-            throw new IllegalAccountType("Student accounts can only transfer to Savings Accounts.");
+            throw new IllegalArgumentException("Student accounts can only transfer to Savings Accounts.");
         }
 
         if (!hasEnoughBalance(amount) || amount <= 0 || amount > MAX_WITHDRAWAL_LIMIT) {
@@ -63,9 +63,9 @@ public class StudentAccount extends SavingsAccount {
         ((SavingsAccount) recipient).adjustAccountBalance(amount);
 
         // Log transactions for both accounts
-        addNewTransaction(recipient.getACCOUNTNUMBER(), Transaction.Transactions.FundTransfer,
-                "Transferred $" + String.format("%.2f", amount) + " to " + recipient.getACCOUNTNUMBER());
-        recipient.addNewTransaction(getACCOUNTNUMBER(), Transaction.Transactions.FundTransfer,
+        addNewTransaction(recipient.getAccountNumber(), Transaction.Transactions.FundTransfer,
+                "Transferred $" + String.format("%.2f", amount) + " to " + recipient.getAccountNumber());
+        recipient.addNewTransaction(getAccountNumber(), Transaction.Transactions.FundTransfer,
                 "Received $" + String.format("%.2f", amount) + " from Student Account.");
         return true;
     }
@@ -73,8 +73,8 @@ public class StudentAccount extends SavingsAccount {
     @Override
     public String toString() {
         return "StudentAccount{" +
-                "accountNumber='" + getACCOUNTNUMBER() + '\'' +
-                ", owner='" + getOWNERFNAME() + " " + getOWNERLNAME() + '\'' +
+                "accountNumber='" + getAccountNumber() + '\'' +
+                ", owner='" + getOwnerFname() + " " + getOwnerLname() + '\'' +
                 ", balance=$" + String.format("%.2f", getBalance()) +
                 ", withdrawalLimit=$" + String.format("%.2f", MAX_WITHDRAWAL_LIMIT) +
                 '}';

@@ -12,6 +12,6 @@ public class BankCredentialsComparator implements Comparator<Bank> {
             return compareName;
         }
 
-        return b1.getPasscode().compareTo(b2.getPasscode());
+        return b1.getBankId().compareTo(b2.getBankId());
     }
 }
