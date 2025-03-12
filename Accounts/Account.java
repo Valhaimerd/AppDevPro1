@@ -1,123 +1,129 @@
 package Accounts;
 
-import Bank.Bank;
 import java.util.ArrayList;
+import java.util.Comparator;
+import Bank.Bank;
 
+/**
+ * Abstract Account class that serves as a base for different account types.
+ * It includes personal details, basic account attributes, comparators, and transaction logging.
+ */
 public abstract class Account {
-    private Bank bank;
-    private String ACCOUNTNUMBER;
-    private String OWNERFNAME, OWNERLNAME, OWNEREMAIL;
-    private String pin;
-    private ArrayList<Transaction> TRANSACTIONS;
 
-    public Account(Bank bank, String ACCOUNTNUMBER, String OWNERFNAME, String OWNERLNAME, String OWNEREMAIL, String pin) {
+    // Core Attributes
+    protected final Bank bank;
+    protected final String accountNumber;
+    protected final ArrayList<Transaction> transactions;
+
+    // Owner Details
+    protected final String ownerFname, ownerLname, ownerEmail;   // Owner's first name
+    protected final String pin;          // 4-digit security PIN (hashed for security in real-world apps)
+
+    /**
+     * Constructor for an Account.
+     *
+     * @param bank          The bank associated with this account.
+     * @param accountNumber The unique account number.
+     * @param ownerFname    Owner's first name.
+     * @param ownerLname    Owner's last name.
+     * @param ownerEmail         Owner's email address.
+     * @param pin           Security PIN (in real-world, store hashed PINs).
+     */
+    public Account(Bank bank, String accountNumber, String ownerFname, String ownerLname,
+                   String ownerEmail, String pin) {
         this.bank = bank;
-        this.ACCOUNTNUMBER = ACCOUNTNUMBER;
-        this.OWNERFNAME = OWNERFNAME;
-        this.OWNERLNAME = OWNERLNAME;
-        this.OWNEREMAIL = OWNEREMAIL;
+        this.accountNumber = accountNumber;
+        this.ownerFname = ownerFname;
+        this.ownerLname = ownerLname;
+        this.ownerEmail = ownerEmail;
         this.pin = pin;
-        this.TRANSACTIONS = new ArrayList<>();
+        this.transactions = new ArrayList<>();
     }
 
-    public Bank getBank() {
-        return bank;
+    public String getOwnerFullname() {
+        return this.ownerLname + ", " + this.ownerFname;
     }
 
-    public String getACCOUNTNUMBER() {
-        return ACCOUNTNUMBER;
+    /**
+     * Adds a new transaction log to this account.
+     *
+     * @param sourceAccount The source account number that triggered this transaction.
+     * @param type          The type of transaction performed.
+     * @param description   A brief description of the transaction.
+     */
+    public void addNewTransaction(String sourceAccount, Transaction.Transactions type, String description) {
+        transactions.add(new Transaction(sourceAccount, type, description));
     }
 
-    public String getOWNERFNAME() {
-        return OWNERFNAME;
+    /**
+     * Retrieves all transaction logs recorded for this account.
+     *
+     * @return A formatted string containing all transaction details.
+     */
+    public String getTransactionsInfo() {
+        if (transactions.isEmpty()) {
+            return "No transactions found for this account.";
+        }
+
+        StringBuilder transactionLog = new StringBuilder("Transaction History:\n");
+        for (Transaction transaction : transactions) {
+            transactionLog.append(transaction.toString()).append("\n");
+        }
+        return transactionLog.toString();
     }
 
-    public String getOWNERLNAME() {
-        return OWNERLNAME;
+    // =================== Getters for Personal Details ===================
+
+    public String getOwnerFname() {
+        return ownerFname;
     }
 
-    public String getOWNEREMAIL() {
-        return OWNEREMAIL;
+    public String getOwnerLname() {
+        return ownerLname;
+    }
+
+    public String getOwnerEmail() {
+        return ownerEmail;
     }
 
     public String getPin() {
         return pin;
     }
 
-    public void setBank(Bank bank) {
-        this.bank = bank;
+    // =================== Bank and Transaction Getters ===================
+
+    public Bank getBank() {
+        return bank;
     }
 
-
-    public void setOWNERFNAME(String OWNERFNAME) {
-        this.OWNERFNAME = OWNERFNAME;
+    public String getAccountNumber() {
+        return accountNumber;
     }
 
-    public void setOWNERLNAME(String OWNERLNAME) {
-        this.OWNERLNAME = OWNERLNAME;
+    public ArrayList<Transaction> getTransactions() {
+        return new ArrayList<>(transactions);
     }
 
-    public void setOWNEREMAIL(String OWNEREMAIL) {
-        this.OWNEREMAIL = OWNEREMAIL;
-    }
-
-    public void setPin(String pin) {
-        this.pin = pin;
-    }
+    // =================== Comparators & Sorting ===================
 
     /**
-    * Adds a new transaction to the account's transaction history.
-    *
-    * @param accountNum  The account number associated with the transaction.
-    * @param type        The type of transaction (e.g., deposit, withdrawal).
-    * @param description A brief description of the transaction.
-    */
-
-    public void addNewTransaction(String accountNum, Transaction.Transactions type, String description) {
-        // TODO Complete this method. (done)
-        TRANSACTIONS.add(new Transaction(accountNum, type, description));
-    }
-
-    public ArrayList<Transaction> getTransactionsInfo() {
-        // TODO Complete this method. (done)
-        return TRANSACTIONS;
-    }
-
-    public String getOwnerFullName() {
-        // TODO Complete this method. (done)
-        return OWNERFNAME + " " + OWNERLNAME;
-    }
+     * Comparator for comparing accounts based on account numbers.
+     */
+    public static final Comparator<Account> ACCOUNT_NUMBER_COMPARATOR = Comparator.comparing(Account::getAccountNumber);
 
     /**
-    * Retrieves the transaction history of the account.
-    *
-    * @return A string representation of all transactions, or a message indicating no transactions are available.
-    */
-    public String getTransactionInfo() {
-        // TODO Complete this method. (done)
-        if (TRANSACTIONS.isEmpty()) {
-            return "No transactions available.";
-        }
-        StringBuilder transactionInfo = new StringBuilder("Transaction History:\n");
-        for (Transaction t : TRANSACTIONS) {
-            transactionInfo.append(t.toString()).append("\n");
-        }
-        return transactionInfo.toString();
-    }
-    /**
-    * Returns a string representation of the account details, including bank name,
-    * account number, owner's full name, email, and the number of transactions.
-    *
-    * @return A formatted string with account details.
-    */
+     * Provides a string representation of the account details.
+     *
+     * @return Formatted account details.
+     */
     @Override
     public String toString() {
-        // TODO Complete this method. (done)
-        return "Account{" +
-                "ACCOUNTNUMBER='" + getACCOUNTNUMBER() + '\'' +
-                ", OWNER='" + getOwnerFullName() + '\'' +
-                ", EMAIL='" + getOWNEREMAIL() + '\'' +
-                ", BANK='" + bank.getName() + '\'' +
+        return "Account {" +
+                "Owner='" + ownerFname + " " + ownerLname + '\'' +
+                ", Email='" + ownerEmail + '\'' +
+                ", Bank='" + bank.getBankName() + '\'' +
+                ", Account Number='" + accountNumber + '\'' +
+                ", Transactions Count=" + transactions.size() +
                 '}';
     }
 }
