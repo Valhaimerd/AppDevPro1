@@ -6,218 +6,212 @@ import Accounts.SavingsAccount;
 import Main.Field;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Optional;
+import java.util.Scanner;
 
+/**
+ * The Bank class represents a banking institution that manages multiple accounts.
+ * It enforces banking rules such as deposit/withdrawal limits and credit limits.
+ */
 public class Bank {
-    private int ID;
-    private String name, passcode;
 
-    private double DEPOSITLIMIT = 50000.0;
-    private double WITHDRAWLIMIT = 50000.0;
-    private double CREDITLIMIT = 100000.0;
-    private double processingFee = 10.00;
-    private ArrayList<Account> BANKACCOUNTS = new ArrayList<>();
-    private static int accountNumberCounter = 1; // Account Number starts from 1
-    private static final Set<String> ACCOUNT_NUMBERS = new HashSet<>(); // Store account numbers
+    private final String bankName;
+    private final Integer bankId;
+    private final ArrayList<Account> bankAccounts;
 
-    public Bank(int ID, String name, String passcode) {
-        this.ID = ID;
-        this.name = name;
-        this.passcode = passcode;
+    // Banking Limits
+    private final double depositLimit, withdrawLimit, creditLimit;
+    private final double processingFee;
+
+    /**
+     * Constructor for Bank.
+     *
+     * @param bankName The name of the bank.
+     * @param bankId   The unique identifier for the bank.
+     */
+    public Bank(Integer bankId, String bankName) {
+        this.bankName = bankName;
+        this.bankId = bankId;
+        this.bankAccounts = new ArrayList<>();
+
+        // Default banking limits
+        this.depositLimit = 50000.0;
+        this.withdrawLimit = 50000.0;
+        this.creditLimit = 100000.0;
+        this.processingFee = 10.0;
     }
 
-    public Bank(int ID, String name, String passcode, double DEPOSITLIMIT, double WITHDRAWLIMIT, double CREDITLIMIT) {
-        this(ID, name, passcode);
-        this.DEPOSITLIMIT = DEPOSITLIMIT;
-        this.WITHDRAWLIMIT = WITHDRAWLIMIT;
-        this.CREDITLIMIT = CREDITLIMIT;
+    public <T extends Account> void showAccounts(Class<T> accountType) {
+        if (accountType == null) {
+            for (Account account : bankAccounts) {
+                System.out.println(account);
+            }
+        } else {
+            System.out.println("Showing accounts of type: " + accountType.getSimpleName());
+
+            for (Account account : bankAccounts) {
+                if (accountType.isInstance(account)) {
+                    System.out.println(account);
+                }
+            }
+        }
     }
 
-    public int getID() {
-        return ID;
+    /**
+     * Get the Account object (if it exists) from a given bank.
+     *
+     * @param accountNum The account number to search for.
+     * @return Optional<Account> containing the account if found, otherwise empty.
+     */
+    public Optional<Account> getBankAccount(String accountNum) {
+        return bankAccounts.stream()
+                .filter(acc -> acc.getAccountNumber().equals(accountNum))
+                .findFirst();
     }
 
-    public String getName() {
-        return name;
+    /**
+     * Creates a new account with validated input fields.
+     *
+     * @return A list of Field objects containing account details.
+     */
+    public ArrayList<Field<?, ?>> createNewAccount() {
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<Field<?, ?>> accountFields = new ArrayList<>();
+
+        // Create fields with appropriate validation
+        Field<String, Integer> accountNumberField = new Field<String, Integer>("Account Number", String.class, 5, new Field.StringFieldLengthValidator());
+
+        Field<String, String> firstNameField = new Field<String, String>("First Name", String.class, null, new Field.StringFieldValidator());
+
+        Field<String, String> lastNameField = new Field<String, String>("Last Name", String.class, null, new Field.StringFieldValidator());
+
+        Field<String, String> emailField = new Field<String, String>("Email", String.class, null, new Field.StringFieldValidator());
+
+        Field<String, Integer> pinField = new Field<String, Integer>("PIN", String.class, 4, new Field.StringFieldLengthValidator());
+
+        // Array of fields to prompt user input
+        Field<?, ?>[] fields = {accountNumberField, firstNameField, lastNameField, emailField, pinField};
+
+        for (Field<?, ?> field : fields) {
+            field.setFieldValue("Enter " + field.getFieldName() + ": ");
+            accountFields.add(field);
+        }
+
+        return accountFields;
     }
 
-    public String getPasscode() {
-        return passcode;
+    /**
+     * Creates and registers a new SavingsAccount using validated fields.
+     *
+     * @return The newly created SavingsAccount.
+     */
+    public SavingsAccount createNewSavingsAccount() {
+        ArrayList<Field<?, ?>> accountData = createNewAccount();
+        String accountNumber = (String) accountData.get(0).getFieldValue();
+        String firstName = (String) accountData.get(1).getFieldValue();
+        String lastName = (String) accountData.get(2).getFieldValue();
+        String email = (String) accountData.get(3).getFieldValue();
+        String pin = (String) accountData.get(4).getFieldValue();
+
+        System.out.print("Enter Initial Deposit: ");
+        double initialDeposit = new Scanner(System.in).nextDouble();
+
+        SavingsAccount newAccount = new SavingsAccount(this, accountNumber, firstName, lastName, email, pin, initialDeposit);
+        addNewAccount(newAccount);
+        return newAccount;
+    }
+
+    /**
+     * Creates and registers a new CreditAccount using validated fields.
+     *
+     * @return The newly created CreditAccount.
+     */
+    public CreditAccount createNewCreditAccount() {
+        ArrayList<Field<?, ?>> accountData = createNewAccount();
+        String accountNumber = (String) accountData.get(0).getFieldValue();
+        String firstName = (String) accountData.get(1).getFieldValue();
+        String lastName = (String) accountData.get(2).getFieldValue();
+        String email = (String) accountData.get(3).getFieldValue();
+        String pin = (String) accountData.get(4).getFieldValue();
+
+        CreditAccount newAccount = new CreditAccount(this, accountNumber, firstName, lastName, email, pin);
+        addNewAccount(newAccount);
+        return newAccount;
+    }
+
+    /**
+     * Adds a new account to the bank if the account number is unique.
+     *
+     * @param account The account to add.
+     */
+    public void addNewAccount(Account account) {
+        if (accountExists(this, account.getAccountNumber())) { // Only check within the same bank
+            System.out.println("Account number already exists in this bank! Registration failed.");
+            return;
+        }
+        bankAccounts.add(account);
+        System.out.println("✅ Account successfully registered.");
+    }
+
+    /**
+     * Checks if an account exists in the given bank based on an account number.
+     * This method is static because it does not require an instance of the Bank class.
+     *
+     * @param bank        The bank to search for the account.
+     * @param accountNum  The account number to check.
+     * @return true if the account exists, false otherwise.
+     */
+    public static boolean accountExists(Bank bank, String accountNum) {
+        if (bank == null || bank.getBankAccounts() == null) {
+            return false; // Handle null cases safely
+        }
+
+        return bank.getBankAccounts().stream()
+                .anyMatch(account -> account.getAccountNumber().equals(accountNum));
+    }
+
+    // ========================= GETTERS =========================
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public Integer getBankId() {
+        return this.bankId;
+    }
+
+    public ArrayList<Account> getBankAccounts() {
+        return new ArrayList<>(bankAccounts); // Return a copy to prevent external modification
+    }
+
+    public double getDepositLimit() {
+        return depositLimit;
+    }
+
+    public double getWithdrawLimit() {
+        return withdrawLimit;
+    }
+
+    public double getCreditLimit() {
+        return creditLimit;
     }
 
     public double getProcessingFee() {
         return processingFee;
     }
 
-    public double getDEPOSITLIMIT() {
-        return DEPOSITLIMIT;
-    }
+    // ========================= COMPARATORS =========================
 
-    public double getCREDITLIMIT() {
-        return CREDITLIMIT;
-    }
-
-    public double getWITHDRAWLIMIT() {
-        return WITHDRAWLIMIT;
-    }
-
-    public void setID(int ID) {
-        this.ID = ID;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPasscode(String passcode) {
-        this.passcode = passcode;
-    }
-
-    public void sortAccounts() {BANKACCOUNTS.sort(Comparator.comparing(Account::getACCOUNTNUMBER));}
-
-    public <T extends  Account> void showAccounts(Class<T> accountType) {
-        // TODO Complete this method.
-        BANKACCOUNTS.parallelStream()
-                .filter(accountType::isInstance)
-                .forEach(System.out::println);
-    }
-
-    public Account getBankAccount(Bank bank, String accountNum) {
-        // TODO Complete this method. (Efficiency)
-        for (Account account : BANKACCOUNTS){
-            if (account.getACCOUNTNUMBER().equals(accountNum)) {
-                return account;
-            }
-        }
-        return null;
-    }
-
-    public ArrayList<Field<String, ?>> createNewAccount() {
-        // TODO Complete this method.
-        ArrayList<Field<String, ?>> accountDetails = new ArrayList<>();
-
-        // First Name (Required)
-        Field<String, Integer> firstName = new Field<>(
-                "First Name", String.class, 2, new Field.StringFieldLengthValidator());
-        firstName.setFieldValue("Enter First Name: ");
-
-        // Last Name (Required)
-        Field<String, Integer> lastName = new Field<>(
-                "Last Name", String.class, 2, new Field.StringFieldLengthValidator());
-        lastName.setFieldValue("Enter Last Name: ");
-
-        // Generate Uniqie Account Number
-        String generatedAccountNumber = generateAccountNumber();
-        System.out.println("Generated Account Number: " + generatedAccountNumber);
-        Field<String, String> accountNumber = new Field<>(
-                "Account Number", String.class, "", new Field.StringFieldValidator());
-        accountNumber.setFieldValue(generatedAccountNumber);
-
-        // Account Holder Email
-        Field<String, String> email = new Field<>(
-                "Account Holder Email", String.class, "", new Field.StringFieldValidator());
-        email.setFieldValue("Enter Email: ");
-
-        Field<String, Integer> pin = new Field<>(
-                "Pin", String.class, 4, new Field.StringFieldLengthValidator());
-        pin.setFieldValue("Enter 4-digit PIN: ");
-
-
-        return accountDetails;
-    }
-
-    public String getBankName() {
-        return this.name;
-    }
-
-    public CreditAccount createNewCreditAccount() {
-        // TODO Complete this method.
-        ArrayList<Field<String, ?>> accountDetails = createNewAccount();
-
-        // Extracts values from accountDetails
-        String firstName = accountDetails.get(0).getFieldValue();
-        String lastName = accountDetails.get(1).getFieldValue();
-        String accountNumber = accountDetails.get(2).getFieldValue();
-        String email = accountDetails.get(3).getFieldValue();
-        String pin = accountDetails.get(4).getFieldValue();
-
-        // Create CreditAccount with default 0.0 loan
-        CreditAccount creditAccount = new CreditAccount(this, accountNumber, firstName, lastName, email, pin, 0.0);
-
-        // Add to BANKACCOUNTS list
-        BANKACCOUNTS.add(creditAccount);
-
-        System.out.println("Credit Account created successfully!");
-        return creditAccount;
-    }
-
-    public SavingsAccount createNewSavingsAccount() {
-        // TODO Complete this method.
-        ArrayList<Field<String, ?>> accountDetails = createNewAccount();
-
-        // Extract values from accountDetails
-        String firstName = accountDetails.get(0).getFieldValue();
-        String lastName = accountDetails.get(1).getFieldValue();
-        String accountNumber = accountDetails.get(2).getFieldValue();
-        String email = accountDetails.get(3).getFieldValue();
-        String pin = accountDetails.get(4).getFieldValue();
-
-        // Create SavingsAccount with default 0.0 balance
-        SavingsAccount savingsAccount = new SavingsAccount(this, accountNumber, firstName, lastName, email, pin, 0.0);
-
-        // Add to BANKACCOUNTS list
-        BANKACCOUNTS.add(savingsAccount);
-
-        System.out.println("Savings Account created successfully!");
-        return savingsAccount;
-    }
-
-    public void addNewAccount(Account account) {
-        // TODO Complete this method.
-        if (account != null) {
-            // Initialize BANKACCOUNT list before adding
-            if (BANKACCOUNTS == null) {
-                BANKACCOUNTS = new ArrayList<>();
-            }
-
-
-            BANKACCOUNTS.add(account);
-            System.out.println("Account sucessfully added: " + account.getACCOUNTNUMBER());
-        } else {
-            System.out.println("Error! Cannot add null account.");
-        }
-    }
-
-    public static boolean accountExists(Bank bank, String accountNum) {
-        // TODO Complete this method.
-        if (bank.BANKACCOUNTS != null) {
-            for (Account account : bank.BANKACCOUNTS) {
-                if (account.getACCOUNTNUMBER().equals(accountNum)) {
-                    return true; // Account found
-                }
-            }
-        }
-        return false; // Account does not exist
-    }
-
-
-
-    private static String generateAccountNumber() {
-        String accountNumber;
-        do {
-            // Format number as 5-digit string (00001, 00002, ...)
-            accountNumber = String.format("%05d", accountNumberCounter);
-            accountNumberCounter++; // Increment for next use
-
-        } while (ACCOUNT_NUMBERS.contains(accountNumber));
-        ACCOUNT_NUMBERS.add(accountNumber); // Store generated numbers
-        return accountNumber;
-    }
+    public static final Comparator<Bank> BANK_NAME_COMPARATOR = new BankComparator();
+    public static final Comparator<Bank> BANK_ID_COMPARATOR = new BankIdComparator();
+    public static final Comparator<Bank> BANK_CREDENTIALS_COMPARATOR = new BankCredentialsComparator();
 
     @Override
     public String toString() {
-        // TODO Complete this method.
-        return super.toString();
+        return "Bank{" +
+                "Bank Name='" + bankName + '\'' +
+                ", Bank ID='" + bankId + '\'' +
+                ", Accounts Registered=" + bankAccounts.size() +
+                '}';
     }
 }

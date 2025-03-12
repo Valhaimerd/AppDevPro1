@@ -1,7 +1,11 @@
-package Accounts;
+package Main;
 
 import java.util.Scanner;
-import Bank.Bank;
+
+import Accounts.Account;
+import Accounts.CreditAccount;
+import Accounts.IllegalAccountType;
+import Accounts.SavingsAccount;
 
 /**
  * CreditAccountLauncher handles interactions with Credit Accounts,
