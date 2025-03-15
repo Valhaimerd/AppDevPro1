@@ -102,7 +102,7 @@ public class BusinessAccount extends CreditAccount {
     public String toString() {
         return "BusinessAccount{" +
                 "Account Number='" + getAccountNumber() + '\'' +
-                ", Owner='" + getOwnerFullname() + '\'' +
+                ", Owner='" + getOwnerFullName() + '\'' +
                 ", Loan Amount=" + getLoan() + // Use the getter method
                 ", Business Credit Limit=" + getBusinessCreditLimit() +
                 '}';
