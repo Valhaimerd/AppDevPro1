@@ -1,7 +1,7 @@
 package Accounts;
 
-import Bank.Bank;
-import Main.Main;
+import Bank.*;
+import Main.*;
 
 /**
  * CreditAccountLauncher handles user interactions for Credit Accounts,
@@ -42,20 +42,20 @@ public class CreditAccountLauncher {
      * Handles the credit payment process.
      */
     public static void creditPaymentProcess() {
-        Field<String, Integer> recipientField = new Field<String, Integer>("Recipient Account Number", String.class, 5, new Main.Field.StringFieldLengthValidator());
+        Field<String, Integer> recipientField = new Field<String, Integer>("Recipient Account Number", String.class, 5, new Field.StringFieldLengthValidator());
         recipientField.setFieldValue("Enter recipient Savings Account number: ");
 
-        Field<Double, Double> amountField = new Field<Double, Double>("Payment Amount", Double.class, 1.0, new Main.Field.DoubleFieldValidator());
+        Field<Double, Double> amountField = new Field<Double, Double>("Payment Amount", Double.class, 1.0, new Field.DoubleFieldValidator());
         amountField.setFieldValue("Enter payment amount: ");
 
         String recipientAccountNum = recipientField.getFieldValue();
         double amount = amountField.getFieldValue();
 
         Bank recipientBank = loggedAccount.getBank();
-        SavingsAccount recipientAccount = (SavingsAccount) recipientBank.getBankAccount(recipientAccountNum).orElse(null);
+        Account recipientAccount = recipientBank.getBankAccount(recipientAccountNum);
 
-        if (recipientAccount == null) {
-            System.out.println("Recipient account not found.");
+        if (!(recipientAccount instanceof SavingsAccount)) {
+            System.out.println("Recipient account not found or is not a Savings Account.");
             return;
         }
 
@@ -64,13 +64,14 @@ public class CreditAccountLauncher {
         } else {
             System.out.println("Credit payment failed. Insufficient funds or invalid amount.");
         }
+
     }
 
     /**
      * Handles the credit recompense process.
      */
     public static void creditRecompenseProcess() {
-        Field<Double, Double> amountField = new Field<Double, Double>("Recompense Amount", Double.class, 1.0, new Main.Field.DoubleFieldValidator());
+        Field<Double, Double> amountField = new Field<Double, Double>("Recompense Amount", Double.class, 1.0, new Field.DoubleFieldValidator());
         amountField.setFieldValue("Enter recompense amount: ");
 
         double amount = amountField.getFieldValue();
