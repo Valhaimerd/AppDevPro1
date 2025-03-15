@@ -1,8 +1,6 @@
 package Bank;
 
-import Accounts.Account;
-import Accounts.CreditAccount;
-import Accounts.SavingsAccount;
+import Accounts.*;
 import Main.Field;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -87,7 +85,7 @@ public class Bank {
 
         Field<String, String> emailField = new Field<String, String>("Email", String.class, null, new Field.StringFieldValidator());
 
-        Field<String, Integer> pinField = new Field<String, Integer>("PIN", String.class, 4, new Field.StringFieldLengthValidator());
+        Field<String, Integer> pinField = new Field<String, Integer>("PIN", String.class, 4, new Field.PinFieldValidator());
 
         // Array of fields to prompt user input
         Field<?, ?>[] fields = {accountNumberField, firstNameField, lastNameField, emailField, pinField};
@@ -135,6 +133,45 @@ public class Bank {
         String pin = (String) accountData.get(4).getFieldValue();
 
         CreditAccount newAccount = new CreditAccount(this, accountNumber, firstName, lastName, email, pin);
+        addNewAccount(newAccount);
+        return newAccount;
+    }
+
+    /**
+     * Creates and registers a new StudentAccount using validated fields.
+     *
+     * @return The newly created StudentAccount.
+     */
+    public StudentAccount createNewStudentAccount() {
+        ArrayList<Field<?, ?>> accountData = createNewAccount();
+        String accountNumber = (String) accountData.get(0).getFieldValue();
+        String firstName = (String) accountData.get(1).getFieldValue();
+        String lastName = (String) accountData.get(2).getFieldValue();
+        String email = (String) accountData.get(3).getFieldValue();
+        String pin = (String) accountData.get(4).getFieldValue();
+
+        System.out.print("Enter Initial Deposit: ");
+        double initialDeposit = new Scanner(System.in).nextDouble();
+
+        StudentAccount newAccount = new StudentAccount(this, accountNumber, firstName, lastName, email, pin, initialDeposit);
+        addNewAccount(newAccount);
+        return newAccount;
+    }
+
+    /**
+     * Creates and registers a new CreditAccount using validated fields.
+     *
+     * @return The newly created CreditAccount.
+     */
+    public BusinessAccount createNewBusinessAccount() {
+        ArrayList<Field<?, ?>> accountData = createNewAccount();
+        String accountNumber = (String) accountData.get(0).getFieldValue();
+        String firstName = (String) accountData.get(1).getFieldValue();
+        String lastName = (String) accountData.get(2).getFieldValue();
+        String email = (String) accountData.get(3).getFieldValue();
+        String pin = (String) accountData.get(4).getFieldValue();
+
+        BusinessAccount newAccount = new BusinessAccount(this, accountNumber, firstName, lastName, email, pin, 0.0);
         addNewAccount(newAccount);
         return newAccount;
     }

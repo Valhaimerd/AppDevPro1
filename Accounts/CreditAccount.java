@@ -39,6 +39,11 @@ public class CreditAccount extends Account implements Payment, Recompense {
                 '}';
     }
 
+    protected double getLoan() {
+        return this.loanBalance; // This gives BusinessAccount access to the numeric loan balance
+    }
+
+
     /**
      * Checks if the account can take additional credit without exceeding the bank's limit.
      *
@@ -57,11 +62,17 @@ public class CreditAccount extends Account implements Payment, Recompense {
      *                         - Positive values increase the loan balance (credit usage).
      *                         - Negative values decrease the loan balance (repayment).
      */
-    public void adjustLoanAmount(double amountAdjustment) {
-        this.loanBalance += amountAdjustment;
-        if (this.loanBalance < 0) {
-            this.loanBalance = 0; // Ensure loan balance never goes negative
-        }
+    private void adjustLoanAmount(double amountAdjustment) {
+        // TODO Complete this method. (done)
+        this.loanBalance = Math.max(0, this.loanBalance + amountAdjustment);
+    }
+
+    /**
+     * Access the adjustLoanAmount, updates it without directly accessing the private method.
+     * @param amount;
+     */
+    public void updateLoan(double amount) {
+        adjustLoanAmount(amount);
     }
 
     /**
@@ -92,10 +103,10 @@ public class CreditAccount extends Account implements Payment, Recompense {
         savingsRecipient.adjustAccountBalance(amount);
 
         // Log the transaction for both accounts
-        addNewTransaction(recipient.getAccountNumber(), Transaction.Transactions.PAYMENT,
+        addNewTransaction(recipient.getAccountNumber(), Transaction.Transactions.FundTransfer,
                 "Paid $" + String.format("%.2f", amount) + " to " + recipient.getAccountNumber());
 
-        savingsRecipient.addNewTransaction(this.accountNumber, Transaction.Transactions.RECEIVE_TRANSFER,
+        savingsRecipient.addNewTransaction(this.accountNumber, Transaction.Transactions.FundTransfer,
                 "Received $" + String.format("%.2f", amount) + " from Credit Account " + this.accountNumber);
 
         System.out.println("Payment successful. New loan balance: $" + loanBalance);
@@ -115,7 +126,7 @@ public class CreditAccount extends Account implements Payment, Recompense {
 
         // Deduct from the loan balance and log the recompense
         adjustLoanAmount(-amount);
-        addNewTransaction(accountNumber, Transaction.Transactions.COMPENSATION,
+        addNewTransaction(accountNumber, Transaction.Transactions.Recompense,
                 "Recompensed $" + String.format("%.2f", amount) + " to the bank.");
 
         return true;
