@@ -1,9 +1,7 @@
 package Accounts;
 
-import Bank.Bank;
-import Main.Main;
-
-import java.util.Optional;
+import Bank.*;
+import Main.*;
 
 /**
  * SavingsAccountLauncher handles user interactions for Savings Accounts,
@@ -16,7 +14,7 @@ public class SavingsAccountLauncher {
     /**
      * Initializes the Savings Account menu after login.
      */
-    public static void savingsAccountInit() {
+    public static void savingsAccountInit() throws IllegalAccountType {
         if (loggedAccount == null) {
             System.out.println("No account logged in.");
             return;
@@ -45,7 +43,7 @@ public class SavingsAccountLauncher {
      * Handles the deposit process.
      */
     public static void depositProcess() {
-        Field<Double, Double> amountField = new Field<Double, Double>("Deposit Amount", Double.class, 1.0, new Main.Field.DoubleFieldValidator());
+        Field<Double, Double> amountField = new Field<Double, Double>("Deposit Amount", Double.class, 1.0, new Field.DoubleFieldValidator());
         amountField.setFieldValue("Enter deposit amount: ");
 
         double amount = amountField.getFieldValue();
@@ -60,7 +58,7 @@ public class SavingsAccountLauncher {
      * Handles the withdrawal process.
      */
     public static void withdrawProcess() {
-        Field<Double, Double> amountField = new Field<Double, Double>("Withdrawal Amount", Double.class, 1.0, new Main.Field.DoubleFieldValidator());
+        Field<Double, Double> amountField = new Field<Double, Double>("Withdrawal Amount", Double.class, 1.0, new Field.DoubleFieldValidator());
         amountField.setFieldValue("Enter withdrawal amount: ");
 
         double amount = amountField.getFieldValue();
@@ -71,7 +69,7 @@ public class SavingsAccountLauncher {
         }
     }
 
-    public static void fundTransfer() {
+    public static void fundTransfer() throws IllegalAccountType {
         if (loggedAccount == null) {
             System.out.println("No account logged in.");
             return;
@@ -85,56 +83,63 @@ public class SavingsAccountLauncher {
         int transferType = Main.getOption();
 
         // Get recipient account number
-        Field<String, Integer> recipientField = new Field<String, Integer>("Recipient Account Number", String.class, 5, new Main.Field.StringFieldLengthValidator());
+        Field<String, Integer> recipientField = new Field<String, Integer>("Recipient Account Number", String.class, 5, new Field.StringFieldLengthValidator());
         recipientField.setFieldValue("Enter recipient account number: ");
         String recipientAccountNum = recipientField.getFieldValue();
 
         // Get transfer amount
-        Field<Double, Double> amountField = new Field<Double, Double>("Transfer Amount", Double.class, 1.0, new Main.Field.DoubleFieldValidator());
+        Field<Double, Double> amountField = new Field<Double, Double>("Transfer Amount", Double.class, 1.0, new Field.DoubleFieldValidator());
         amountField.setFieldValue("Enter transfer amount: ");
         double amount = amountField.getFieldValue();
 
         if (transferType == 1) { // Internal Transfer
-            Optional<Account> recipient = loggedAccount.getBank().getBankAccount(recipientAccountNum);
+            Account recipient = loggedAccount.getBank().getBankAccount(recipientAccountNum);
 
-            if (recipient.isPresent()) {
-                if (loggedAccount.transfer(recipient.get(), amount)) {
-                    System.out.println("✅ Internal transfer successful.");
-                } else {
-                    System.out.println("❌ Transfer failed. Insufficient funds or limit exceeded.");
-                }
-            } else {
-                System.out.println("❌ Recipient account not found in the same bank.");
+            if (!(recipient instanceof SavingsAccount)) {
+                System.out.println("❌ Recipient account not found or is not a Savings Account.");
+                return;
             }
+
+            if (loggedAccount.transfer(recipient, amount)) {
+                System.out.println("✅ Internal transfer successful.");
+            } else {
+                System.out.println("❌ Transfer failed. Insufficient funds or limit exceeded.");
+            }
+
 
         } else if (transferType == 2) { // External Transfer
             // Get recipient Bank ID instead of name
-            Field<Integer, Integer> recipientBankField = new Field<Integer, Integer>("Recipient Bank ID", Integer.class, 1, new Main.Field.IntegerFieldValidator());
+            Field<Integer, Integer> recipientBankField = new Field<Integer, Integer>("Recipient Bank ID", Integer.class, 1, new Field.IntegerFieldValidator());
             recipientBankField.setFieldValue("Enter recipient bank ID: ");
             int recipientBankId = recipientBankField.getFieldValue();
 
-            Optional<Bank> recipientBank = BankLauncher.getBanks().stream()
-                    .filter(b -> b.getBankId().equals(recipientBankId))
-                    .findFirst();
-
-            if (recipientBank.isPresent()) {
-                Optional<Account> recipient = recipientBank.get().getBankAccount(recipientAccountNum);
-
-                if (recipient.isPresent()) {
-                    double totalAmount = amount + loggedAccount.getBank().getProcessingFee(); // Add fee
-
-                    if (loggedAccount.transfer(recipientBank.get(), recipient.get(), amount)) {
-                        System.out.println("✅ External transfer successful. Processing fee of $" +
-                                loggedAccount.getBank().getProcessingFee() + " applied.");
-                    } else {
-                        System.out.println("❌ Transfer failed. Insufficient funds or limit exceeded.");
-                    }
-                } else {
-                    System.out.println("❌ Recipient account not found in the selected bank.");
+            Bank recipientBank = null;
+            for (Bank bank : BankLauncher.getBanks()) {
+                if (bank.getBankId() == recipientBankId) {  // ✅ Use == for primitive int comparison
+                    recipientBank = bank;
+                    break;
                 }
-            } else {
-                System.out.println("❌ Recipient bank not found.");
             }
+
+            if (recipientBank == null) {
+                System.out.println("❌ Recipient bank not found.");
+                return;
+            }
+
+            Account recipient = recipientBank.getBankAccount(recipientAccountNum);
+
+            if (!(recipient instanceof SavingsAccount)) {
+                System.out.println("❌ Recipient account not found or is not a Savings Account.");
+                return;
+            }
+
+            if (loggedAccount.transfer(recipientBank, recipient, amount)) {
+                System.out.println("✅ External transfer successful. Processing fee of $" +
+                        loggedAccount.getBank().getProcessingFee() + " applied.");
+            } else {
+                System.out.println("❌ Transfer failed. Insufficient funds or limit exceeded.");
+            }
+
         } else {
             System.out.println("❌ Invalid selection.");
         }
