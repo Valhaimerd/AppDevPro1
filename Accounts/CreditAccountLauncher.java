@@ -1,8 +1,7 @@
-package Main;
+package Accounts;
 
-import Accounts.CreditAccount;
-import Accounts.SavingsAccount;
 import Bank.Bank;
+import Main.Main;
 
 /**
  * CreditAccountLauncher handles user interactions for Credit Accounts,
@@ -43,10 +42,10 @@ public class CreditAccountLauncher {
      * Handles the credit payment process.
      */
     public static void creditPaymentProcess() {
-        Field<String, Integer> recipientField = new Field<String, Integer>("Recipient Account Number", String.class, 5, new Field.StringFieldLengthValidator());
+        Field<String, Integer> recipientField = new Field<String, Integer>("Recipient Account Number", String.class, 5, new Main.Field.StringFieldLengthValidator());
         recipientField.setFieldValue("Enter recipient Savings Account number: ");
 
-        Field<Double, Double> amountField = new Field<Double, Double>("Payment Amount", Double.class, 1.0, new Field.DoubleFieldValidator());
+        Field<Double, Double> amountField = new Field<Double, Double>("Payment Amount", Double.class, 1.0, new Main.Field.DoubleFieldValidator());
         amountField.setFieldValue("Enter payment amount: ");
 
         String recipientAccountNum = recipientField.getFieldValue();
@@ -71,7 +70,7 @@ public class CreditAccountLauncher {
      * Handles the credit recompense process.
      */
     public static void creditRecompenseProcess() {
-        Field<Double, Double> amountField = new Field<Double, Double>("Recompense Amount", Double.class, 1.0, new Field.DoubleFieldValidator());
+        Field<Double, Double> amountField = new Field<Double, Double>("Recompense Amount", Double.class, 1.0, new Main.Field.DoubleFieldValidator());
         amountField.setFieldValue("Enter recompense amount: ");
 
         double amount = amountField.getFieldValue();

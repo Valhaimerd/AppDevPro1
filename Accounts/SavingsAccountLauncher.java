@@ -1,8 +1,7 @@
-package Main;
+package Accounts;
 
-import Accounts.Account;
-import Accounts.SavingsAccount;
 import Bank.Bank;
+import Main.Main;
 
 import java.util.Optional;
 
@@ -46,7 +45,7 @@ public class SavingsAccountLauncher {
      * Handles the deposit process.
      */
     public static void depositProcess() {
-        Field<Double, Double> amountField = new Field<Double, Double>("Deposit Amount", Double.class, 1.0, new Field.DoubleFieldValidator());
+        Field<Double, Double> amountField = new Field<Double, Double>("Deposit Amount", Double.class, 1.0, new Main.Field.DoubleFieldValidator());
         amountField.setFieldValue("Enter deposit amount: ");
 
         double amount = amountField.getFieldValue();
@@ -61,7 +60,7 @@ public class SavingsAccountLauncher {
      * Handles the withdrawal process.
      */
     public static void withdrawProcess() {
-        Field<Double, Double> amountField = new Field<Double, Double>("Withdrawal Amount", Double.class, 1.0, new Field.DoubleFieldValidator());
+        Field<Double, Double> amountField = new Field<Double, Double>("Withdrawal Amount", Double.class, 1.0, new Main.Field.DoubleFieldValidator());
         amountField.setFieldValue("Enter withdrawal amount: ");
 
         double amount = amountField.getFieldValue();
@@ -86,12 +85,12 @@ public class SavingsAccountLauncher {
         int transferType = Main.getOption();
 
         // Get recipient account number
-        Field<String, Integer> recipientField = new Field<String, Integer>("Recipient Account Number", String.class, 5, new Field.StringFieldLengthValidator());
+        Field<String, Integer> recipientField = new Field<String, Integer>("Recipient Account Number", String.class, 5, new Main.Field.StringFieldLengthValidator());
         recipientField.setFieldValue("Enter recipient account number: ");
         String recipientAccountNum = recipientField.getFieldValue();
 
         // Get transfer amount
-        Field<Double, Double> amountField = new Field<Double, Double>("Transfer Amount", Double.class, 1.0, new Field.DoubleFieldValidator());
+        Field<Double, Double> amountField = new Field<Double, Double>("Transfer Amount", Double.class, 1.0, new Main.Field.DoubleFieldValidator());
         amountField.setFieldValue("Enter transfer amount: ");
         double amount = amountField.getFieldValue();
 
@@ -110,7 +109,7 @@ public class SavingsAccountLauncher {
 
         } else if (transferType == 2) { // External Transfer
             // Get recipient Bank ID instead of name
-            Field<Integer, Integer> recipientBankField = new Field<Integer, Integer>("Recipient Bank ID", Integer.class, 1, new Field.IntegerFieldValidator());
+            Field<Integer, Integer> recipientBankField = new Field<Integer, Integer>("Recipient Bank ID", Integer.class, 1, new Main.Field.IntegerFieldValidator());
             recipientBankField.setFieldValue("Enter recipient bank ID: ");
             int recipientBankId = recipientBankField.getFieldValue();
 
