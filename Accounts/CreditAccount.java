@@ -74,7 +74,7 @@ public class CreditAccount extends Account implements Payment, Recompense {
      * @throws IllegalArgumentException If trying to pay to another CreditAccount.
      */
     public boolean pay(Account recipient, double amount) {
-        if (!(recipient instanceof SavingsAccount)) {
+        if (!(recipient instanceof SavingsAccount savingsRecipient)) {
             throw new IllegalArgumentException("Credit Accounts can only pay to Savings Accounts.");
         }
 
@@ -88,7 +88,6 @@ public class CreditAccount extends Account implements Payment, Recompense {
         adjustLoanAmount(amount);
 
         // Add the paid amount to the recipient's balance
-        SavingsAccount savingsRecipient = (SavingsAccount) recipient;
         savingsRecipient.adjustAccountBalance(amount);
 
         // Log the transaction for both accounts
