@@ -30,7 +30,7 @@ public class AccountLauncher {
         Main.setOption();
 
         int accountTypeOption = Main.getOption();
-        Class<? extends Account> accountType = null;
+        Class<? extends Account> accountType;
 
         switch (accountTypeOption) {
             case 1 -> accountType = CreditAccount.class;
