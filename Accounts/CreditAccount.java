@@ -17,12 +17,12 @@ public class CreditAccount extends Account implements Payment, Recompense {
      * @param accountNumber The unique account number.
      * @param ownerFname Owner's first name.
      * @param ownerLname Owner's last name.
-     * @param email       Owner's email address.
+     * @param ownerEmail       Owner's email address.
      * @param pin         Security PIN for authentication.
      */
-    public CreditAccount(Bank bank, String accountNumber, String ownerFname, String ownerLname,
-                         String email, String pin) {
-        super(bank, accountNumber, ownerFname, ownerLname, email, pin);
+    public CreditAccount(Bank bank, String accountNumber, String pin, String ownerFname,
+                         String ownerLname, String ownerEmail) {
+        super(bank, accountNumber, pin, ownerFname, ownerLname, ownerEmail);
         this.loanBalance = 0.0; // Start with no credit used
     }
 
@@ -115,18 +115,10 @@ public class CreditAccount extends Account implements Payment, Recompense {
 
         // Deduct from the loan balance and log the recompense
         adjustLoanAmount(-amount);
-        addNewTransaction(accountNumber, Transaction.Transactions.COMPENSATION,
-                "Recompensed $" + String.format("%.2f", amount) + " to the bank.");
-
         return true;
     }
 
-    /**
-     * Retrieves the current loan balance.
-     *
-     * @return The outstanding loan amount.
-     */
-    public double getLoanBalance() {
-        return loanBalance;
+    public double getLoan() {
+        return this.loanBalance;
     }
 }

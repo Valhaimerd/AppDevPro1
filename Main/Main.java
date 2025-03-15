@@ -1,6 +1,8 @@
 package Main;
 
-import Bank.Bank;
+import Accounts.AccountLauncher;
+import Accounts.IllegalAccountType;
+import Bank.*;
 
 import java.util.Scanner;
 
@@ -12,16 +14,14 @@ public class Main
      * Option field used when selection options during menu prompts. Do not create a different
      * option variable in menus. Just use this instead. <br>
      * As to how to utilize Field objects properly, refer to the following:
-     * 
+     *
      * @see #prompt(String, boolean)
      * @see #setOption() How Field objects are used.
      */
     public static Field<Integer, Integer> option = new Field<Integer, Integer>("Option",
             Integer.class, -1, new Field.IntegerFieldValidator());
 
-    public static void main(String[] args)
-    {
-        BankLauncher bankLauncher = new BankLauncher();
+    public static void main(String[] args) throws IllegalAccountType {
 
         while (true)
         {
@@ -63,7 +63,6 @@ public class Main
             // Create New Bank
             else if (getOption() == 3)
             {
-                // TODO: Complete this portion...
                 showMenuHeader("Create New Bank");
                 BankLauncher.createNewBank();
             }
@@ -83,7 +82,7 @@ public class Main
      * Show menu based on index given. <br>
      * Refer to Menu enum for more info about menu indexes. <br>
      * Use this method if you want a single menu option every line.
-     * 
+     *
      * @param menuIdx Main.Menu index to be shown
      */
     public static void showMenu(int menuIdx)
@@ -94,7 +93,7 @@ public class Main
     /**
      * Show menu based on index given. <br>
      * Refer to Menu enum for more info about menu indexes.
-     * 
+     *
      * @param menuIdx Main.Menu index to be shown
      * @param inlineTexts Number of menu options in a single line. Set to 1 if you only want a
      *        single menu option every line.
@@ -127,7 +126,7 @@ public class Main
     /**
      * Prompt some input to the user. Only receives on non-space containing String. This string can
      * then be parsed into targeted data type using DataTypeWrapper.parse() method.
-     * 
+     *
      * @param phrase Prompt to the user.
      * @param inlineInput A flag to ask if the input is just one entire String or receive an entire
      *        line input. <br>
@@ -150,7 +149,7 @@ public class Main
 
     /**
      * Prompts user to set an option based on menu outputted.
-     * 
+     *
      * @throws NumberFormatException May happen if the user attempts to input something other than
      *         numbers.
      */
@@ -169,7 +168,7 @@ public class Main
 
     /**
      * Used for printing the header whenever a new menu is accessed.
-     * 
+     *
      * @param menuTitle Title of the menu to be outputted.
      */
     public static void showMenuHeader(String menuTitle)
