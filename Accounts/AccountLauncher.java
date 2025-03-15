@@ -18,7 +18,7 @@ public class AccountLauncher {
     /**
      * Initializes the account login process.
      */
-    public void accountLogin() {
+    public void accountLogin() throws IllegalAccountType {
         if (assocBank == null) {
             System.out.println("Bank selection failed. Please try again.");
             return;
