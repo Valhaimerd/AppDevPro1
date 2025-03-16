@@ -5,27 +5,28 @@ Funtionalities:
     - 
     
 
-ADDED METHODS/FUNCTIONS
-//Account.java
-**getTransactionsInfo()**
-**getOwnerFullName()**
+**ADDED METHODS/FUNCTIONS**
 
-//AccountLauncher.java
-**getAssocBank()**
+###**Account.java**
 
-//CreditAccount.java
-**pay()**
-**recompense()**
+1. *getTransactionsInfo()* 	- 
 
-//SavingsAccount.java
+2. *getOwnerFullName()* 	- 
 
 
-We decided to add test files to test if our program was running properly and calling the right functions/methods.
-List of Files Added:
-**TransactionTest**
-    - 
-**BankTest**
-    - 
+###**AccountLauncher.java**
+
+1. *getAssocBank()* 	- 
+
+
+###**CreditAccount.java**
+
+1. *pay()* 	- 
+
+2. *recompense()* 	-
+
+
+###**SavingsAccount.java**
 
 
 Note: Will add more details later.
