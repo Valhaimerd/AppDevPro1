@@ -1,20 +1,36 @@
 package Data;
 
-import Services.BankService;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class DatabaseSeeder {
+    private static final String DATABASE_PATH = "jdbc:sqlite:Data/banking_system.db";
+
     public static void insertSampleData() {
-        IDatabaseProvider databaseProvider = new SQLiteDatabaseProvider();
+        String insertBank = "INSERT INTO Bank (name) VALUES (?)";
+        String insertAccount = "INSERT INTO Account (bank_id, account_number, balance, account_type) VALUES (?, ?, ?, ?)";
 
-        BankDAO bankDAO = new BankDAO(databaseProvider);
-        AccountDAO accountDAO = new AccountDAO(databaseProvider);
-        AccountTypeDAO accountTypeDAO = new AccountTypeDAO();
+        try (Connection conn = DriverManager.getConnection(DATABASE_PATH);
+             PreparedStatement bankStmt = conn.prepareStatement(insertBank);
+             PreparedStatement accountStmt = conn.prepareStatement(insertAccount)) {
 
-        // Use service instead of direct DAO
-        BankService bankService = new BankService(bankDAO);
-        bankService.createBank(1, "DDO", "12345678");
+            // Insert Bank
+            bankStmt.setString(1, "ABC Bank");
+            bankStmt.executeUpdate();
 
-        System.out.println("Sample data inserted successfully.");
+            // Insert Account (Assuming Bank ID = 1)
+            accountStmt.setInt(1, 1);
+            accountStmt.setString(2, "1234567890");
+            accountStmt.setDouble(3, 1000.00);
+            accountStmt.setString(4, "Savings");
+            accountStmt.executeUpdate();
+
+            System.out.println("Sample data inserted successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error inserting data: " + e.getMessage());
+        }
     }
 
     public static void main(String[] args) {
