@@ -1,4 +1,7 @@
-package Accounts;
+package Services;
+
+import Accounts.Account;
+import Accounts.IllegalAccountType;
 
 public interface Payment {
 

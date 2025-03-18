@@ -2,6 +2,7 @@ package Accounts;
 
 import java.util.ArrayList;
 import Bank.Bank;
+import Services.Transaction;
 
 /**
  * Abstract Account class that serves as a base for different account types.
