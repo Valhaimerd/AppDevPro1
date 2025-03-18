@@ -1,7 +1,6 @@
 package Accounts;
 
 import Bank.Bank;
-import Services.TransactionServices;
 
 /**
  * BusinessAccount class representing a business credit account with higher limits
@@ -9,7 +8,6 @@ import Services.TransactionServices;
  */
 public class BusinessAccount extends CreditAccount {
 
-    private final TransactionServices transactionService = new TransactionServices();
     private static final double BUSINESS_CREDIT_LIMIT_MULTIPLIER = 2.0; // Business credit is usually higher
 
     /**
@@ -26,12 +24,6 @@ public class BusinessAccount extends CreditAccount {
     public BusinessAccount(Bank bank, String accountNumber, String ownerFname, String ownerLname,
                            String email, String pin, double initialLoan) {
         super(bank, accountNumber, ownerFname, ownerLname, email, pin);
-
-        if (initialLoan > 0 && canBusinessCredit(initialLoan)) {
-            super.adjustLoanAmount(initialLoan);
-        } else {
-            System.out.println("⚠️ Initial loan amount exceeds business credit limit.");
-        }
     }
 
     /**
@@ -42,6 +34,7 @@ public class BusinessAccount extends CreditAccount {
     public double getBusinessCreditLimit() {
         return super.getBank().getCreditLimit() * BUSINESS_CREDIT_LIMIT_MULTIPLIER;
     }
+
     /**
      * Determines whether the business account can take additional credit.
      *
@@ -59,17 +52,30 @@ public class BusinessAccount extends CreditAccount {
      * @param amount    The amount to pay.
      * @return True if successful, false otherwise.
      */
-    public boolean pay(Account recipient, double amount) throws IllegalAccountType {
+    @Override
+    public boolean pay(Account recipient, double amount) {
         if (!(recipient instanceof SavingsAccount savingsRecipient)) {
             throw new IllegalArgumentException("Business accounts can only pay to Savings Accounts.");
         }
 
-        if (!canBusinessCredit(amount)) { // Business accounts may have higher limits
+        if (!canBusinessCredit(amount)) {
             System.out.println("Payment failed: Business credit limit exceeded.");
             return false;
         }
 
-        return transactionService.creditPayment(this, savingsRecipient, amount);
+        updateLoan(amount); // Increase loan balance (business payments are credit-based)
+
+        savingsRecipient.adjustAccountBalance(amount);
+
+        // Log the transaction
+        addNewTransaction(recipient.getAccountNumber(), Transaction.Transactions.FundTransfer,
+                String.format("Paid $%.2f to %s (Business Transaction)", amount, recipient.getAccountNumber()));
+
+        savingsRecipient.addNewTransaction(getAccountNumber(), Transaction.Transactions.FundTransfer,
+                String.format("Received $%.2f from Business Account %s", amount, getAccountNumber()));
+
+        System.out.println("Business payment successful. New loan balance: $" + getLoan());
+        return true;
     }
 
     /**
@@ -79,22 +85,28 @@ public class BusinessAccount extends CreditAccount {
      * @return True if successful, false otherwise.
      */
     @Override
-    public boolean recompense(double amount) throws IllegalAccountType {
-        return transactionService.recompense(this, amount);
-    }
-
-    @Override
-    public void adjustLoanAmount(double amount) {
-        double currentLoan = getLoan();
-        double newLoan = currentLoan + amount;
-
-        if (newLoan > getBusinessCreditLimit()) {
-            System.out.println("❌ Loan adjustment failed: Exceeds business credit limit.");
-            return;
+    public boolean recompense(double amount) {
+        if (amount <= 0 || amount > getLoan()) {
+            return false; // Invalid amount or exceeding owed loan
         }
 
-        super.adjustLoanAmount(amount);
-        System.out.println("✅ Loan successfully adjusted. New Loan: " + getLoan());
+        updateLoan(-amount); // Deduct from loan balance
+
+        // Log recompense transaction
+        addNewTransaction(getAccountNumber(), Transaction.Transactions.Recompense,
+                String.format("Recompensed $%.2f to the bank from Business Account.", amount));
+
+        return true;
     }
+    @Override
+    public String toString() {
+        return "BusinessAccount{" +
+                "Account Number='" + getAccountNumber() + '\'' +
+                ", Owner='" + getOwnerFullname() + '\'' +
+                ", Loan Amount=" + getLoan() + // Use the getter method
+                ", Business Credit Limit=" + getBusinessCreditLimit() +
+                '}';
+    }
+
 
 }

@@ -78,6 +78,29 @@ public class AccountLauncher {
         }
     }
 
+//    /**
+//     * Allows the user to select a bank before logging into an account.
+//     *
+//     * @return The selected Bank instance.
+//     */
+//    public static Bank selectBank() {
+//        if (BankLauncher.bankSize() == 0) {
+//            System.out.println("No banks are available. Please create a bank first.");
+//            return null;
+//        }
+//
+//        Main.showMenuHeader("Select a Bank");
+//        BankLauncher.showBanksMenu();
+//
+//        String bankName = Main.prompt("Enter Bank Name: ", false);
+//        Bank selectedBank = BankLauncher.getBank(Bank.BANK_NAME_COMPARATOR, new Bank(null, bankName));
+//
+//        if (selectedBank == null) {
+//            System.out.println("Bank not found. Please try again.");
+//        }
+//        return selectedBank;
+//    }
+
     /**
      * Allows the user to select a bank before logging into an account.
      *

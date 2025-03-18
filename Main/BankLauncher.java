@@ -56,12 +56,39 @@ public class BankLauncher {
         if (!banks.contains(b)) {
             banks.add(b);
             System.out.println("Bank successfully added: " + b.getBankName());
+        } else {
+            System.out.println("Bank already exists.");
         }
     }
 
     /**
      * Handles the bank login process.
      //     */
+//    public static void bankLogin() {
+//        if (banks.isEmpty()) {
+//            System.out.println("No banks registered yet. Create a new bank first.");
+//            return;
+//        }
+//
+//        System.out.println("Available Banks:");
+//        for (int i = 0; i < banks.size(); i++) {
+//            System.out.println("[" + (i + 1) + "] " + banks.get(i).getBankName());
+//        }
+//
+//        Main.showMenuHeader("Enter Bank Option: ");
+//        Main.setOption();
+//
+//        int bankIndex = Main.getOption();
+//        Optional<Bank> bank = getBankByIndex(bankIndex);
+//
+//        if (bank.isPresent()) {
+//            setLogSession(bank.get());
+//            System.out.println("Successfully logged into " + loggedBank.getBankName());
+//            bankInit();
+//        } else {
+//            System.out.println("Bank not found. Please try again.");
+//        }
+//    }
 
     public static void bankLogin() {
         if (banks.isEmpty()) {
@@ -72,7 +99,7 @@ public class BankLauncher {
         Main.showMenuHeader("Bank Login Options");
         System.out.println("[1] Login by Bank Name");
         System.out.println("[2] Login by Bank ID");
-        System.out.println("[3] Login by Bank Email");
+        System.out.println("[3] Login by Bank Credentials");
         Main.setOption();
 
         Bank selectedBank = null;
@@ -173,32 +200,10 @@ public class BankLauncher {
             case 2 -> displayAccounts(SavingsAccount.class);
             case 3 -> displayAccounts(StudentAccount.class);
             case 4 -> displayAccounts(BusinessAccount.class);
-            case 5 -> searchAccount();
-            case 6 -> displayAllAccounts();
+            case 5 -> displayAllAccounts();
             default -> System.out.println("Invalid option. Try again.");
         }
     }
-
-    /**
-     * Searches for an account by its account number across all registered banks.
-     * If found, displays the account details; otherwise, notifies the user that
-     * the account was not found.
-     */
-    public static void searchAccount() {
-        // Prompt user to enter an account number
-        String accountNum = Main.prompt("Enter account number: ", false);
-
-        // Search for the account using findAccount method
-        Optional<Account> account = findAccount(accountNum);
-
-        // Display account details if found, otherwise inform the user
-        if (account.isPresent()) {
-            System.out.println("Account found: " + account.get());
-        } else {
-            System.out.println("Account not found.");
-        }
-    }
-
 
     /**
      * Display all accounts registered under the logged-in bank.
@@ -268,25 +273,8 @@ public class BankLauncher {
         bankIdField.setFieldValue("Enter Bank ID: ");
 
         Bank newBank = new Bank(bankIdField.getFieldValue(), bankNameField.getFieldValue());
-        // Check if the bank already exists before adding
-        if (isDuplicateBank(newBank)) {
-            System.out.println("A bank with the same ID or Name already exists. Please try again.");
-        } else {
-            addBank(newBank);  // Uses the addBank() method
-        }
-    }
-
-    /**
-     * Checks if a bank with the same ID or name already exists in the system.
-     *
-     * @param newBank The bank object to check for duplicates.
-     * @return true if a bank with the same ID or name exists, false otherwise.
-     */
-    private static boolean isDuplicateBank(Bank newBank) {
-        return banks.stream().anyMatch(bank ->
-                bank.getBankId() == newBank.getBankId() ||
-                        bank.getBankName().equalsIgnoreCase(newBank.getBankName())
-        );
+        banks.add(newBank);
+        System.out.println("Bank created successfully: " + newBank);
     }
 
     /**
