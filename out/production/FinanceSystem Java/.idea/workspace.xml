@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="a321b0a9-621d-40fe-b1e7-b4e5aaaf17d6" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../../.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.idea/libraries/Project_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Accounts/Account.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Accounts/BusinessAccount.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Accounts/CreditAccount.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Accounts/IllegalAccountType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Accounts/SavingsAccount.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Accounts/StudentAccount.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Bank/Bank.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Data/DatabaseQuery.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Data/DatabaseSchema.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Data/DatabaseSeeder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../FinanceSystem Java.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Main/AccountLauncher.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Main/AccountLauncher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Main/BankLauncher.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Main/BankLauncher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Main/Field.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Main/FieldValidator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Main/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Main/Menu.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/apiguardian-api-1.1.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/junit-jupiter-5.8.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/junit-jupiter-api-5.8.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/junit-jupiter-engine-5.8.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/junit-jupiter-params-5.8.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/junit-platform-commons-1.8.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/junit-platform-engine-1.8.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lib/opentest4j-1.2.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Project_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Accounts/Account.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Accounts/BusinessAccount.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Accounts/CreditAccount.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Accounts/IllegalAccountType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Accounts/SavingsAccount.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Accounts/StudentAccount.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bank/Bank.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FinanceSystem Java.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Main/AccountLauncher.class" beforeDir="false" afterPath="$PROJECT_DIR$/Main/AccountLauncher.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Main/BankLauncher.class" beforeDir="false" afterPath="$PROJECT_DIR$/Main/BankLauncher.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Main/Field$DoubleFieldValidator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Main/Field$IntegerFieldValidator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Main/Field$PinFieldValidator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Main/Field$StringFieldLengthValidator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Main/Field$StringFieldValidator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Main/Field.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Main/FieldValidator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Main/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Main/Menu.class" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "Kenhub01"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Valhaimerd/AppDevPro1.git",
+    "accountId": "87e6af76-bc50-4d93-8da4-36f5cb95a0b1"
+  }
+}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="2uSBduT5B1GtCVUvoyjK14jREiE" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "alvarez",
+    "kotlin-language-version-configured": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a321b0a9-621d-40fe-b1e7-b4e5aaaf17d6" name="Changes" comment="" />
+      <created>1742232187639</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1742232187639</updated>
+    </task>
+    <servers />
+  </component>
+</project>
