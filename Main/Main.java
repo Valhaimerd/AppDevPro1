@@ -2,6 +2,8 @@ package Main;
 
 import Launchers.*;
 import Accounts.IllegalAccountType;
+import Bank.*;
+import Launchers.BankLauncher;
 
 import java.util.Scanner;
 
@@ -21,7 +23,7 @@ public class Main
             Integer.class, -1, new Field.IntegerFieldValidator());
 
     public static void main(String[] args) throws IllegalAccountType {
-
+        BankLauncher.loadBanksFromDatabase();
         while (true)
         {
             showMenuHeader("Main Menu");

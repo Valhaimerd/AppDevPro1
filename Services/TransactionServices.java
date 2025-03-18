@@ -21,7 +21,7 @@ public class TransactionServices {
             }
         }
 
-        if (!senderAcc.hasEnoughBalance(amount)) {
+        if (senderAcc.hasEnoughBalance(amount)) {
             senderAcc.insufficientBalance();
             return false;
         }
@@ -37,8 +37,6 @@ public class TransactionServices {
         return true;
     }
 
-
-
     /**
      * Handles fund transfers between different banks.
      */
@@ -49,7 +47,7 @@ public class TransactionServices {
 
         double totalAmount = amount + senderAcc.getBank().getProcessingFee();
 
-        if (!senderAcc.hasEnoughBalance(totalAmount)) {
+        if (senderAcc.hasEnoughBalance(totalAmount)) {
             senderAcc.insufficientBalance();
             return false;
         }
@@ -97,7 +95,7 @@ public class TransactionServices {
             return false;
         }
 
-        if (!savingsAcc.hasEnoughBalance(amount)) {
+        if (savingsAcc.hasEnoughBalance(amount)) {
             savingsAcc.insufficientBalance();
             return false;
         }
@@ -109,29 +107,6 @@ public class TransactionServices {
         return true;
     }
 
-    /**
-     * Handles credit payments from a CreditAccount to a SavingsAccount.
-     */
-//    public synchronized boolean creditPayment(Account creditAcc, Account savingsAcc, double amount) throws IllegalAccountType {
-//        if (!(creditAcc instanceof CreditAccount creditAccount) || !(savingsAcc instanceof SavingsAccount savingsAccount)) {
-//            throw new IllegalAccountType("❌ Credit payments can only be made from CreditAccount to SavingsAccount.");
-//        }
-//
-//        if (!creditAccount.canCredit(amount)) {
-//            System.out.println("❌ Payment failed: Not enough credit available.");
-//            return false;
-//        }
-//
-//        creditAccount.adjustLoanAmount(amount);
-//        savingsAccount.adjustAccountBalance(amount);
-//
-//        creditAccount.addNewTransaction(creditAccount.getAccountNumber(), Transaction.Transactions.PAYMENT,
-//                "Paid $" + amount + " to " + savingsAccount.getAccountNumber());
-//        savingsAccount.addNewTransaction(savingsAccount.getAccountNumber(), Transaction.Transactions.RECEIVE_TRANSFER,
-//                "Received $" + amount + " from Credit Account " + creditAccount.getAccountNumber());
-//
-//        return true;
-//    }
     public synchronized boolean creditPayment(Account creditAcc, Account savingsAcc, double amount) throws IllegalAccountType {
         if (!(creditAcc instanceof CreditAccount creditAccount) || !(savingsAcc instanceof SavingsAccount savingsAccount)) {
             throw new IllegalAccountType("❌ Credit payments can only be made from CreditAccount to SavingsAccount.");

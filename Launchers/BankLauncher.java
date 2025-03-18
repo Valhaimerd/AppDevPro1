@@ -9,15 +9,22 @@ import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
 
+import Services.ServiceProvider;
+import Services.BankService;
 /**
  * BankLauncher handles interactions with the bank module, allowing login,
  * account management, and bank creation.
  */
 public class BankLauncher {
-
+    private static final BankService bankService = ServiceProvider.getBankService();
     private final static ArrayList<Bank> banks = new ArrayList<>();
     private static Bank loggedBank;
 
+    public static void loadBanksFromDatabase() {
+        banks.clear();  // Clear any old data
+        banks.addAll(BankService.fetchAllBanksStatic());  // Add fresh data from DB
+        System.out.println("Loaded " + banks.size() + " banks from the database.");
+    }
     /**
      * Initializes the banking module, allowing users to log in or create a new bank.
      */
@@ -138,6 +145,7 @@ public class BankLauncher {
         Main.showMenuHeader("Show Accounts");
         Main.showMenu(Menu.ShowAccounts.menuIdx);
         Main.setOption();
+        loggedBank.loadAccountsFromDatabase();
 
         switch (Main.getOption()) {
             case 1 -> loggedBank.showAccounts(CreditAccount.class);
@@ -165,7 +173,6 @@ public class BankLauncher {
         System.out.println("Showing " + (accountType == CreditAccount.class ? "Credit" : "Savings") + " Accounts:");
         loggedBank.showAccounts(accountType);
     }
-
 
     /**
      * Handles the creation of a new account within the currently logged-in bank.
@@ -214,6 +221,7 @@ public class BankLauncher {
         }
         loggedBank = null;
     }
+    
     /**
      * Creates a new bank and registers it in the system.
      */
@@ -265,6 +273,7 @@ public class BankLauncher {
                     creditLimitField.getFieldValue(),
                     processingFeeField.getFieldValue()
             );
+
         } else {
             // Create Bank with default values
             newBank = new Bank(
@@ -278,6 +287,14 @@ public class BankLauncher {
         Bank sameName = getBank(new Bank.BankComparator(), newBank);
         Bank samePasscode = getBank(new Bank.BankCredentialsComparator(), newBank);
         if (samePasscode == null || sameName == null) {
+            bankService.createBank(
+                    bankSize(),
+                    bankNameField.getFieldValue(),
+                    bankPasscodeField.getFieldValue(),
+                    depositLimitField.getFieldValue(),
+                    withdrawLimitField.getFieldValue(),
+                    creditLimitField.getFieldValue(),
+                    processingFeeField.getFieldValue()
             addBank(newBank);
             System.out.println("✅ Bank created successfully: " + newBank);
             return;
