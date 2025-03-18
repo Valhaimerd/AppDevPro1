@@ -4,27 +4,47 @@ Banking System - This program
 Funtionalities:
     - 
     
-
 ADDED METHODS/FUNCTIONS
-//Account.java
-**getTransactionsInfo()**
-**getOwnerFullName()**
 
-//AccountLauncher.java
-**getAssocBank()**
+###**Account.java**
 
-//CreditAccount.java
-**pay()**
-**recompense()**
+1. *getTransactionsInfo()*
+    -
+   
+3. *getOwnerFullName()*
+     -
+   
+###**AccountLauncher.java**
 
-//SavingsAccount.java
+1. *getAssocBank()*     - 
 
+###**CreditAccount.java**
 
-We decided to add test files to test if our program was running properly and calling the right functions/methods.
-List of Files Added:
-**TransactionTest**
+1. *pay()* 
     - 
-**BankTest**
+2. *recompense()*
+    -
+
+###**SavingsAccount.java**
+
+1. transfer(account: Account, amount: double) 
+    - 
+2. transfer(bank: Bank, account: Account, amount: double)
+    - 
+3. cashDeposit()
+    - 
+4. withdrawal()
+    - 
+
+Bank.java/
+
+1. accountNumberCounter()
+    -
+   
+2. ACCOUNT_NUMBERS: Set<String>sortAccounts(): void
+    -
+    
+3. getBankName(): String
     - 
 
 
