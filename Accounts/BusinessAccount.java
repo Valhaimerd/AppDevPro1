@@ -1,6 +1,7 @@
 package Accounts;
 
 import Bank.Bank;
+import Services.Transaction;
 
 /**
  * BusinessAccount class representing a business credit account with higher limits

@@ -1,6 +1,7 @@
 package Accounts;
 
 import Bank.Bank;
+import Services.Transaction;
 
 public class StudentAccount extends SavingsAccount {
     private static final double MAX_WITHDRAWAL_LIMIT = 1000.00;

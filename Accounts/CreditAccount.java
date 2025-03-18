@@ -1,6 +1,9 @@
 package Accounts;
 
 import Bank.Bank;
+import Services.Payment;
+import Services.Recompense;
+import Services.Transaction;
 
 /**
  * CreditAccount class representing a bank account that operates on credit.
