@@ -1,14 +1,16 @@
 package Accounts;
 
 import Bank.Bank;
+import Services.*;
 
 /**
  * SavingsAccount class representing a standard savings account with balance tracking.
  * It allows deposits, withdrawals, and fund transfers while enforcing banking rules.
  */
-public class SavingsAccount extends Account implements Withdrawal, Deposit, FundTransfer {
+public class SavingsAccount extends Account {
 
     private double balance;  // The current balance of the savings account
+    private final TransactionServices transactionService = new TransactionServices();
 
     /**
      * Constructor for SavingsAccount.
@@ -29,19 +31,6 @@ public class SavingsAccount extends Account implements Withdrawal, Deposit, Fund
             throw new IllegalArgumentException("Initial deposit cannot be negative.");
         }
         this.balance = balance;
-    }
-
-    /**
-     * Retrieves the account balance statement.
-     *
-     * @return The formatted balance statement.
-     */
-    public String getAccountBalanceStatement() {
-        return "SavingsAccount{" +
-                "Account Number='" + accountNumber + '\'' +
-                ", Owner='" + ownerFname + " " + ownerLname + '\'' +
-                ", Balance=$" + String.format("%.2f", balance) +
-                '}';
     }
 
     /**
@@ -79,18 +68,8 @@ public class SavingsAccount extends Account implements Withdrawal, Deposit, Fund
      * @param amount The amount to deposit.
      * @return True if deposit is successful, false otherwise.
      */
-    public boolean cashDeposit(double amount) {
-        if (amount > bank.getDepositLimit()) {
-            System.out.println("Deposit amount exceeds the bank's limit.");
-            return false;
-        }
-        this.adjustAccountBalance(amount);
-
-        // Ensure a transaction log is added for the deposit
-        this.addNewTransaction(this.getAccountNumber(), Transaction.Transactions.DEPOSIT,
-                "Deposited $" + amount);
-
-        return true;
+    public boolean cashDeposit(double amount) throws IllegalAccountType {
+        return transactionService.deposit(this, amount);
     }
 
     /**
@@ -99,18 +78,8 @@ public class SavingsAccount extends Account implements Withdrawal, Deposit, Fund
      * @param amount The amount to withdraw.
      * @return True if withdrawal is successful, false otherwise.
      */
-    public boolean withdrawal(double amount) {
-        if (amount <= 0 || amount > balance || amount > bank.getWithdrawLimit()) {
-            insufficientBalance();
-            return false; // Cannot withdraw more than available balance or withdrawal limit
-        }
-
-        // Adjust balance and log transaction
-        adjustAccountBalance(-amount);
-        addNewTransaction(accountNumber, Transaction.Transactions.WITHDRAWAL,
-                "Withdrew $" + String.format("%.2f", amount));
-
-        return true;
+    public boolean withdrawal(double amount) throws IllegalAccountType {
+        return transactionService.withdraw(this, amount);
     }
 
     /**
@@ -121,29 +90,9 @@ public class SavingsAccount extends Account implements Withdrawal, Deposit, Fund
      * @param recipient The recipient account.
      * @param amount    The amount to transfer.
      * @return True if the transfer was successful, false otherwise.
-     * @throws IllegalAccountType If attempting to transfer to a CreditAccount.
      */
     public boolean transfer(Account recipient, double amount) throws IllegalAccountType {
-        if (!(recipient instanceof SavingsAccount)) {
-            throw new IllegalAccountType("Cannot transfer funds to a CreditAccount.");
-        }
-
-        if (!hasEnoughBalance(amount) || amount <= 0 || amount > bank.getWithdrawLimit()) {
-            insufficientBalance();
-            return false; // Insufficient funds or exceeding withdrawal limit
-        }
-
-        // Deduct from sender and add to recipient
-        adjustAccountBalance(-amount);
-        ((SavingsAccount) recipient).adjustAccountBalance(amount);
-
-        // Log transactions for both accounts
-        addNewTransaction(recipient.getAccountNumber(), Transaction.Transactions.FUNDTRANSFER,
-                "Transferred $" + String.format("%.2f", amount) + " to " + recipient.getAccountNumber());
-        recipient.addNewTransaction(accountNumber, Transaction.Transactions.RECEIVE_TRANSFER,
-                "Received $" + String.format("%.2f", amount) + " from " + accountNumber);
-
-        return true;
+        return transactionService.transferFunds(this, recipient, amount);
     }
 
     /**
@@ -156,36 +105,23 @@ public class SavingsAccount extends Account implements Withdrawal, Deposit, Fund
      * @throws IllegalAccountType If attempting to transfer to a CreditAccount.
      */
     public boolean transfer(Bank recipientBank, Account recipient, double amount) throws IllegalAccountType {
-        if (!(recipient instanceof SavingsAccount)) {
-            throw new IllegalAccountType("Cannot transfer funds to a CreditAccount.");
-        }
-
-        double totalAmount = amount + bank.getProcessingFee(); // Ensure sender pays fee
-
-        if (!hasEnoughBalance(totalAmount) || amount <= 0 || totalAmount > bank.getWithdrawLimit()) {
-            insufficientBalance();
-            return false; // Insufficient funds or exceeding withdrawal limit
-        }
-
-        // Deduct full amount from sender including processing fee
-        adjustAccountBalance(-totalAmount);
-
-        // Credit only the transferred amount (not including fee) to recipient
-        ((SavingsAccount) recipient).adjustAccountBalance(amount);
-
-        // Log transactions for both accounts
-        addNewTransaction(recipient.getAccountNumber(), Transaction.Transactions.EXTERNAL_TRANSFER,
-                "Transferred $" + String.format("%.2f", amount) + " to " + recipient.getAccountNumber() +
-                        " at " + recipientBank.getName() + " (Fee: $" + bank.getProcessingFee() + ")");
-
-        recipient.addNewTransaction(accountNumber, Transaction.Transactions.RECEIVE_TRANSFER,
-                "Received $" + String.format("%.2f", amount) + " from " + accountNumber +
-                        " at " + bank.getName());
-
-        return true;
+        return transactionService.transferFunds(this, recipientBank, recipient, amount);
     }
 
     public double getAccountBalance() {
         return this.balance;
+    }
+
+    /**
+     * Retrieves the account balance statement.
+     *
+     * @return The formatted balance statement.
+     */
+    public String getAccountBalanceStatement() {
+        return "SavingsAccount{" +
+                "Account Number='" + "SA" + accountNumber + '\'' +
+                ", Owner='" + ownerFname + " " + ownerLname + '\'' +
+                ", Balance=$" + String.format("%.2f", balance) +
+                '}';
     }
 }
