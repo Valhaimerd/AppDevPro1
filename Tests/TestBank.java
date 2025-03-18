@@ -4,7 +4,7 @@ import Accounts.Account;
 import Accounts.CreditAccount;
 import Accounts.SavingsAccount;
 import Bank.Bank;
-import Launcher.BankLauncher;
+import Launchers.BankLauncher;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
