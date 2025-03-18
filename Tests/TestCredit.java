@@ -2,7 +2,7 @@ package Tests;
 
 import Accounts.CreditAccount;
 import Accounts.SavingsAccount;
-import Laucnher.BankLauncher;
+import Launcher.BankLauncher;
 import org.junit.Assert;
 import org.junit.Test;
 

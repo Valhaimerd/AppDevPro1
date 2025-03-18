@@ -1,4 +1,4 @@
-package Laucnher;
+package Launcher;
 
 import Accounts.Account;
 import Accounts.CreditAccount;

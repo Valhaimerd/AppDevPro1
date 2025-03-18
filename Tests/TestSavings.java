@@ -4,7 +4,7 @@ import Accounts.CreditAccount;
 import Accounts.IllegalAccountType;
 import Accounts.SavingsAccount;
 import Bank.Bank;
-import Laucnher.BankLauncher;
+import Launcher.BankLauncher;
 import org.junit.Assert;
 import org.junit.Test;
 

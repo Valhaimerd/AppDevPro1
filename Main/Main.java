@@ -1,9 +1,9 @@
 package Main;
 
-import Laucnher.AccountLauncher;
+import Launcher.AccountLauncher;
 import Accounts.IllegalAccountType;
 import Bank.*;
-import Laucnher.BankLauncher;
+import Launcher.BankLauncher;
 
 import java.util.Scanner;
 

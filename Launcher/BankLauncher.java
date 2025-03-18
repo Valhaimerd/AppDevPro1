@@ -1,4 +1,4 @@
-package Laucnher;
+package Launcher;
 
 import Accounts.*;
 import Bank.Bank;
