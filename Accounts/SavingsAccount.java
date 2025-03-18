@@ -40,7 +40,7 @@ public class SavingsAccount extends Account {
      * @return True if there is enough balance, false otherwise.
      */
     public boolean hasEnoughBalance(double amount) {
-        return balance >= amount;
+        return !(balance >= amount);
     }
 
     /**
@@ -68,7 +68,7 @@ public class SavingsAccount extends Account {
      * @param amount The amount to deposit.
      * @return True if deposit is successful, false otherwise.
      */
-    public boolean cashDeposit(double amount) throws IllegalAccountType {
+    public synchronized boolean cashDeposit(double amount) throws IllegalAccountType {
         return transactionService.deposit(this, amount);
     }
 
@@ -78,7 +78,7 @@ public class SavingsAccount extends Account {
      * @param amount The amount to withdraw.
      * @return True if withdrawal is successful, false otherwise.
      */
-    public boolean withdrawal(double amount) throws IllegalAccountType {
+    public synchronized boolean withdrawal(double amount) throws IllegalAccountType {
         return transactionService.withdraw(this, amount);
     }
 
@@ -91,7 +91,7 @@ public class SavingsAccount extends Account {
      * @param amount    The amount to transfer.
      * @return True if the transfer was successful, false otherwise.
      */
-    public boolean transfer(Account recipient, double amount) throws IllegalAccountType {
+    public synchronized boolean transfer(Account recipient, double amount) throws IllegalAccountType {
         return transactionService.transferFunds(this, recipient, amount);
     }
 
@@ -104,7 +104,7 @@ public class SavingsAccount extends Account {
      * @return True if the transfer was successful, false otherwise.
      * @throws IllegalAccountType If attempting to transfer to a CreditAccount.
      */
-    public boolean transfer(Bank recipientBank, Account recipient, double amount) throws IllegalAccountType {
+    public synchronized boolean transfer(Bank recipientBank, Account recipient, double amount) throws IllegalAccountType {
         return transactionService.transferFunds(this, recipientBank, recipient, amount);
     }
 

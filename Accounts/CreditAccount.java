@@ -65,7 +65,7 @@ public class CreditAccount extends Account implements Payment, Recompense {
      * @throws IllegalArgumentException If trying to pay to another CreditAccount.
      */
     @Override
-    public boolean pay(Account recipient, double amount) throws IllegalAccountType {
+    public synchronized boolean pay(Account recipient, double amount) throws IllegalAccountType {
         if (!(recipient instanceof SavingsAccount savingsRecipient)) {
             throw new IllegalArgumentException("Credit Accounts can only pay to Savings Accounts.");
         }
@@ -85,7 +85,7 @@ public class CreditAccount extends Account implements Payment, Recompense {
      * @param amount The amount to recompense.
      * @return True if successful, false otherwise.
      */
-    public boolean recompense(double amount) throws IllegalAccountType {
+    public synchronized boolean recompense(double amount) throws IllegalAccountType {
         return transactionService.recompense(this, amount);
     }
 
