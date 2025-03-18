@@ -1,9 +1,9 @@
 package Bank;
 
-import Accounts.Account;
-import Accounts.CreditAccount;
-import Accounts.SavingsAccount;
+import Accounts.*;
 import Main.Field;
+import Main.Main;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -52,6 +52,11 @@ public class Bank {
     }
 
     public <T extends Account> void showAccounts(Class<T> accountType) {
+        if (bankAccounts.isEmpty()) {
+            System.out.println("No account(s) exist..");
+            return;
+        }
+
         if (accountType == null) {
             for (Account account : bankAccounts) {
                 System.out.println(account);
@@ -60,7 +65,7 @@ public class Bank {
             System.out.println("Showing accounts of type: " + accountType.getSimpleName());
 
             for (Account account : bankAccounts) {
-                if (accountType.isInstance(account)) {
+                if (account.getClass().equals(accountType)) { // Fix: Use exact class matching
                     System.out.println(account);
                 }
             }
@@ -93,13 +98,13 @@ public class Bank {
         // Create fields with appropriate validation
         Field<String, Integer> accountNumberField = new Field<String, Integer>("Account Number", String.class, 5, new Field.StringFieldLengthValidator());
 
-        Field<String, Integer> pinField = new Field<String, Integer>("PIN", String.class, 3, new Field.StringFieldLengthValidator());
+        Field<String, Integer> pinField = new Field<String, Integer>("PIN", String.class, 4, new Field.PinFieldValidator());
 
         Field<String, String> firstNameField = new Field<String, String>("First Name", String.class, null, new Field.StringFieldValidator());
 
         Field<String, String> lastNameField = new Field<String, String>("Last Name", String.class, null, new Field.StringFieldValidator());
 
-        Field<String, String> emailField = new Field<String, String>("Email", String.class, null, new Field.StringFieldValidator());
+        Field<String, String> emailField = new Field<String, String>("Email", String.class, null, new Field.EmailFieldValidator());
 
 
         // Array of fields to prompt user input
@@ -119,6 +124,7 @@ public class Bank {
      * @return The newly created SavingsAccount.
      */
     public SavingsAccount createNewSavingsAccount() {
+        Main.showMenuHeader("Create New Savings Account");
         ArrayList<Field<?, ?>> accountData = createNewAccount();
         String accountNumber = (String) accountData.get(0).getFieldValue();
         String pin = (String) accountData.get(1).getFieldValue();
@@ -127,7 +133,7 @@ public class Bank {
         String email = (String) accountData.get(4).getFieldValue();
 
         // Use Main.prompt() instead of new Scanner(System.in)
-        double initialDeposit = Double.parseDouble(Main.Main.prompt("Enter Initial Deposit: ", true));
+        double initialDeposit = Double.parseDouble(Main.prompt("Enter Initial Deposit: ", true));
 
         SavingsAccount newAccount = new SavingsAccount(this, accountNumber, pin, firstName, lastName, email, initialDeposit);
         addNewAccount(newAccount);
@@ -140,6 +146,7 @@ public class Bank {
      * @return The newly created CreditAccount.
      */
     public CreditAccount createNewCreditAccount() {
+        Main.showMenuHeader("Create New Credit Account");
         ArrayList<Field<?, ?>> accountData = createNewAccount();
         String accountNumber = (String) accountData.get(0).getFieldValue();
         String pin = (String) accountData.get(1).getFieldValue();
@@ -151,6 +158,39 @@ public class Bank {
         addNewAccount(newAccount);
         return newAccount;
     }
+
+    public StudentAccount createNewStudentAccount() {
+        Main.showMenuHeader("Create New Students Account");
+        ArrayList<Field<?, ?>> accountData = createNewAccount();
+        String accountNumber = (String) accountData.get(0).getFieldValue();
+        String pin = (String) accountData.get(1).getFieldValue();
+        String firstName = (String) accountData.get(2).getFieldValue();
+        String lastName = (String) accountData.get(3).getFieldValue();
+        String email = (String) accountData.get(4).getFieldValue();
+
+        double initialDeposit = Double.parseDouble(Main.prompt("Enter Initial Deposit: ", true));
+
+        StudentAccount newAccount = new StudentAccount(this, accountNumber, firstName, lastName, email, pin, initialDeposit);
+        addNewAccount(newAccount);
+        return newAccount;
+    }
+
+    public BusinessAccount createNewBusinessAccount() {
+        Main.showMenuHeader("Create New Business Account");
+        ArrayList<Field<?, ?>> accountData = createNewAccount();
+        String accountNumber = (String) accountData.get(0).getFieldValue();
+        String pin = (String) accountData.get(1).getFieldValue();
+        String firstName = (String) accountData.get(2).getFieldValue();
+        String lastName = (String) accountData.get(3).getFieldValue();
+        String email = (String) accountData.get(4).getFieldValue();
+
+        double initialLoan = Double.parseDouble(Main.prompt("Enter Initial Loan Amount: ", true));
+
+        BusinessAccount newAccount = new BusinessAccount(this, accountNumber, firstName, lastName, email, pin, initialLoan);
+        addNewAccount(newAccount);
+        return newAccount;
+    }
+
 
     /**
      * Adds a new account to the bank if the account number is unique.
