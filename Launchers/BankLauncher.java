@@ -233,16 +233,9 @@ public class BankLauncher {
         Field<String, String> bankNameField = new Field<String, String>("Bank Name", String.class, null, new Field.StringFieldValidator());
         bankNameField.setFieldValue("Enter Bank Name: ", false);
 
-        String bankName = bankNameField.getFieldValue().trim();
-
         if (bankNameField.getFieldValue().isEmpty()) {
             System.out.println("❌ Error: Bank Name is required!");
             return; // Exit early
-        }
-
-        if (isBankNameRegistered(bankName)) {
-            System.out.println("❌ Error: A bank with this name already exists!");
-            return;
         }
 
         Field<String, Integer> bankPasscodeField = new Field<String, Integer>("Bank Passcode", String.class, 4, new Field.StringFieldLengthValidator());
@@ -295,10 +288,6 @@ public class BankLauncher {
         // Add Bank to the List
         addBank(newBank);
         System.out.println("✅ Bank created successfully: " + newBank);
-    }
-
-    public static boolean isBankNameRegistered(String bankName) {
-        return banks.stream().anyMatch(bank -> bank.getName().equalsIgnoreCase(bankName));
     }
 
     /**
