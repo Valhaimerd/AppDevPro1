@@ -1,6 +1,7 @@
-package Bank;
+package Laucnher;
 
 import Accounts.*;
+import Bank.Bank;
 import Main.*;
 
 import java.util.ArrayList;
