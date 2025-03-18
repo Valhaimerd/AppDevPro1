@@ -141,8 +141,22 @@ public class Field<T, E> {
 
         @Override
         public String validate(String value, String threshold) {
-            if(value.isEmpty()) {
+            if(value == null || value.trim().isEmpty()) {
                 return "Field cannot be empty!";
+            }
+            return null;
+        }
+    }
+
+    public static class EmailFieldValidator implements FieldValidator<String, String> {
+
+        @Override
+        public String validate(String value, String threshold) {
+            if(value == null || value.trim().isEmpty()) {
+                return "Email field cannot be empty!";
+            }
+            if (!value.contains("@")) {
+                return "Invalid email format. Email must contain '@'.";
             }
             return null;
         }
@@ -167,6 +181,7 @@ public class Field<T, E> {
     public static class PinFieldValidator implements FieldValidator<String, Integer> {
         @Override
         public String validate(String value, Integer threshold) {
+
             if (value == null || !value.matches("\\d{" + threshold + "}")) {
                 return "Invalid PIN! Please enter exactly " + threshold + " digits.";
             }
