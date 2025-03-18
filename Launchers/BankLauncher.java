@@ -125,17 +125,6 @@ public class BankLauncher {
     }
 
     /**
-     * Retrieves a bank that matches the given comparator.
-     *
-     * @param bankComparator Comparator to determine the matching criteria.
-     * @param bank Bank object to be compared.
-     * @return The matching Bank object, or null if no match is found.
-     */
-    public static Bank getBank(Comparator<Bank> bankComparator, Bank bank) {
-        return banks.stream().filter(b -> bankComparator.compare(b, bank) == 0).findFirst().orElse(null);
-    }
-
-    /**
      * Show the accounts registered to this bank.
      * Must prompt the user to select which type of accounts to show:
      * (1) Credit Accounts, (2) Savings Accounts, (3) All, and (4) Create New Account.
@@ -286,8 +275,25 @@ public class BankLauncher {
         }
 
         // Add Bank to the List
-        addBank(newBank);
-        System.out.println("✅ Bank created successfully: " + newBank);
+        Bank sameName = getBank(new Bank.BankComparator(), newBank);
+        Bank samePasscode = getBank(new Bank.BankCredentialsComparator(), newBank);
+        if (samePasscode == null || sameName == null) {
+            addBank(newBank);
+            System.out.println("✅ Bank created successfully: " + newBank);
+            return;
+        }
+        System.out.println("❌ Bank already exists...");
+    }
+
+    /**
+     * Retrieves a bank that matches the given comparator.
+     *
+     * @param bankComparator Comparator to determine the matching criteria.
+     * @param bank Bank object to be compared.
+     * @return The matching Bank object, or null if no match is found.
+     */
+    public static Bank getBank(Comparator<Bank> bankComparator, Bank bank) {
+        return banks.stream().filter(b -> bankComparator.compare(b, bank) == 0).findFirst().orElse(null);
     }
 
     /**
