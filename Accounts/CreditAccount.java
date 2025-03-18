@@ -1,6 +1,9 @@
 package Accounts;
 
 import Bank.Bank;
+import Services.Payment;
+import Services.Recompense;
+import Services.Transaction;
 
 /**
  * CreditAccount class representing a bank account that operates on credit.
@@ -17,12 +20,12 @@ public class CreditAccount extends Account implements Payment, Recompense {
      * @param accountNumber The unique account number.
      * @param ownerFname Owner's first name.
      * @param ownerLname Owner's last name.
-     * @param email       Owner's email address.
+     * @param ownerEmail       Owner's email address.
      * @param pin         Security PIN for authentication.
      */
-    public CreditAccount(Bank bank, String accountNumber, String ownerFname, String ownerLname,
-                         String email, String pin) {
-        super(bank, accountNumber, ownerFname, ownerLname, email, pin);
+    public CreditAccount(Bank bank, String accountNumber, String pin, String ownerFname,
+                         String ownerLname, String ownerEmail) {
+        super(bank, accountNumber, pin, ownerFname, ownerLname, ownerEmail);
         this.loanBalance = 0.0; // Start with no credit used
     }
 
@@ -38,11 +41,6 @@ public class CreditAccount extends Account implements Payment, Recompense {
                 ", Loan Balance=$" + String.format("%.2f", loanBalance) +
                 '}';
     }
-
-    protected double getLoan() {
-        return this.loanBalance; // This gives BusinessAccount access to the numeric loan balance
-    }
-
 
     /**
      * Checks if the account can take additional credit without exceeding the bank's limit.
@@ -62,17 +60,11 @@ public class CreditAccount extends Account implements Payment, Recompense {
      *                         - Positive values increase the loan balance (credit usage).
      *                         - Negative values decrease the loan balance (repayment).
      */
-    private void adjustLoanAmount(double amountAdjustment) {
-        // TODO Complete this method. (done)
-        this.loanBalance = Math.max(0, this.loanBalance + amountAdjustment);
-    }
-
-    /**
-     * Access the adjustLoanAmount, updates it without directly accessing the private method.
-     * @param amount;
-     */
-    public void updateLoan(double amount) {
-        adjustLoanAmount(amount);
+    public void adjustLoanAmount(double amountAdjustment) {
+        this.loanBalance += amountAdjustment;
+        if (this.loanBalance < 0) {
+            this.loanBalance = 0; // Ensure loan balance never goes negative
+        }
     }
 
     /**
@@ -103,10 +95,10 @@ public class CreditAccount extends Account implements Payment, Recompense {
         savingsRecipient.adjustAccountBalance(amount);
 
         // Log the transaction for both accounts
-        addNewTransaction(recipient.getAccountNumber(), Transaction.Transactions.FundTransfer,
+        addNewTransaction(recipient.getAccountNumber(), Transaction.Transactions.PAYMENT,
                 "Paid $" + String.format("%.2f", amount) + " to " + recipient.getAccountNumber());
 
-        savingsRecipient.addNewTransaction(this.accountNumber, Transaction.Transactions.FundTransfer,
+        savingsRecipient.addNewTransaction(this.accountNumber, Transaction.Transactions.RECEIVE_TRANSFER,
                 "Received $" + String.format("%.2f", amount) + " from Credit Account " + this.accountNumber);
 
         System.out.println("Payment successful. New loan balance: $" + loanBalance);
@@ -126,18 +118,10 @@ public class CreditAccount extends Account implements Payment, Recompense {
 
         // Deduct from the loan balance and log the recompense
         adjustLoanAmount(-amount);
-        addNewTransaction(accountNumber, Transaction.Transactions.Recompense,
-                "Recompensed $" + String.format("%.2f", amount) + " to the bank.");
-
         return true;
     }
 
-    /**
-     * Retrieves the current loan balance.
-     *
-     * @return The outstanding loan amount.
-     */
-    public double getLoanBalance() {
-        return loanBalance;
+    public double getLoan() {
+        return this.loanBalance;
     }
 }

@@ -1,6 +1,7 @@
 package Accounts;
 
 import Bank.Bank;
+import Services.Transaction;
 
 /**
  * BusinessAccount class representing a business credit account with higher limits
@@ -63,15 +64,15 @@ public class BusinessAccount extends CreditAccount {
             return false;
         }
 
-        updateLoan(amount); // Increase loan balance (business payments are credit-based)
+        adjustLoanAmount(amount); // Increase loan balance (business payments are credit-based)
 
         savingsRecipient.adjustAccountBalance(amount);
 
         // Log the transaction
-        addNewTransaction(recipient.getAccountNumber(), Transaction.Transactions.FundTransfer,
+        addNewTransaction(recipient.getAccountNumber(), Transaction.Transactions.FUNDTRANSFER,
                 String.format("Paid $%.2f to %s (Business Transaction)", amount, recipient.getAccountNumber()));
 
-        savingsRecipient.addNewTransaction(getAccountNumber(), Transaction.Transactions.FundTransfer,
+        savingsRecipient.addNewTransaction(getAccountNumber(), Transaction.Transactions.FUNDTRANSFER,
                 String.format("Received $%.2f from Business Account %s", amount, getAccountNumber()));
 
         System.out.println("Business payment successful. New loan balance: $" + getLoan());
@@ -90,10 +91,10 @@ public class BusinessAccount extends CreditAccount {
             return false; // Invalid amount or exceeding owed loan
         }
 
-        updateLoan(-amount); // Deduct from loan balance
+        adjustLoanAmount(-amount); // Deduct from loan balance
 
         // Log recompense transaction
-        addNewTransaction(getAccountNumber(), Transaction.Transactions.Recompense,
+        addNewTransaction(getAccountNumber(), Transaction.Transactions.COMPENSATION,
                 String.format("Recompensed $%.2f to the bank from Business Account.", amount));
 
         return true;
@@ -102,7 +103,7 @@ public class BusinessAccount extends CreditAccount {
     public String toString() {
         return "BusinessAccount{" +
                 "Account Number='" + getAccountNumber() + '\'' +
-                ", Owner='" + getOwnerFullname() + '\'' +
+                ", Owner='" + getOwnerFullName() + '\'' +
                 ", Loan Amount=" + getLoan() + // Use the getter method
                 ", Business Credit Limit=" + getBusinessCreditLimit() +
                 '}';

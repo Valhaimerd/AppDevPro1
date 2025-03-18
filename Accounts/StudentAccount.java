@@ -1,6 +1,7 @@
 package Accounts;
 
 import Bank.Bank;
+import Services.Transaction;
 
 public class StudentAccount extends SavingsAccount {
     private static final double MAX_WITHDRAWAL_LIMIT = 1000.00;
@@ -35,7 +36,7 @@ public class StudentAccount extends SavingsAccount {
 
         // Adjust balance and log transaction
         adjustAccountBalance(-amount);
-        addNewTransaction(this.getAccountNumber(), Transaction.Transactions.Withdraw,
+        addNewTransaction(this.getAccountNumber(), Transaction.Transactions.WITHDRAWAL,
                 "Withdrew $" + String.format("%.2f", amount) + " from Student Account.");
         return true;
     }
@@ -63,9 +64,9 @@ public class StudentAccount extends SavingsAccount {
         ((SavingsAccount) recipient).adjustAccountBalance(amount);
 
         // Log transactions for both accounts
-        addNewTransaction(recipient.getAccountNumber(), Transaction.Transactions.FundTransfer,
+        addNewTransaction(recipient.getAccountNumber(), Transaction.Transactions.FUNDTRANSFER,
                 "Transferred $" + String.format("%.2f", amount) + " to " + recipient.getAccountNumber());
-        recipient.addNewTransaction(getAccountNumber(), Transaction.Transactions.FundTransfer,
+        recipient.addNewTransaction(getAccountNumber(), Transaction.Transactions.FUNDTRANSFER,
                 "Received $" + String.format("%.2f", amount) + " from Student Account.");
         return true;
     }
@@ -75,7 +76,7 @@ public class StudentAccount extends SavingsAccount {
         return "StudentAccount{" +
                 "accountNumber='" + getAccountNumber() + '\'' +
                 ", owner='" + getOwnerFname() + " " + getOwnerLname() + '\'' +
-                ", balance=$" + String.format("%.2f", getBalance()) +
+                ", balance=$" + String.format("%.2f", getAccountBalance()) +
                 ", withdrawalLimit=$" + String.format("%.2f", MAX_WITHDRAWAL_LIMIT) +
                 '}';
     }

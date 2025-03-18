@@ -4,19 +4,48 @@ Banking System - This program
 Funtionalities:
     - 
     
-
 ADDED METHODS/FUNCTIONS
-Transaction.java
-    **toString()** method was added. It formats transaction details into a readable string, including time, source account, type, and description.
-    Why it was added: It made transaction details easier to read and display, especially for logs or user interfaces.
 
+###**Account.java**
 
-We decided to add test files to test if our program was running properly and calling the right functions/methods.
-List of Files Added:
-**TransactionTest**
+1. *getTransactionsInfo()*
+    -
+   
+3. *getOwnerFullName()*
+     -
+   
+###**AccountLauncher.java**
+
+1. *getAssocBank()*     - 
+
+###**CreditAccount.java**
+
+1. *pay()* 
     - 
-**BankTest**
+2. *recompense()*
+    -
+
+###**SavingsAccount.java**
+
+1. transfer(account: Account, amount: double) 
+    - 
+2. transfer(bank: Bank, account: Account, amount: double)
+    - 
+3. cashDeposit()
+    - 
+4. withdrawal()
+    - 
+
+Bank.java/
+
+1. accountNumberCounter()
+    -
+   
+2. ACCOUNT_NUMBERS: Set<String>sortAccounts(): void
+    -
+    
+3. getBankName(): String
     - 
 
 
-Note: Will add more details later. I lost my text file, which contains all the missing data.
+Note: Will add more details later.
