@@ -104,7 +104,7 @@ public class Bank {
 
         Field<String, String> lastNameField = new Field<String, String>("Last Name", String.class, null, new Field.StringFieldValidator());
 
-        Field<String, String> emailField = new Field<String, String>("Email", String.class, null, new Field.EmailFieldValidator());
+        Field<String, String> emailField = new Field<String, String>("Email", String.class, null, new Field.StringFieldValidator());
 
 
         // Array of fields to prompt user input
@@ -272,14 +272,12 @@ public class Bank {
     public static class BankCredentialsComparator implements Comparator<Bank> {
         @Override
         public int compare(Bank b1, Bank b2) {
-            BankComparator name = new BankComparator();
-            int compareName = name.compare(b1, b2);
-
-            if (compareName != 0) {
-                return compareName;
+            int nameComparison = b1.getName().compareTo(b2.getName());
+            if (nameComparison != 0) {
+                return nameComparison;
             }
-
-            return Integer.compare(b1.getBankId(), b2.getBankId());
+            // If bank names are equal, compare by passcode
+            return b1.getPasscode().compareTo(b2.getPasscode());
         }
     }
 
