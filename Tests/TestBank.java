@@ -2,6 +2,7 @@ package Tests;
 
 import Accounts.Account;
 import Accounts.CreditAccount;
+import Accounts.IllegalAccountType;
 import Accounts.SavingsAccount;
 import Bank.Bank;
 import Launchers.BankLauncher;
@@ -110,11 +111,11 @@ public class TestBank {
             // Manual Savings input
             String in4 = "20010-00001\n1234\nJohn\nDoe\njd@gmail.com\n500.0\n";
             // Creating credit
-            String in5 = "2\n1\n";
+            String in5 = "1\n";
             // Manual Credit Input
             String in6 = "20010-00002\n1234\nJane\nDoe\njaned@gmail.com\n";
             // Get both accounts
-            String in7 = "3\n";
+            String in7 = "5\n3\n";
 
             String input = in1 + in2 + in3 + in4 + in5 + in6 + in7;
 

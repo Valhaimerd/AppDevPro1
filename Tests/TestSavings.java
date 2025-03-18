@@ -32,7 +32,7 @@ public class TestSavings {
         // Manual Credit Input
         String in6 = "20010-00002\n1234\nJane\nDoe\njaned@gmail.com\n1000.0\n";
         // Logout
-        String in7 = "3\n";
+        String in7 = "5\n3\n";
 
         String input = in1 + in2 + in3 + in4 + in5 + in6 + in7;
 
@@ -93,11 +93,11 @@ public class TestSavings {
         // Manual Savings 1 input
         String in4 = "20010-00001\n1234\nJohn\nDoe\njd@gmail.com\n500.0\n";
         // Creating credit account #1 for bank #1
-        String in5 = "2\n1\n";
+        String in5 = "1\n";
         // Manual Credit Account 1 Input
         String in6 = "20010-00002\n1234\nJane\nDoe\njaned@gmail.com\n";
         // Logout
-        String in7 = "3\n";
+        String in7 = "5\n3\n";
 
         // Login on Bank 2
         String log2 = "BDP\n12345667\n";
@@ -105,7 +105,7 @@ public class TestSavings {
         String acc2 = "2\n2\n";
         // Manual Bank 2 Savings input
         String acc3 = "20011-00001\n5566\nJose\nRizel\njprizal@gmail.com\n5000.0\n";
-        String logout2 = "3\n";
+        String logout2 = "5\n3\n";
 
         String input = in1 + bn2 + in2 + in3 + in4 + in5 + in6 +
                 in7 + log2 + acc2 + acc3 + logout2;
