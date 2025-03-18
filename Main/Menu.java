@@ -29,8 +29,15 @@ public enum Menu {
     /**
      * Accounts.Account type selection menu. Used when creating New Accounts for every Bank.Bank.
      */
-    AccountTypeSelection(new String[]{ "Credit Account", "Savings Account", "Student Account", "Business Account" }, 33),
+    AccountTypeSelection(new String[]{ "Credit Account", "Savings Account", "Student Account", "Business Account", "Go Back" }, 33),
     /**
+     * BusinessAccount menu options.
+     */
+    BusinessAccountMenu(new String[]{ "View Loan Statement", "Make Payment", "Recompense Loan", "View Transactions", "Logout" }, 71),
+    /**
+     * StudentAccount menu options.
+     */
+    StudentAccountMenu(new String[]{ "View Balance", "Withdraw", "Fund Transfer", "View Transactions", "Logout" }, 61),    /**
      * CreditAccount type selection menu. Used when logging in as a CreditAccount.
      */
     CreditAccountMenu(new String[]{ "Show Credits", "Pay", "Recompense", "Show Transactions", "Logout" }, 41),
