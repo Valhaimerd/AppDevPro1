@@ -1,8 +1,8 @@
 package Accounts;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import Bank.Bank;
+import Services.Transaction;
 
 /**
  * Abstract Account class that serves as a base for different account types.
@@ -29,19 +29,19 @@ public abstract class Account {
      * @param ownerEmail         Owner's email address.
      * @param pin           Security PIN (in real-world, store hashed PINs).
      */
-    public Account(Bank bank, String accountNumber, String ownerFname, String ownerLname,
-                   String ownerEmail, String pin) {
+    public Account(Bank bank, String accountNumber, String pin, String ownerFname,
+                   String ownerLname, String ownerEmail) {
         this.bank = bank;
         this.accountNumber = accountNumber;
+        this.pin = pin;
         this.ownerFname = ownerFname;
         this.ownerLname = ownerLname;
         this.ownerEmail = ownerEmail;
-        this.pin = pin;
         this.transactions = new ArrayList<>();
     }
 
-    public String getOwnerFullname() {
-        return this.ownerLname + ", " + this.ownerFname;
+    public String getOwnerFullName() {
+        return this.ownerFname + " " + this.ownerLname;
     }
 
     /**
@@ -104,13 +104,6 @@ public abstract class Account {
         return new ArrayList<>(transactions);
     }
 
-    // =================== Comparators & Sorting ===================
-
-    /**
-     * Comparator for comparing accounts based on account numbers.
-     */
-    public static final Comparator<Account> ACCOUNT_NUMBER_COMPARATOR = Comparator.comparing(Account::getAccountNumber);
-
     /**
      * Provides a string representation of the account details.
      *
@@ -121,7 +114,7 @@ public abstract class Account {
         return "Account {" +
                 "Owner='" + ownerFname + " " + ownerLname + '\'' +
                 ", Email='" + ownerEmail + '\'' +
-                ", Bank='" + bank.getBankName() + '\'' +
+                ", Bank='" + bank.getName() + '\'' +
                 ", Account Number='" + accountNumber + '\'' +
                 ", Transactions Count=" + transactions.size() +
                 '}';

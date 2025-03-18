@@ -1,4 +1,6 @@
-package Accounts;
+package Services;
+
+import Accounts.IllegalAccountType;
 
 public interface Recompense {
 
@@ -8,5 +10,5 @@ public interface Recompense {
      * @param amount Amount of money to be recompensed.
      * @return Flag if compensation was successful.
      */
-    public boolean recompense(double amount);
+    public boolean recompense(double amount) throws IllegalAccountType;
 }
