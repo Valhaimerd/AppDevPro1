@@ -3,7 +3,7 @@ package Launchers;
 import Accounts.Account;
 import Accounts.IllegalAccountType;
 import Accounts.SavingsAccount;
-import Bank.*;
+import Bank.Bank;
 import Main.*;
 
 /**
@@ -45,7 +45,7 @@ public class SavingsAccountLauncher {
     /**
      * Handles the deposit process.
      */
-    public static void depositProcess() {
+    public static void depositProcess() throws IllegalAccountType {
         Field<Double, Double> amountField = new Field<Double, Double>("Deposit Amount", Double.class, 1.0, new Field.DoubleFieldValidator());
         amountField.setFieldValue("Enter deposit amount: ");
 
@@ -60,7 +60,7 @@ public class SavingsAccountLauncher {
     /**
      * Handles the withdrawal process.
      */
-    public static void withdrawProcess() {
+    public static void withdrawProcess() throws IllegalAccountType {
         Field<Double, Double> amountField = new Field<Double, Double>("Withdrawal Amount", Double.class, 1.0, new Field.DoubleFieldValidator());
         amountField.setFieldValue("Enter withdrawal amount: ");
 
@@ -103,7 +103,7 @@ public class SavingsAccountLauncher {
                 return;
             }
 
-            if (loggedAccount.transfer(recipient, amount)) {
+            if (loggedAccount.transfer(loggedAccount.getBank(), (SavingsAccount) recipient, amount)) {
                 System.out.println("✅ Internal transfer successful.");
             } else {
                 System.out.println("❌ Transfer failed. Insufficient funds or limit exceeded.");
@@ -136,7 +136,7 @@ public class SavingsAccountLauncher {
                 return;
             }
 
-            if (loggedAccount.transfer(recipientBank, recipient, amount)) {
+            if (loggedAccount.transfer(recipientBank, (SavingsAccount) recipient, amount)) {
                 System.out.println("✅ External transfer successful. Processing fee of $" +
                         loggedAccount.getBank().getProcessingFee() + " applied.");
             } else {

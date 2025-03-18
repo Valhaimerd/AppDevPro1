@@ -57,7 +57,6 @@ public class BankLauncher {
     public static void addBank(Bank b) {
         if (!banks.contains(b)) {
             banks.add(b);
-            System.out.println("✅ Bank successfully added: " + b.getName());
         } else {
             System.out.println("⚠ Bank already exists.");
         }
@@ -152,9 +151,11 @@ public class BankLauncher {
         Main.setOption();
 
         switch (Main.getOption()) {
-            case 1 -> displayAccounts(CreditAccount.class);
-            case 2 -> displayAccounts(SavingsAccount.class);
-            case 3 -> displayAllAccounts();
+            case 1 -> loggedBank.showAccounts(CreditAccount.class);
+            case 2 -> loggedBank.showAccounts(SavingsAccount.class);
+            case 3 -> loggedBank.showAccounts(StudentAccount.class);
+            case 4 -> loggedBank.showAccounts(BusinessAccount.class);
+            case 5 -> loggedBank.showAccounts(null);
             default -> System.out.println("Invalid option. Try again.");
         }
     }
@@ -182,18 +183,27 @@ public class BankLauncher {
      */
     public static void newAccounts() {
         if (loggedBank == null) {
-            System.out.println("No bank logged in.");
+            System.out.println("No bank is logged in. Please log into a bank first.");
             return;
         }
 
-        Main.showMenuHeader("Create a New Account");
-        Main.showMenu(Menu.AccountTypeSelection.menuIdx);
-        Main.setOption();
+        while (true) {
+            Main.showMenu(Menu.AccountTypeSelection.menuIdx);
+            Main.setOption();
 
-        switch (Main.getOption()) {
-            case 1 -> System.out.println("Credit Account created: " + loggedBank.createNewCreditAccount());
-            case 2 -> System.out.println("Savings Account created: " + loggedBank.createNewSavingsAccount());
-            default -> System.out.println("Invalid choice.");
+            int option = Main.getOption();
+            if (option == 5) {  // Fix: Immediately return if Go Back is selected
+                System.out.println("Returning to Bank Menu...");
+                return;
+            }
+
+            switch (option) {
+                case 1 -> loggedBank.createNewCreditAccount();
+                case 2 -> loggedBank.createNewSavingsAccount();
+                case 3 -> loggedBank.createNewStudentAccount();
+                case 4 -> loggedBank.createNewBusinessAccount();
+                default -> System.out.println("Invalid option! Please try again.");
+            }
         }
     }
 

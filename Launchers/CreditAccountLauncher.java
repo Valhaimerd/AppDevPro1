@@ -2,6 +2,7 @@ package Launchers;
 
 import Accounts.Account;
 import Accounts.CreditAccount;
+import Accounts.IllegalAccountType;
 import Accounts.SavingsAccount;
 import Bank.*;
 import Main.*;
@@ -17,7 +18,7 @@ public class CreditAccountLauncher {
     /**
      * Initializes the Credit Account menu after login.
      */
-    public static void creditAccountInit() {
+    public static void creditAccountInit() throws IllegalAccountType {
         if (loggedAccount == null) {
             System.out.println("No account logged in.");
             return;
@@ -44,7 +45,7 @@ public class CreditAccountLauncher {
     /**
      * Handles the credit payment process.
      */
-    public static void creditPaymentProcess() {
+    public static void creditPaymentProcess() throws IllegalAccountType {
         Field<String, Integer> recipientField = new Field<String, Integer>("Recipient Account Number", String.class, 5, new Field.StringFieldLengthValidator());
         recipientField.setFieldValue("Enter recipient Savings Account number: ");
 
@@ -73,7 +74,7 @@ public class CreditAccountLauncher {
     /**
      * Handles the credit recompense process.
      */
-    public static void creditRecompenseProcess() {
+    public static void creditRecompenseProcess() throws IllegalAccountType {
         Field<Double, Double> amountField = new Field<Double, Double>("Recompense Amount", Double.class, 1.0, new Field.DoubleFieldValidator());
         amountField.setFieldValue("Enter recompense amount: ");
 
