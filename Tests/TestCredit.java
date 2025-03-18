@@ -1,10 +1,11 @@
 package Tests;
 
 import Accounts.CreditAccount;
+import Accounts.IllegalAccountType;
 import Accounts.SavingsAccount;
-import Launchers.BankLauncher;
 import org.junit.Assert;
 import org.junit.Test;
+import Launchers.BankLauncher;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -23,11 +24,11 @@ public class TestCredit {
         // Manual Savings input
         String in4 = "20010-00001\n1234\nJohn\nDoe\njd@gmail.com\n500.0\n";
         // Creating credit account #1
-        String in5 = "2\n1\n";
+        String in5 = "1\n";
         // Manual Credit Input
-        String in6 = "20010-00002\n1234\nJane\nDoe\njaned@gmail.com\n1000.0\n";
+        String in6 = "20010-00002\n1234\nJane\nDoe\njaned@gmail.com\n";
         // Logout
-        String in7 = "3\n";
+        String in7 = "5\n3\n";
 
         String input = in1 + in2 + in3 + in4 + in5 + in6 + in7;
 
@@ -63,6 +64,8 @@ public class TestCredit {
             Assert.assertEquals(3, sa1LogCount);
             Assert.assertEquals(2, ca1LogCount);
 
+        } catch (IllegalAccountType e) {
+            throw new RuntimeException(e);
         } finally {
             System.setIn(original);
         }

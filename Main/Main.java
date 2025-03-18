@@ -1,9 +1,8 @@
 package Main;
 
-import Launchers.AccountLauncher;
+import Launchers.*;
 import Accounts.IllegalAccountType;
 import Bank.*;
-import Launchers.BankLauncher;
 
 import java.util.Scanner;
 
@@ -36,15 +35,7 @@ public class Main
                 setOption();
 
                 if (getOption() == 1) {
-                    Bank selectedBank = AccountLauncher.selectBank();
-
-                    if (selectedBank == null) {
-                        System.out.println("Invalid bank selection.");
-                        return;
-                    }
-
                     AccountLauncher accountLauncher = new AccountLauncher();
-                    accountLauncher.setAssocBank(selectedBank);
                     accountLauncher.accountLogin();
                 }
             }
