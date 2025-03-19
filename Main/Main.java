@@ -27,7 +27,6 @@ public class Main
         for (Bank bank : BankLauncher.getBanks()) {
             bank.loadAccountsFromDatabase();
         }
-        BankLauncher.loadAccountsForAllBanks();
         BankLauncher.loadTransactionsForAllAccounts();
         
         while (true)

@@ -112,19 +112,19 @@ public class AccountDAO implements IAccountDAO {
                     case "Business" -> new BusinessAccount(
                             bank,
                             rs.getString("account_number"),
+                            rs.getString("pin"),
                             rs.getString("owner_fname"),
                             rs.getString("owner_lname"),
                             rs.getString("owner_email"),
-                            rs.getString("pin"),
                             rs.getDouble("balance")
                     );
                     case "Student" -> new StudentAccount(
                             bank,
                             rs.getString("account_number"),
+                            rs.getString("pin"),
                             rs.getString("owner_fname"),
                             rs.getString("owner_lname"),
                             rs.getString("owner_email"),
-                            rs.getString("pin"),
                             rs.getDouble("balance")
                     );
                     default -> null;

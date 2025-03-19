@@ -94,6 +94,6 @@ public class DatabaseSchema {
     public static void main(String[] args) {
 //        clearAccountTypeTable();
 //        clearTables();
-//        createTables();
+        createTables();
     }
 }
