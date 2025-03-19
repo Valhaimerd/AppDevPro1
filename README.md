@@ -93,58 +93,52 @@ The **Banking System Program** is designed to simulate a real-world banking syst
 ### **Added Methods/Functions**  
 
 ### **Account.java**  
-1. **`getTransactionsInfo()`**  
-   -  
-
-2. **`getOwnerFullName()`**  
-   -  
-
-3. **`getOwnerEmail()`**  
-   -  
-
-4. **Transaction Notif()**  
-   -  
-
-5. **Email Validator()**  
-   -  
-
-6. **`getTransactions()`**  
-   -  
-
-### **AccountLauncher.java**  
-1. **`getAssocBank()`**  
-   -  
+1. **loadTransactionsFromDatabase()**  
+   - The method was added to keep an account’s transaction history updated by automatically retrieving past transactions from a database. This amkes sure that it has accurate financial records without manual entry.
+#### Funtionality
+   - It clears the existing transaction list to avoid duplicates, fetches transactions from a log service using the account number, adds them back into the list, and prints the number of transactions loaded.
 
 ### **CreditAccount.java**  
-1. **`pay()`**  
-   -  
+1. **pay()**  
+   -  allows a CreditAccount to send money to a SavingsAccount by checking if the credit limit allows the transaction. If the limit is exceeded, the payment fails. Otherwise, it processes the transfer through transactionService.creditPayment().
+   -  It was added to allow credit accounts to make controlled payments while ensuring they do not exceed their borrowing limit.
 
-2. **`recompense()`**  
-   -  
+2. **recompense()**  
+   - It enables the CreditAccount to repay its loan balance by calling transactionService.recompense().
+   - It was added to provide a way for users to settle their debts and restore available credit.
 
 ### **SavingsAccount.java**  
-1. **`transfer(account: Account, amount: double)`**  
-   -  
+1. **transfer(account: Account, amount: double)**  
+   -  allows a **SavingsAccount** to send money to another account within the same bank. It calls _transactionService.transferFunds()_ to process the transaction.
+   -  It was added so users can transafer funds between accounts without needing to withdraw cash manually.
 
-2. **`transfer(bank: Bank, account: Account, amount: double)`**  
-   -  
+2. **transfer(bank: Bank, account: Account, amount: double)**  
+   -  enables a **SavingsAccount** to send money to an account in a different bank, applying a processing fee. It also calls _transactionService.transferFunds()_.
+   -  We added it to support interbank transfers, allowing users to send money outside their bank while ensuring feeas are applied.
 
-3. **`cashDeposit()`**  
-   -  
+3. **cashDeposit()**  
+   -  allows a **SavingsAccount** to receive money by calling _transactionService.deposit()_.
+   -  was added so users can increase their account balance by depositing cash into their savings account.
 
-4. **`withdrawal()`**  
-   -  
+4. **withdrawal()**
+   - lets a **SavingsAccount** take out money by calling _transactionService.withdraw()_.
+   - was added so users can access their funds when needed, ensuring they can withdraw cash from their account.
+5. **getAccountBalance()** 
+   - returns the current balance of a **SavingsAccount**.
+   - was added to let users check how much money they have in their account.
 
 ### **Bank.java**  
-1. **`accountNumberCounter()`**  
-   -  
+1. **passcode** (Attribute)
+   - Prevents unauthorized access to the bank’s data.
+   - is added to provide a security layer for the bank and to ensure only authorized users can access or modify bank details.
 
-2. **`ACCOUNT_NUMBERS: Set<String> sortAccounts(): void`**  
-   -  
+2. **withdrawLimit** (Attribute)
+   - Helps regulate cash flow in the bank and it also ensures users to not withdraw excessive amounts that could lead to insufficient funds.
+   - is added to set a maximum amount a user can withdraw from their account at a time. To prevent large withdrawals that could cause financial instability.
 
-3. **`getBankName(): String`**  
-   -  
-
+3. **creditLimit** (Attribute)
+   - it helps manage the bank’s risk by limiting excessive credit borrowing.
+   - was added to define the maximum credit (loan) a user can borrow. To prevent users from borrowing beyond what the bank can handle.
 ---
 
 📌 **Note:** More details will be added later.
