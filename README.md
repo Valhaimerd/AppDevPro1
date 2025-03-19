@@ -65,10 +65,21 @@ The **Banking System Program** is designed to simulate a real-world banking syst
 ## **SERVICES**  
 
 ### **AccountService**
+- **Fetches all accounts** – Retrieves all accounts from the database.
+- **Provides static fetch method** – Allows fetching accounts without needing an instance of _AccountService_.
+- **Creates accounts** – Validates inputs and adds new accounts to the database.
+- **Checks account balance** – Retrieves the balance of a specific account.
+- **Updates account balance **– Modifies the balance of an account based on transactions.
+- **Handles loan updates** – Adjusts balances for credit or loan accounts.
 
 ### **BankService**
+- **Fetches all banks** – Retrieves a list of all banks from the database.
+- **Provides static fetch method** – Allows getting all banks without creating an instance of _BankService_.
+- **Creates a bank (basic)** – Adds a new bank with an ID, name, and passcode after checking if inputs are valid.
+- **Creates a bank (custom settings)** – Adds a new bank with extra settings like deposit, withdrawal, and credit limits, as well as processing fees.
 
 ### **Deposit**
+- an interface serves as a blueprint for deposit operations
 
 ### **FundTransfer**
 
