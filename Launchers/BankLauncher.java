@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
 
+
 import Services.ServiceProvider;
 import Services.BankService;
 /**
@@ -25,6 +26,22 @@ public class BankLauncher {
         banks.addAll(BankService.fetchAllBanksStatic());  // Add fresh data from DB
         System.out.println("Loaded " + banks.size() + " banks from the database.");
     }
+    public static void loadAccountsForAllBanks() {
+        for (Bank bank : banks) {
+            bank.loadAccountsFromDatabase();
+        }
+    }
+
+    public static void loadTransactionsForAllAccounts() {
+        for (Bank bank : banks) {
+            for (Account account : bank.getBankAccounts()) {
+                account.loadTransactionsFromDatabase();
+            }
+        }
+        System.out.println("✔ Transactions loaded for all accounts.");
+    }
+
+
     /**
      * Initializes the banking module, allowing users to log in or create a new bank.
      */
@@ -46,6 +63,8 @@ public class BankLauncher {
             }
         }
     }
+
+
 
     /**
      * Checks if there is a currently logged-in bank session.
@@ -145,7 +164,6 @@ public class BankLauncher {
         Main.showMenuHeader("Show Accounts");
         Main.showMenu(Menu.ShowAccounts.menuIdx);
         Main.setOption();
-        loggedBank.loadAccountsFromDatabase();
 
         switch (Main.getOption()) {
             case 1 -> loggedBank.showAccounts(CreditAccount.class);
@@ -173,6 +191,7 @@ public class BankLauncher {
         System.out.println("Showing " + (accountType == CreditAccount.class ? "Credit" : "Savings") + " Accounts:");
         loggedBank.showAccounts(accountType);
     }
+
 
     /**
      * Handles the creation of a new account within the currently logged-in bank.
@@ -221,7 +240,6 @@ public class BankLauncher {
         }
         loggedBank = null;
     }
-    
     /**
      * Creates a new bank and registers it in the system.
      */
@@ -274,6 +292,16 @@ public class BankLauncher {
                     processingFeeField.getFieldValue()
             );
 
+            bankService.createBank(
+                    bankSize(),
+                    bankNameField.getFieldValue(),
+                    bankPasscodeField.getFieldValue(),
+                    depositLimitField.getFieldValue(),
+                    withdrawLimitField.getFieldValue(),
+                    creditLimitField.getFieldValue(),
+                    processingFeeField.getFieldValue()
+            );
+
         } else {
             // Create Bank with default values
             newBank = new Bank(
@@ -287,14 +315,6 @@ public class BankLauncher {
         Bank sameName = getBank(new Bank.BankComparator(), newBank);
         Bank samePasscode = getBank(new Bank.BankCredentialsComparator(), newBank);
         if (samePasscode == null || sameName == null) {
-            bankService.createBank(
-                    bankSize(),
-                    bankNameField.getFieldValue(),
-                    bankPasscodeField.getFieldValue(),
-                    depositLimitField.getFieldValue(),
-                    withdrawLimitField.getFieldValue(),
-                    creditLimitField.getFieldValue(),
-                    processingFeeField.getFieldValue()
             addBank(newBank);
             System.out.println("✅ Bank created successfully: " + newBank);
             return;

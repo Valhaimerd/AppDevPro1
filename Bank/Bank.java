@@ -11,7 +11,6 @@ import Services.AccountService;
 import Services.ServiceProvider;
 import Services.BankService;
 import Launchers.BankLauncher;
-
 /**
  * The Bank class represents a banking institution that manages multiple accounts.
  * It enforces banking rules such as deposit/withdrawal limits and credit limits.
@@ -26,7 +25,7 @@ public class Bank {
     private final double processingFee;
 
     public void loadAccountsFromDatabase() {
-        bankAccounts.clear();
+        bankAccounts.clear(); // Clear any old data
         List<Account> allAccounts = ServiceProvider.getAccountService().fetchAllAccounts();
         for (Account acc : allAccounts) {
             if (acc.getBank().getBankId() == this.bankId) {
@@ -35,7 +34,6 @@ public class Bank {
         }
         System.out.println("Loaded " + bankAccounts.size() + " accounts for bank " + getName() + " from the database.");
     }
-
     /**
      * Constructor for Bank.
      *
@@ -95,7 +93,7 @@ public class Bank {
      * @return The account if found, otherwise null.
      */
     public Account getBankAccount(String accountNum) {
-        loadAccountsFromDatabase();
+
         for (Account account : bankAccounts) { // Assuming `accounts` is a list of accounts
             if (account.getAccountNumber().equals(accountNum)) {
                 return account;
@@ -123,6 +121,8 @@ public class Bank {
 
         Field<String, String> emailField = new Field<String, String>("Email", String.class, null, new Field.StringFieldValidator());
 
+
+        // Array of fields to prompt user input
         Field<?, ?>[] fields = {accountNumberField, pinField, firstNameField, lastNameField, emailField};
 
         for (Field<?, ?> field : fields) {
@@ -233,7 +233,7 @@ public class Bank {
      * @param account The account to add.
      */
     public boolean addNewAccount(Account account) {
-        if (accountExists(this, account.getAccountNumber())) {
+        if (accountExists(this, account.getAccountNumber())) { // Only check within the same bank
             System.out.println("Account number already exists in this bank! Registration failed.");
             return false;
         }
@@ -259,6 +259,8 @@ public class Bank {
                 .anyMatch(account -> account.getAccountNumber().equals(accountNum));
     }
 
+    // ========================= GETTERS =========================
+
     public String getName() {
         return bankName;
     }
@@ -272,7 +274,7 @@ public class Bank {
     }
 
     public ArrayList<Account> getBankAccounts() {
-        return new ArrayList<>(bankAccounts);
+        return new ArrayList<>(bankAccounts); // Return a copy to prevent external modification
     }
 
     public double getDepositLimit() {
@@ -289,6 +291,18 @@ public class Bank {
 
     public double getProcessingFee() {
         return processingFee;
+    }
+
+    // ========================= COMPARATORS =========================
+
+    @Override
+    public String toString() {
+        return "Bank{" +
+                "Bank ID='" + bankId + '\'' +
+                "Bank Name='" + bankName + '\'' +
+                ", Bank Passcode='" + passcode + '\'' +
+                ", Accounts Registered=" + bankAccounts.size() +
+                '}';
     }
 
     public static class BankCredentialsComparator implements Comparator<Bank> {
@@ -315,15 +329,5 @@ public class Bank {
         public int compare(Bank b1, Bank b2) {
             return b1.getName().compareTo(b2.getName());
         }
-    }
-
-    @Override
-    public String toString() {
-        return "Bank{" +
-                "Bank ID='" + bankId + '\'' +
-                "Bank Name='" + bankName + '\'' +
-                ", Bank Passcode='" + passcode + '\'' +
-                ", Accounts Registered=" + bankAccounts.size() +
-                '}';
     }
 }

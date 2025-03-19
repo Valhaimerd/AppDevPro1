@@ -6,7 +6,6 @@ import Services.TransactionServices;
 public class StudentAccount extends SavingsAccount {
     private final TransactionServices transactionService = new TransactionServices();
     public static final double MAX_WITHDRAWAL_LIMIT = 1000.00;
-
     /**
      * Constructor for StudentAccount.
      *
@@ -60,4 +59,6 @@ public class StudentAccount extends SavingsAccount {
                 ", withdrawalLimit=$" + String.format("%.2f", MAX_WITHDRAWAL_LIMIT) +
                 '}';
     }
+
 }
+

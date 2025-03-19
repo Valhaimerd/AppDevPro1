@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import Accounts.Account;
 
 public class AccountTypeDAO {
     public void insertAccountType(String typeName) {
@@ -31,4 +34,6 @@ public class AccountTypeDAO {
         }
         return -1; // Return -1 if not found
     }
+
+
 }

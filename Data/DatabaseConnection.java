@@ -26,4 +26,6 @@ public class DatabaseConnection {
             System.out.println("Error closing database connection: " + e.getMessage());
         }
     }
+
+
 }
