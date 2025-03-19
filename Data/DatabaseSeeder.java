@@ -56,29 +56,47 @@ public class DatabaseSeeder {
     }
 
     public static void insertSampleCreditPayments(TransactionDAO transactionDAO) {
-        // Example: ACC002 (credit account) pays 1000.00 to ACC001 (savings)
-        double paymentAmount = 1000.00;
-        String creditAccount = "ACC002";
-        String savingsAccount = "ACC001";
+        // 1-4 FUNDTRANSFER (Savings to Savings same bank)
+        transactionDAO.logTransaction("10001", "10003", Transaction.Transactions.FUNDTRANSFER.toString(), 500, "Transferred 500 from 10001 to 10003");
+        transactionDAO.logTransaction("10003", "10001", Transaction.Transactions.RECEIVE_TRANSFER.toString(), 500, "Received 500 from 10001");
 
-        // Log for credit account
-        transactionDAO.logTransaction(
-                creditAccount,
-                savingsAccount,
-                Transaction.Transactions.PAYMENT.toString(), // use enum value
-                paymentAmount,
-                "Paid to account " + savingsAccount
-        );
+        transactionDAO.logTransaction("10004", "10006", Transaction.Transactions.FUNDTRANSFER.toString(), 400, "Transferred 400 from 10004 to 10006");
+        transactionDAO.logTransaction("10006", "10004", Transaction.Transactions.RECEIVE_TRANSFER.toString(), 400, "Received 400 from 10004");
 
-        // Log for savings account
-        transactionDAO.logTransaction(
-                savingsAccount,
-                creditAccount,
-                Transaction.Transactions.RECEIVE_TRANSFER.toString(), // use enum value
-                paymentAmount,
-                "Received credit payment from " + creditAccount
-        );
+        // 5-8 EXTERNAL_TRANSFER (Savings to Savings different bank)
+        transactionDAO.logTransaction("10001", "20003", Transaction.Transactions.EXTERNAL_TRANSFER.toString(), 700, "External transfer from 10001 to 20003");
+        transactionDAO.logTransaction("20003", "10001", Transaction.Transactions.RECEIVE_TRANSFER.toString(), 700, "Received external transfer from 10001");
 
+        transactionDAO.logTransaction("10004", "20006", Transaction.Transactions.EXTERNAL_TRANSFER.toString(), 600, "External transfer from 10004 to 20006");
+        transactionDAO.logTransaction("20006", "10004", Transaction.Transactions.RECEIVE_TRANSFER.toString(), 600, "Received external transfer from 10004");
+
+        // 9-12 PAYMENT (Credit to Savings)
+        transactionDAO.logTransaction("10002", "10001", Transaction.Transactions.PAYMENT.toString(), 800, "Credit payment from 10002 to 10001");
+        transactionDAO.logTransaction("10001", "10002", Transaction.Transactions.RECEIVE_TRANSFER.toString(), 800, "Received credit payment from 10002");
+
+        transactionDAO.logTransaction("20002", "20003", Transaction.Transactions.PAYMENT.toString(), 900, "Credit payment from 20002 to 20003");
+        transactionDAO.logTransaction("20003", "20002", Transaction.Transactions.RECEIVE_TRANSFER.toString(), 900, "Received credit payment from 20002");
+
+        // 13-16 WITHDRAWAL
+        transactionDAO.logTransaction("10001", "ATM", Transaction.Transactions.WITHDRAWAL.toString(), 300, "Withdrew 300 from 10001");
+        transactionDAO.logTransaction("10003", "ATM", Transaction.Transactions.WITHDRAWAL.toString(), 200, "Withdrew 200 from 10003");
+
+        transactionDAO.logTransaction("20003", "ATM", Transaction.Transactions.WITHDRAWAL.toString(), 500, "Withdrew 500 from 20003");
+        transactionDAO.logTransaction("20006", "ATM", Transaction.Transactions.WITHDRAWAL.toString(), 150, "Withdrew 150 from 20006");
+
+        // 17-20 DEPOSIT
+        transactionDAO.logTransaction("BANK", "10001", Transaction.Transactions.DEPOSIT.toString(), 1200, "Deposit to 10001");
+        transactionDAO.logTransaction("BANK", "10004", Transaction.Transactions.DEPOSIT.toString(), 1400, "Deposit to 10004");
+
+        transactionDAO.logTransaction("BANK", "20003", Transaction.Transactions.DEPOSIT.toString(), 1600, "Deposit to 20003");
+        transactionDAO.logTransaction("BANK", "20006", Transaction.Transactions.DEPOSIT.toString(), 1800, "Deposit to 20006");
+
+        // 21-24 COMPENSATION (Manual credit compensation log)
+        transactionDAO.logTransaction("10002", "LOAN", Transaction.Transactions.COMPENSATION.toString(), 500, "Manual compensation log for 10002");
+        transactionDAO.logTransaction("20002", "LOAN", Transaction.Transactions.COMPENSATION.toString(), 400, "Manual compensation log for 20002");
+
+        transactionDAO.logTransaction("10007", "LOAN", Transaction.Transactions.COMPENSATION.toString(), 300, "Manual compensation log for 10007");
+        transactionDAO.logTransaction("20007", "LOAN", Transaction.Transactions.COMPENSATION.toString(), 200, "Manual compensation log for 20007");
     }
 
     public static void insertSampleData() {
@@ -90,11 +108,11 @@ public class DatabaseSeeder {
         BankService bankService = new BankService(bankDAO);
         AccountService accountService = new AccountService(accountDAO);
 
-        insertAccountTypes(accountTypeDAO);
-
-        insertBank(bankService);
-        insertAccounts(accountService, accountTypeDAO);
-//        insertSampleCreditPayments(transactionDAO);
+//        insertAccountTypes(accountTypeDAO);
+//
+//        insertBank(bankService);
+//        insertAccounts(accountService, accountTypeDAO);
+        insertSampleCreditPayments(transactionDAO);
 
         System.out.println("All sample data inserted successfully.");
     }
