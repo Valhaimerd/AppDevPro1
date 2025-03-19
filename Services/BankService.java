@@ -1,10 +1,19 @@
 package Services;
-
+import Bank.Bank;
 import Data.IBankDAO;
 import java.util.List;
 
 public class BankService {
     private final IBankDAO bankDAO;
+
+    public List<Bank> fetchAllBanks() {
+        return bankDAO.getAllBanksFull();
+    }
+
+    public static List<Bank> fetchAllBanksStatic() {
+        BankService bankService = ServiceProvider.getBankService();
+        return bankService.fetchAllBanks();
+    }
 
     public BankService(IBankDAO bankDAO) {
         this.bankDAO = bankDAO;
@@ -40,7 +49,4 @@ public class BankService {
         System.out.println("Bank added successfully with custom settings!");
     }
 
-    public List<String> getAllBanks() {
-        return bankDAO.getAllBanks();
-    }
 }

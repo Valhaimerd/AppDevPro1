@@ -2,7 +2,9 @@ package Main;
 
 import Launchers.*;
 import Accounts.IllegalAccountType;
-
+import Bank.*;
+import Launchers.BankLauncher;
+import Bank.Bank;
 import java.util.Scanner;
 
 public class Main
@@ -21,7 +23,12 @@ public class Main
             Integer.class, -1, new Field.IntegerFieldValidator());
 
     public static void main(String[] args) throws IllegalAccountType {
-
+        BankLauncher.loadBanksFromDatabase();
+        for (Bank bank : BankLauncher.getBanks()) {
+            bank.loadAccountsFromDatabase();
+        }
+        BankLauncher.loadTransactionsForAllAccounts();
+        
         while (true)
         {
             showMenuHeader("Main Menu");

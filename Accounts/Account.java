@@ -1,8 +1,12 @@
 package Accounts;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import Bank.Bank;
+import Services.LogService;
 import Services.Transaction;
+import Services.ServiceProvider;
 
 /**
  * Abstract Account class that serves as a base for different account types.
@@ -18,6 +22,14 @@ public abstract class Account {
     // Owner Details
     protected final String ownerFname, ownerLname, ownerEmail;   // Owner's first name
     protected final String pin;          // 4-digit security PIN (hashed for security in real-world apps)
+
+    public void loadTransactionsFromDatabase() {
+        transactions.clear(); // Clear existing transactions
+        LogService logService = ServiceProvider.getTransactionService();
+        List<Transaction> allTransactions = logService.fetchTransactionsForAccount(this.accountNumber);
+        transactions.addAll(allTransactions);
+        System.out.println("Loaded " + transactions.size() + " transactions for account " + accountNumber + " from the database.");
+    }
 
     /**
      * Constructor for an Account.

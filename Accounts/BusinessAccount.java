@@ -59,7 +59,7 @@ public class BusinessAccount extends CreditAccount {
      * @param amount    The amount to pay.
      * @return True if successful, false otherwise.
      */
-    public boolean pay(Account recipient, double amount) throws IllegalAccountType {
+    public synchronized boolean pay(Account recipient, double amount) throws IllegalAccountType {
         if (!(recipient instanceof SavingsAccount savingsRecipient)) {
             throw new IllegalArgumentException("Business accounts can only pay to Savings Accounts.");
         }
@@ -79,7 +79,7 @@ public class BusinessAccount extends CreditAccount {
      * @return True if successful, false otherwise.
      */
     @Override
-    public boolean recompense(double amount) throws IllegalAccountType {
+    public synchronized boolean recompense(double amount) throws IllegalAccountType {
         return transactionService.recompense(this, amount);
     }
 

@@ -3,6 +3,7 @@ package Data;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 
 public class DatabaseSchema {
     public static void createTables() {
@@ -25,16 +26,25 @@ public class DatabaseSchema {
                 + "account_number TEXT UNIQUE NOT NULL, "
                 + "balance REAL DEFAULT 0, "
                 + "account_type INTEGER, "
+                + "pin TEXT NOT NULL, "
+                + "owner_fname TEXT NOT NULL, "
+                + "owner_lname TEXT NOT NULL, "
+                + "owner_email TEXT NOT NULL, "
                 + "FOREIGN KEY (account_type) REFERENCES AccountType(type_id), "
-                + "FOREIGN KEY (bank_id) REFERENCES Bank(bank_id))";
+                + "FOREIGN KEY (bank_id) REFERENCES Bank(bank_id)"
+                + ")";
 
         String transactionTable = "CREATE TABLE IF NOT EXISTS Transactions ("
                 + "transaction_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "account_number TEXT NOT NULL, " // Changed from int to String
+                + "source_account TEXT NOT NULL, "
+                + "target_account TEXT, "
                 + "transaction_type TEXT NOT NULL, "
                 + "amount REAL NOT NULL, "
+                + "description TEXT, "
                 + "date TEXT DEFAULT CURRENT_TIMESTAMP, "
-                + "FOREIGN KEY (account_number) REFERENCES Account(account_number))";
+                + "FOREIGN KEY (source_account) REFERENCES Account(account_number), "
+                + "FOREIGN KEY (target_account) REFERENCES Account(account_number)"
+                + ")";
 
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement()) {
@@ -50,7 +60,40 @@ public class DatabaseSchema {
         }
     }
 
+    public static void clearTables() {
+        IDatabaseProvider databaseProvider = new SQLiteDatabaseProvider();
+
+        try (Connection conn = databaseProvider.getConnection();
+             PreparedStatement clearTransactions = conn.prepareStatement("DELETE FROM Transactions");
+             PreparedStatement clearAccounts = conn.prepareStatement("DELETE FROM Account");
+             PreparedStatement clearBanks = conn.prepareStatement("DELETE FROM Bank")) {
+
+            clearTransactions.executeUpdate();
+            clearAccounts.executeUpdate();
+            clearBanks.executeUpdate();
+
+            System.out.println("All tables cleared successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error clearing tables: " + e.getMessage());
+        }
+    }
+
+    public static void clearAccountTypeTable() {
+        IDatabaseProvider databaseProvider = new SQLiteDatabaseProvider();
+
+        try (Connection conn = databaseProvider.getConnection();
+             PreparedStatement clearAccountTypes = conn.prepareStatement("DELETE FROM AccountType")) {
+
+            clearAccountTypes.executeUpdate();
+            System.out.println("AccountType table cleared successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error clearing AccountType table: " + e.getMessage());
+        }
+    }
+
     public static void main(String[] args) {
+//        clearAccountTypeTable();
+//        clearTables();
         createTables();
     }
 }

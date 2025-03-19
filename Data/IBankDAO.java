@@ -1,5 +1,7 @@
 package Data;
 
+import Bank.Bank;
+
 import java.util.List;
 
 public interface IBankDAO {
@@ -11,5 +13,6 @@ public interface IBankDAO {
     void addBank(int bankId, String name, String passcode,
                  double depositLimit, double withdrawLimit,
                  double creditLimit, double processingFee);
-    List<String> getAllBanks();
+
+    List<Bank> getAllBanksFull();
 }

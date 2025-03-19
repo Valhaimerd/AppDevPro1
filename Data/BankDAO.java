@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import Bank.Bank;
+
+
 
 public class BankDAO implements IBankDAO {
     private final IDatabaseProvider databaseProvider;
@@ -60,18 +63,30 @@ public class BankDAO implements IBankDAO {
     }
 
     @Override
-    public List<String> getAllBanks() {
-        List<String> banks = new ArrayList<>();
-        String sql = "SELECT name FROM Bank";
+    public List<Bank> getAllBanksFull() {
+        List<Bank> banks = new ArrayList<>();
+        String sql = "SELECT * FROM Bank"; // Select all columns
+
         try (Connection conn = databaseProvider.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                banks.add(rs.getString("name"));
+                Bank bank = new Bank(
+                        rs.getInt("bank_id"),
+                        rs.getString("name"),
+                        rs.getString("passcode"),
+                        rs.getDouble("deposit_limit"),
+                        rs.getDouble("withdraw_limit"),
+                        rs.getDouble("credit_limit"),
+                        rs.getDouble("processing_fee")
+                );
+                banks.add(bank);
             }
         } catch (SQLException e) {
             System.out.println("Error fetching banks: " + e.getMessage());
         }
         return banks;
     }
+
+
 }

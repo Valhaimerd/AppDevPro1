@@ -5,8 +5,12 @@ import Main.Field;
 import Main.Main;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Comparator;
-
+import Services.AccountService;
+import Services.ServiceProvider;
+import Services.BankService;
+import Launchers.BankLauncher;
 /**
  * The Bank class represents a banking institution that manages multiple accounts.
  * It enforces banking rules such as deposit/withdrawal limits and credit limits.
@@ -20,6 +24,16 @@ public class Bank {
     private final double depositLimit, withdrawLimit, creditLimit;
     private final double processingFee;
 
+    public void loadAccountsFromDatabase() {
+        bankAccounts.clear(); // Clear any old data
+        List<Account> allAccounts = ServiceProvider.getAccountService().fetchAllAccounts();
+        for (Account acc : allAccounts) {
+            if (acc.getBank().getBankId() == this.bankId) {
+                bankAccounts.add(acc);
+            }
+        }
+        System.out.println("Loaded " + bankAccounts.size() + " accounts for bank " + getName() + " from the database.");
+    }
     /**
      * Constructor for Bank.
      *
@@ -79,6 +93,7 @@ public class Bank {
      * @return The account if found, otherwise null.
      */
     public Account getBankAccount(String accountNum) {
+
         for (Account account : bankAccounts) { // Assuming `accounts` is a list of accounts
             if (account.getAccountNumber().equals(accountNum)) {
                 return account;
@@ -98,7 +113,7 @@ public class Bank {
         // Create fields with appropriate validation
         Field<String, Integer> accountNumberField = new Field<String, Integer>("Account Number", String.class, 5, new Field.StringFieldLengthValidator());
 
-        Field<String, Integer> pinField = new Field<String, Integer>("PIN", String.class, 4, new Field.PinFieldValidator());
+        Field<String, Integer> pinField = new Field<String, Integer>("PIN", String.class, 3, new Field.StringFieldLengthValidator());
 
         Field<String, String> firstNameField = new Field<String, String>("First Name", String.class, null, new Field.StringFieldValidator());
 
@@ -136,7 +151,12 @@ public class Bank {
         double initialDeposit = Double.parseDouble(Main.prompt("Enter Initial Deposit: ", true));
 
         SavingsAccount newAccount = new SavingsAccount(this, accountNumber, pin, firstName, lastName, email, initialDeposit);
-        addNewAccount(newAccount);
+        boolean verify = addNewAccount(newAccount);
+        if (verify) {
+            ServiceProvider.getAccountService().createAccount(
+                    this.bankId, accountNumber, initialDeposit, 2, pin, firstName, lastName, email
+            );
+        }
         return newAccount;
     }
 
@@ -155,7 +175,12 @@ public class Bank {
         String email = (String) accountData.get(4).getFieldValue();
 
         CreditAccount newAccount = new CreditAccount(this, accountNumber, pin, firstName, lastName, email);
-        addNewAccount(newAccount);
+        boolean verify = addNewAccount(newAccount);
+        if (verify) {
+            ServiceProvider.getAccountService().createAccount(
+                    this.bankId, accountNumber, 0.0, 2, pin, firstName, lastName, email
+            );
+        }
         return newAccount;
     }
 
@@ -171,7 +196,12 @@ public class Bank {
         double initialDeposit = Double.parseDouble(Main.prompt("Enter Initial Deposit: ", true));
 
         StudentAccount newAccount = new StudentAccount(this, accountNumber, firstName, lastName, email, pin, initialDeposit);
-        addNewAccount(newAccount);
+        boolean verify = addNewAccount(newAccount);
+        if (verify) {
+            ServiceProvider.getAccountService().createAccount(
+                    this.bankId, accountNumber, initialDeposit, 2, pin, firstName, lastName, email
+            );
+        }
         return newAccount;
     }
 
@@ -187,7 +217,12 @@ public class Bank {
         double initialLoan = Double.parseDouble(Main.prompt("Enter Initial Loan Amount: ", true));
 
         BusinessAccount newAccount = new BusinessAccount(this, accountNumber, firstName, lastName, email, pin, initialLoan);
-        addNewAccount(newAccount);
+        boolean verify = addNewAccount(newAccount);
+        if (verify) {
+            ServiceProvider.getAccountService().createAccount(
+                    this.bankId, accountNumber, initialLoan, 2, pin, firstName, lastName, email
+            );
+        }
         return newAccount;
     }
 
@@ -197,13 +232,14 @@ public class Bank {
      *
      * @param account The account to add.
      */
-    public void addNewAccount(Account account) {
+    public boolean addNewAccount(Account account) {
         if (accountExists(this, account.getAccountNumber())) { // Only check within the same bank
             System.out.println("Account number already exists in this bank! Registration failed.");
-            return;
+            return false;
         }
         bankAccounts.add(account);
         System.out.println("✅ Account successfully registered.");
+        return true;
     }
 
     /**

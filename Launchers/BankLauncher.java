@@ -9,14 +9,38 @@ import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
 
+
+import Services.ServiceProvider;
+import Services.BankService;
 /**
  * BankLauncher handles interactions with the bank module, allowing login,
  * account management, and bank creation.
  */
 public class BankLauncher {
-
+    private static final BankService bankService = ServiceProvider.getBankService();
     private final static ArrayList<Bank> banks = new ArrayList<>();
     private static Bank loggedBank;
+
+    public static void loadBanksFromDatabase() {
+        banks.clear();  // Clear any old data
+        banks.addAll(BankService.fetchAllBanksStatic());  // Add fresh data from DB
+        System.out.println("Loaded " + banks.size() + " banks from the database.");
+    }
+    public static void loadAccountsForAllBanks() {
+        for (Bank bank : banks) {
+            bank.loadAccountsFromDatabase();
+        }
+    }
+
+    public static void loadTransactionsForAllAccounts() {
+        for (Bank bank : banks) {
+            for (Account account : bank.getBankAccounts()) {
+                account.loadTransactionsFromDatabase();
+            }
+        }
+        System.out.println("✔ Transactions loaded for all accounts.");
+    }
+
 
     /**
      * Initializes the banking module, allowing users to log in or create a new bank.
@@ -39,6 +63,8 @@ public class BankLauncher {
             }
         }
     }
+
+
 
     /**
      * Checks if there is a currently logged-in bank session.
@@ -265,6 +291,17 @@ public class BankLauncher {
                     creditLimitField.getFieldValue(),
                     processingFeeField.getFieldValue()
             );
+
+            bankService.createBank(
+                    bankSize(),
+                    bankNameField.getFieldValue(),
+                    bankPasscodeField.getFieldValue(),
+                    depositLimitField.getFieldValue(),
+                    withdrawLimitField.getFieldValue(),
+                    creditLimitField.getFieldValue(),
+                    processingFeeField.getFieldValue()
+            );
+
         } else {
             // Create Bank with default values
             newBank = new Bank(
