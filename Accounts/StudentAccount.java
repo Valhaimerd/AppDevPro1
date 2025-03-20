@@ -1,9 +1,11 @@
 package Accounts;
 
 import Bank.Bank;
+import Services.FundTransfer;
 import Services.TransactionServices;
+import Services.Withdrawal;
 
-public class StudentAccount extends SavingsAccount {
+public class StudentAccount extends SavingsAccount implements FundTransfer, Withdrawal {
     private final TransactionServices transactionService = new TransactionServices();
     public static final double MAX_WITHDRAWAL_LIMIT = 1000.00;
     /**
@@ -29,8 +31,7 @@ public class StudentAccount extends SavingsAccount {
      * @return True if withdrawal is successful, false otherwise.
      */
     @Override
-    public synchronized boolean withdrawal(double amount) throws IllegalAccountType {
-        // Let TransactionServices handle all validations and logic
+    public synchronized boolean withdrawal(double amount) {
         return transactionService.withdraw(this, amount);
     }
 
@@ -41,24 +42,24 @@ public class StudentAccount extends SavingsAccount {
      * @param amount    The amount to transfer.
      * @return True if transfer is successful, false otherwise.
      */
+    @Override
     public synchronized boolean transfer(Account recipient, double amount) throws IllegalAccountType {
         if (amount <= 0 || amount > MAX_WITHDRAWAL_LIMIT) {
             System.out.println("Transaction failed: Exceeds student transfer limit.");
             return false;
         }
 
-        return transactionService.transferFunds(this, recipient, amount);
+        return transactionService.transfer(this, recipient, amount);
     }
 
+    /**
+     * Provides a string representation of the account details.
+     *
+     * @return Formatted account details.
+     */
     @Override
     public String toString() {
-        return "StudentAccount{" +
-                "accountNumber='" + "ST" +  getAccountNumber() + '\'' +
-                ", owner='" + getOwnerFname() + " " + getOwnerLname() + '\'' +
-                ", balance=$" + String.format("%.2f", getAccountBalance()) +
-                ", withdrawalLimit=$" + String.format("%.2f", MAX_WITHDRAWAL_LIMIT) +
-                '}';
+        return String.format("Student Account | Owner: %s %s | Account No: ST%s | Balance: $%.2f | Max Withdrawal: $%.2f",
+                getOwnerFname(), getOwnerLname(), getAccountNumber(), getAccountBalance(), MAX_WITHDRAWAL_LIMIT);
     }
-
 }
-

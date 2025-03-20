@@ -3,43 +3,36 @@ package Launchers;
 import Accounts.*;
 import Bank.Bank;
 import Main.*;
-import Services.AccountService;
-import Services.ServiceProvider;
-import Services.BankService;
+
 /**
  * AccountLauncher handles user login and navigation to account-specific menus.
  */
 public class AccountLauncher {
 
-    private Account loggedAccount;
-    private Bank assocBank;
-
-    public void setAssocBank(Bank assocBank) {
-        this.assocBank = assocBank;
-    }
+    private static Account loggedAccount;
+    private static Bank assocBank;
 
     /**
      * Initializes the account login process.
      */
-    public void accountLogin() throws IllegalAccountType {
+    public static void accountLogin() throws IllegalAccountType {
         if (BankLauncher.bankSize() == 0) {
             System.out.println("❌ No banks are available. Please create a bank first.");
-            return; // Prevents crashing, but allows user to go back
+            return;
         }
 
         assocBank = selectBank();
         if (assocBank == null) {
             System.out.println("❌ Invalid bank selection. Returning to main menu.");
-            return; // Avoid further execution when no bank is selected
+            return;
         }
 
-        // Prompt user to select account type
         Main.showMenuHeader("Select Account Type");
         Main.showMenu(Menu.AccountTypeSelection.menuIdx);
         Main.setOption();
 
         int accountTypeOption = Main.getOption();
-        Class<? extends Account> accountType = null;
+        Class<? extends Account> accountType;
 
         switch (accountTypeOption) {
             case 1 -> accountType = CreditAccount.class;
@@ -56,11 +49,9 @@ public class AccountLauncher {
             }
         }
 
-        // Prompt user for account number and PIN
         String accountNumber = Main.prompt("Enter Account Number: ", false);
         String pin = Main.prompt("Enter 4-digit PIN: ", true);
 
-        // Retrieve account
         Account account = assocBank.getBankAccount(accountNumber);
 
         if (account == null) {
@@ -68,34 +59,31 @@ public class AccountLauncher {
             return;
         }
 
-        // Check if the account type matches
         if (!account.getClass().equals(accountType)) {
             System.out.println("❌ Invalid account type. Please select the correct type.");
             return;
         }
 
-        // Check credentials
-        if (!account.getPin().equals(pin)) {
+        if (!checkCredentials(accountNumber, pin)) {
             System.out.println("❌ Invalid credentials. Login failed.");
             return;
         }
 
-        // Log in the user
         setLogSession(account);
         System.out.println("✅ Login successful. Welcome, " + loggedAccount.getOwnerFname() + "!");
         System.out.println("Logged account type: " + loggedAccount.getClass().getName());
 
         if (loggedAccount.getClass().equals(SavingsAccount.class)) {
-            SavingsAccountLauncher.setLoggedAccount((SavingsAccount) loggedAccount);
+            AccountLauncher.setLogSession(loggedAccount);
             SavingsAccountLauncher.savingsAccountInit();
         } else if (loggedAccount.getClass().equals(CreditAccount.class)) {
-            CreditAccountLauncher.setLoggedAccount((CreditAccount) loggedAccount);
+            AccountLauncher.setLogSession(loggedAccount);
             CreditAccountLauncher.creditAccountInit();
         } else if (loggedAccount.getClass().equals(StudentAccount.class)) {
-            StudentAccountLauncher.setLoggedAccount((StudentAccount) loggedAccount);
+            AccountLauncher.setLogSession(loggedAccount);
             StudentAccountLauncher.studentAccountInit();
         } else if (loggedAccount.getClass().equals(BusinessAccount.class)) {
-            BusinessAccountLauncher.setLoggedAccount((BusinessAccount) loggedAccount);
+            AccountLauncher.setLogSession(loggedAccount);
             BusinessAccountLauncher.businessAccountInit();
         }
 
@@ -126,9 +114,10 @@ public class AccountLauncher {
      * @param pin           The entered PIN.
      * @return True if the credentials match, false otherwise.
      */
-    private boolean checkCredentials(String accountNumber, String pin) {
-        Account account = assocBank.getBankAccount(accountNumber);
-        return account != null && account.getPin().equals(pin);
+    private static boolean checkCredentials(String accountNumber, String pin) {
+        if (assocBank == null) return false;
+        Account account = assocBank.getBankAccount(accountNumber.trim());
+        return account != null && account.getPin().equals(pin.trim());
     }
 
     /**
@@ -136,14 +125,18 @@ public class AccountLauncher {
      *
      * @param account The account that successfully logged in.
      */
-    public void setLogSession(Account account) {
-        this.loggedAccount = account;
+    public static void setLogSession(Account account) {
+        loggedAccount = account;
+    }
+
+    protected static Account getLoggedAccount() {
+        return loggedAccount;
     }
 
     /**
      * Destroys the current account session.
      */
-    public void destroyLogSession() {
+    public static void destroyLogSession() {
         System.out.println("Logging out of " + loggedAccount.getAccountNumber());
         loggedAccount = null;
     }
@@ -153,7 +146,7 @@ public class AccountLauncher {
      *
      * @return True if an account is logged in, false otherwise.
      */
-    public boolean isLoggedIn() {
+    public static boolean isLoggedIn() {
         return loggedAccount != null;
     }
 }

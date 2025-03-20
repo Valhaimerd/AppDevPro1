@@ -11,15 +11,12 @@ import Main.*;
  * CreditAccountLauncher handles user interactions for Credit Accounts,
  * allowing credit payments and recompense.
  */
-public class CreditAccountLauncher {
-
-    private static CreditAccount loggedAccount;
-
+public class CreditAccountLauncher extends AccountLauncher {
     /**
      * Initializes the Credit Account menu after login.
      */
     public static void creditAccountInit() throws IllegalAccountType {
-        if (loggedAccount == null) {
+        if (!isLoggedIn()) {
             System.out.println("No account logged in.");
             return;
         }
@@ -30,10 +27,10 @@ public class CreditAccountLauncher {
             Main.setOption();
 
             switch (Main.getOption()) {
-                case 1 -> System.out.println(loggedAccount.getLoanStatement());
+                case 1 -> System.out.println(getLoggedAccount().getLoanStatement());
                 case 2 -> creditPaymentProcess();
                 case 3 -> creditRecompenseProcess();
-                case 4 -> System.out.println(loggedAccount.getTransactionsInfo());
+                case 4 -> System.out.println(getLoggedAccount().getTransactionsInfo());
                 case 5 -> {
                     return;
                 }
@@ -55,6 +52,7 @@ public class CreditAccountLauncher {
         String recipientAccountNum = recipientField.getFieldValue();
         double amount = amountField.getFieldValue();
 
+        CreditAccount loggedAccount = getLoggedAccount();
         Bank recipientBank = loggedAccount.getBank();
         Account recipientAccount = recipientBank.getBankAccount(recipientAccountNum);
 
@@ -77,9 +75,9 @@ public class CreditAccountLauncher {
     public static void creditRecompenseProcess() throws IllegalAccountType {
         Field<Double, Double> amountField = new Field<Double, Double>("Recompense Amount", Double.class, 1.0, new Field.DoubleFieldValidator());
         amountField.setFieldValue("Enter recompense amount: ");
-
         double amount = amountField.getFieldValue();
 
+        CreditAccount loggedAccount = getLoggedAccount();
         if (loggedAccount.recompense(amount)) {
             System.out.println("Recompense successful.");
         } else {
@@ -88,19 +86,11 @@ public class CreditAccountLauncher {
     }
 
     /**
-     * Sets the currently logged-in Credit Account.
-     *
-     * @param account The logged-in CreditAccount.
-     */
-    public static void setLoggedAccount(CreditAccount account) {
-        loggedAccount = account;
-    }
-
-    /**
      * Get the Credit Account instance of the currently logged account.
      * @return The currently logged account
      */
-    public static CreditAccount getLoggedAccount() {
-        return loggedAccount;
+    protected static CreditAccount getLoggedAccount()
+    {
+        return (CreditAccount) AccountLauncher.getLoggedAccount();
     }
 }

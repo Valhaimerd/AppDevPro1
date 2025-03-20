@@ -176,24 +176,6 @@ public class BankLauncher {
     }
 
     /**
-     * Display all accounts registered under the logged-in bank.
-     */
-    private static void displayAllAccounts() {
-        System.out.println("Showing all accounts:");
-        loggedBank.showAccounts(null);
-    }
-
-    /**
-     * Display accounts of a specific type (Credit or Savings).
-     * @param accountType The class type of accounts to display.
-     */
-    private static void displayAccounts(Class<? extends Account> accountType) {
-        System.out.println("Showing " + (accountType == CreditAccount.class ? "Credit" : "Savings") + " Accounts:");
-        loggedBank.showAccounts(accountType);
-    }
-
-
-    /**
      * Handles the creation of a new account within the currently logged-in bank.
      */
     public static void newAccounts() {
@@ -207,17 +189,23 @@ public class BankLauncher {
             Main.setOption();
 
             int option = Main.getOption();
-            if (option == 5) {  // Fix: Immediately return if Go Back is selected
+            if (option == 5) {
                 System.out.println("Returning to Bank Menu...");
                 return;
             }
 
-            switch (option) {
+            Account newAccount = switch (option) {
                 case 1 -> loggedBank.createNewCreditAccount();
                 case 2 -> loggedBank.createNewSavingsAccount();
                 case 3 -> loggedBank.createNewStudentAccount();
                 case 4 -> loggedBank.createNewBusinessAccount();
-                default -> System.out.println("Invalid option! Please try again.");
+                default -> null;
+            };
+
+            if (newAccount != null) {
+                System.out.println("✅ New account created: " + newAccount);
+            } else {
+                System.out.println("Account creation failed or canceled.");
             }
         }
     }
@@ -250,7 +238,7 @@ public class BankLauncher {
 
         if (bankNameField.getFieldValue().isEmpty()) {
             System.out.println("❌ Error: Bank Name is required!");
-            return; // Exit early
+            return;
         }
 
         Field<String, Integer> bankPasscodeField = new Field<String, Integer>("Bank Passcode", String.class, 4, new Field.StringFieldLengthValidator());
@@ -258,17 +246,15 @@ public class BankLauncher {
 
         if (bankPasscodeField.getFieldValue() == null || bankPasscodeField.getFieldValue().length() < 4) {
             System.out.println("❌ Error: Passcode must be at least 4 characters long.");
-            return; // Exit early
+            return;
         }
 
-        // Ask user if they want to set custom limits
         System.out.println("Do you want to set custom deposit, withdrawal, and credit limits? (Y/N): ");
         String choice = Main.prompt("", true).trim().toUpperCase();
 
         Bank newBank;
 
         if (choice.equals("Y")) {
-            // Custom Limits Fields
             Field<Double, Double> depositLimitField = new Field<Double, Double>("Deposit Limit", Double.class, 0.0, new Field.DoubleFieldValidator());
             depositLimitField.setFieldValue("Enter Deposit Limit: ");
 
@@ -281,7 +267,6 @@ public class BankLauncher {
             Field<Double, Double> processingFeeField = new Field<Double, Double>("Processing Fee", Double.class, 0.0, new Field.DoubleFieldValidator());
             processingFeeField.setFieldValue("Enter Processing Fee: ");
 
-            // Create Bank with custom values
             newBank = new Bank(
                     bankSize(),
                     bankNameField.getFieldValue(),
@@ -303,7 +288,6 @@ public class BankLauncher {
             );
 
         } else {
-            // Create Bank with default values
             newBank = new Bank(
                     bankSize(),
                     bankNameField.getFieldValue(),
@@ -311,7 +295,6 @@ public class BankLauncher {
             );
         }
 
-        // Add Bank to the List
         Bank sameName = getBank(new Bank.BankComparator(), newBank);
         Bank samePasscode = getBank(new Bank.BankCredentialsComparator(), newBank);
         if (samePasscode == null || sameName == null) {

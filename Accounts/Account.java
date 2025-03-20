@@ -84,8 +84,6 @@ public abstract class Account {
         return transactionLog.toString();
     }
 
-    // =================== Getters for Personal Details ===================
-
     public String getOwnerFname() {
         return ownerFname;
     }
@@ -102,18 +100,12 @@ public abstract class Account {
         return pin;
     }
 
-    // =================== Bank and Transaction Getters ===================
-
     public Bank getBank() {
         return bank;
     }
 
     public String getAccountNumber() {
         return accountNumber;
-    }
-
-    public ArrayList<Transaction> getTransactions() {
-        return new ArrayList<>(transactions);
     }
 
     /**
@@ -123,12 +115,7 @@ public abstract class Account {
      */
     @Override
     public String toString() {
-        return "Account {" +
-                "Owner='" + ownerFname + " " + ownerLname + '\'' +
-                ", Email='" + ownerEmail + '\'' +
-                ", Bank='" + bank.getName() + '\'' +
-                ", Account Number='" + accountNumber + '\'' +
-                ", Transactions Count=" + transactions.size() +
-                '}';
+        return String.format("Account Owner: %s %s (%s)\nBank: %s | Account No: %s | Transactions: %d",
+                ownerFname, ownerLname, ownerEmail, bank.getName(), accountNumber, transactions.size());
     }
 }

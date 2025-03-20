@@ -7,9 +7,9 @@ import Services.*;
  * SavingsAccount class representing a standard savings account with balance tracking.
  * It allows deposits, withdrawals, and fund transfers while enforcing banking rules.
  */
-public class SavingsAccount extends Account {
+public class SavingsAccount extends Account implements Deposit, Withdrawal, FundTransfer {
 
-    private double balance;  // The current balance of the savings account
+    private double balance;
     private final TransactionServices transactionService = new TransactionServices();
 
     /**
@@ -40,7 +40,7 @@ public class SavingsAccount extends Account {
      * @return True if there is enough balance, false otherwise.
      */
     public boolean hasEnoughBalance(double amount) {
-        return !(balance >= amount);
+        return balance >= amount;
     }
 
     /**
@@ -58,7 +58,7 @@ public class SavingsAccount extends Account {
     public void adjustAccountBalance(double amount) {
         this.balance += amount;
         if (this.balance < 0) {
-            this.balance = 0; // Prevent negative balances
+            this.balance = 0;
         }
     }
 
@@ -68,8 +68,9 @@ public class SavingsAccount extends Account {
      * @param amount The amount to deposit.
      * @return True if deposit is successful, false otherwise.
      */
-    public synchronized boolean cashDeposit(double amount) throws IllegalAccountType {
-        return transactionService.deposit(this, amount);
+    @Override
+    public synchronized boolean cashDeposit(double amount) {
+        return transactionService.cashDeposit(this, amount);
     }
 
     /**
@@ -78,7 +79,8 @@ public class SavingsAccount extends Account {
      * @param amount The amount to withdraw.
      * @return True if withdrawal is successful, false otherwise.
      */
-    public synchronized boolean withdrawal(double amount) throws IllegalAccountType {
+    @Override
+    public synchronized boolean withdrawal(double amount) {
         return transactionService.withdraw(this, amount);
     }
 
@@ -91,8 +93,9 @@ public class SavingsAccount extends Account {
      * @param amount    The amount to transfer.
      * @return True if the transfer was successful, false otherwise.
      */
+    @Override
     public synchronized boolean transfer(Account recipient, double amount) throws IllegalAccountType {
-        return transactionService.transferFunds(this, recipient, amount);
+        return transactionService.transfer(this, recipient, amount);
     }
 
     /**
@@ -104,8 +107,9 @@ public class SavingsAccount extends Account {
      * @return True if the transfer was successful, false otherwise.
      * @throws IllegalAccountType If attempting to transfer to a CreditAccount.
      */
+    @Override
     public synchronized boolean transfer(Bank recipientBank, Account recipient, double amount) throws IllegalAccountType {
-        return transactionService.transferFunds(this, recipientBank, recipient, amount);
+        return transactionService.transfer(this, recipientBank, recipient, amount);
     }
 
     public double getAccountBalance() {
@@ -118,10 +122,20 @@ public class SavingsAccount extends Account {
      * @return The formatted balance statement.
      */
     public String getAccountBalanceStatement() {
-        return "SavingsAccount{" +
-                "Account Number='" + "SA" + accountNumber + '\'' +
-                ", Owner='" + ownerFname + " " + ownerLname + '\'' +
-                ", Balance=$" + String.format("%.2f", balance) +
-                '}';
+        return String.format("Savings Account | Owner: %s %s | Account No: SA%s | Balance: $%.2f",
+                ownerFname, ownerLname, accountNumber, balance);
+    }
+
+    /**
+     * Provides a compact string representation of the account details.
+     *
+     * @return Formatted account details.
+     */
+    @Override
+    public String toString() {
+        return String.format(
+            "Savings Account [SA%s] - %s %s | Bank: %s | Balance: $%.2f",
+            accountNumber, ownerFname, ownerLname, bank.getName(), balance
+    );
     }
 }

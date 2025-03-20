@@ -2,7 +2,6 @@ package Main;
 
 import Launchers.*;
 import Accounts.IllegalAccountType;
-import Bank.*;
 import Launchers.BankLauncher;
 import Bank.Bank;
 import java.util.Scanner;
@@ -27,8 +26,9 @@ public class Main
         for (Bank bank : BankLauncher.getBanks()) {
             bank.loadAccountsFromDatabase();
         }
+        BankLauncher.loadAccountsForAllBanks();
         BankLauncher.loadTransactionsForAllAccounts();
-        
+
         while (true)
         {
             showMenuHeader("Main Menu");
@@ -41,8 +41,7 @@ public class Main
                 setOption();
 
                 if (getOption() == 1) {
-                    AccountLauncher accountLauncher = new AccountLauncher();
-                    accountLauncher.accountLogin();
+                    AccountLauncher.accountLogin();
                 }
             }
             // Bank Option

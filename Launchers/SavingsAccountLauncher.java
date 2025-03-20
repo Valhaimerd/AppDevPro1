@@ -10,15 +10,12 @@ import Main.*;
  * SavingsAccountLauncher handles user interactions for Savings Accounts,
  * allowing deposits, withdrawals, and fund transfers.
  */
-public class SavingsAccountLauncher {
-
-    private static SavingsAccount loggedAccount;
-
+public class SavingsAccountLauncher extends AccountLauncher {
     /**
      * Initializes the Savings Account menu after login.
      */
     public static void savingsAccountInit() throws IllegalAccountType {
-        if (loggedAccount == null) {
+        if (!isLoggedIn()) {
             System.out.println("No account logged in.");
             return;
         }
@@ -29,11 +26,11 @@ public class SavingsAccountLauncher {
             Main.setOption();
 
             switch (Main.getOption()) {
-                case 1 -> System.out.println(loggedAccount.getAccountBalanceStatement());
+                case 1 -> System.out.println(getLoggedAccount().getAccountBalanceStatement());
                 case 2 -> depositProcess();
                 case 3 -> withdrawProcess();
                 case 4 -> fundTransfer();
-                case 5 -> System.out.println(loggedAccount.getTransactionsInfo());
+                case 5 -> System.out.println(getLoggedAccount().getTransactionsInfo());
                 case 6 -> {
                     return;
                 }
@@ -45,11 +42,12 @@ public class SavingsAccountLauncher {
     /**
      * Handles the deposit process.
      */
-    public static void depositProcess() throws IllegalAccountType {
+    public static void depositProcess() {
         Field<Double, Double> amountField = new Field<Double, Double>("Deposit Amount", Double.class, 1.0, new Field.DoubleFieldValidator());
         amountField.setFieldValue("Enter deposit amount: ");
-
         double amount = amountField.getFieldValue();
+
+        SavingsAccount loggedAccount = getLoggedAccount();
         if (loggedAccount.cashDeposit(amount)) {
             System.out.println("Deposit successful.");
         } else {
@@ -60,11 +58,12 @@ public class SavingsAccountLauncher {
     /**
      * Handles the withdrawal process.
      */
-    public static void withdrawProcess() throws IllegalAccountType {
+    public static void withdrawProcess() {
         Field<Double, Double> amountField = new Field<Double, Double>("Withdrawal Amount", Double.class, 1.0, new Field.DoubleFieldValidator());
         amountField.setFieldValue("Enter withdrawal amount: ");
-
         double amount = amountField.getFieldValue();
+
+        SavingsAccount loggedAccount = getLoggedAccount();
         if (loggedAccount.withdrawal(amount)) {
             System.out.println("Withdrawal successful.");
         } else {
@@ -73,6 +72,7 @@ public class SavingsAccountLauncher {
     }
 
     public static void fundTransfer() throws IllegalAccountType {
+        SavingsAccount loggedAccount = getLoggedAccount();
         if (loggedAccount == null) {
             System.out.println("No account logged in.");
             return;
@@ -103,7 +103,7 @@ public class SavingsAccountLauncher {
                 return;
             }
 
-            if (loggedAccount.transfer(loggedAccount.getBank(), (SavingsAccount) recipient, amount)) {
+            if (loggedAccount.transfer(loggedAccount.getBank(), recipient, amount)) {
                 System.out.println("✅ Internal transfer successful.");
             } else {
                 System.out.println("❌ Transfer failed. Insufficient funds or limit exceeded.");
@@ -136,7 +136,7 @@ public class SavingsAccountLauncher {
                 return;
             }
 
-            if (loggedAccount.transfer(recipientBank, (SavingsAccount) recipient, amount)) {
+            if (loggedAccount.transfer(recipientBank, recipient, amount)) {
                 System.out.println("✅ External transfer successful. Processing fee of $" +
                         loggedAccount.getBank().getProcessingFee() + " applied.");
             } else {
@@ -148,22 +148,12 @@ public class SavingsAccountLauncher {
         }
     }
 
-
-    /**
-     * Sets the currently logged-in Savings Account.
-     *
-     * @param account The logged-in SavingsAccount.
-     */
-    public static void setLoggedAccount(SavingsAccount account) {
-        loggedAccount = account;
-    }
-
     /**
      * Gets the currently logged-in Savings Account.
      *
      * @return The logged-in SavingsAccount.
      */
-    public SavingsAccount getLoggedAccount() {
-        return loggedAccount;
+    protected static SavingsAccount getLoggedAccount() {
+        return (SavingsAccount) AccountLauncher.getLoggedAccount();
     }
 }

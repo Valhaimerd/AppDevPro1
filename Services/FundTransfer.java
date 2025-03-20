@@ -5,6 +5,7 @@ import Accounts.IllegalAccountType;
 import Bank.Bank;
 
 public interface FundTransfer{
+
     /**
      * Cross-transferring of money from one account of one bank, and another account of another bank.
      * Each transfer may require an additional process fee, which is directly deducted
@@ -21,7 +22,7 @@ public interface FundTransfer{
      * @throws IllegalAccountType This error is thrown depending on the rules set upon. Generally
      * occurs when fund transferring from an incompatible account type.
      */
-    public boolean transfer(Bank bank, Account account, double amount) throws IllegalAccountType;
+    boolean transfer(Bank bank, Account account, double amount) throws IllegalAccountType;
 
     /**
      * Transfer money from one account on the same bank, using the
@@ -38,5 +39,6 @@ public interface FundTransfer{
      * @throws IllegalAccountType This error is thrown depending on the rules set upon. Generally occurs
      * when fund transferring from an incompatible account type.
      */
-    public boolean transfer(Account account, double amount) throws IllegalAccountType;
+    boolean transfer(Account account, double amount) throws IllegalAccountType;
+
 }
