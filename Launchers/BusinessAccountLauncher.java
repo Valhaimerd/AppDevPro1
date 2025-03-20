@@ -1,22 +1,17 @@
 package Launchers;
 
-import Accounts.BusinessAccount;
-import Accounts.IllegalAccountType;
-import Accounts.SavingsAccount;
+import Accounts.*;
 import Main.*;
 
 /**
  * BusinessAccountLauncher handles user interactions for Business Accounts.
  */
-public class BusinessAccountLauncher {
-
-    private static BusinessAccount loggedAccount;
-
+public class BusinessAccountLauncher extends CreditAccountLauncher{
     /**
      * Initializes the Business Account menu after login.
      */
     public static void businessAccountInit() throws IllegalAccountType {
-        if (loggedAccount == null) {
+        if (!isLoggedIn()) {
             System.out.println("No account logged in.");
             return;
         }
@@ -27,10 +22,10 @@ public class BusinessAccountLauncher {
             Main.setOption();
 
             switch (Main.getOption()) {
-                case 1 -> System.out.println(loggedAccount.getLoanStatement());
+                case 1 -> System.out.println(getLoggedAccount().getLoanStatement());
                 case 2 -> businessPaymentProcess();
                 case 3 -> recompenseProcess();
-                case 4 -> System.out.println(loggedAccount.getTransactionsInfo());
+                case 4 -> System.out.println(getLoggedAccount().getTransactionsInfo());
                 case 5 -> {
                     return;
                 }
@@ -51,6 +46,7 @@ public class BusinessAccountLauncher {
         amountField.setFieldValue("Enter payment amount: ");
         double amount = amountField.getFieldValue();
 
+        BusinessAccount loggedAccount = getLoggedAccount();
         SavingsAccount recipient = (SavingsAccount) loggedAccount.getBank().getBankAccount(recipientAccountNum);
 
         if (recipient == null) {
@@ -73,6 +69,7 @@ public class BusinessAccountLauncher {
         amountField.setFieldValue("Enter recompense amount: ");
         double amount = amountField.getFieldValue();
 
+        CreditAccount loggedAccount = getLoggedAccount();
         if (loggedAccount.recompense(amount)) {
             System.out.println("✅ Recompense successful.");
         } else {
@@ -80,11 +77,12 @@ public class BusinessAccountLauncher {
         }
     }
 
-    public static void setLoggedAccount(BusinessAccount account) {
-        loggedAccount = account;
-    }
-
-    public static BusinessAccount getLoggedAccount() {
-        return loggedAccount;
+    /**
+     * Gets the currently logged-in Business Account.
+     *
+     * @return The logged-in BusinessAccount.
+     */
+    protected static BusinessAccount getLoggedAccount() {
+        return (BusinessAccount) AccountLauncher.getLoggedAccount();
     }
 }
