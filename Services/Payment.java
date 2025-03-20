@@ -10,9 +10,9 @@ public interface Payment {
      * This is different from Fund Transfer as paying does not have any sort of
      * processing fee.
      * @param account Target account to pay money into.
-     * @param amount
+     * @param amount The amount of money to pay.
      * @throws IllegalAccountType Payment can only be processed between legal account types.
      */
-    public boolean pay(Account account, double amount) throws IllegalAccountType;
+    boolean pay(Account account, double amount) throws IllegalAccountType;
 
 }
