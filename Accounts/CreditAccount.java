@@ -37,7 +37,7 @@ public class CreditAccount extends Account implements Payment, Recompense {
      */
     public boolean canCredit(double amountAdjustment) {
         double creditLimit = bank.getCreditLimit(); // Retrieve credit limit from the bank
-        return (loanBalance + amountAdjustment) <= creditLimit;
+        return !((loanBalance + amountAdjustment) <= creditLimit);
     }
 
     /**
@@ -70,7 +70,7 @@ public class CreditAccount extends Account implements Payment, Recompense {
             throw new IllegalArgumentException("Credit Accounts can only pay to Savings Accounts.");
         }
 
-        if (!canCredit(amount)) { // Prevent exceeding the credit limit
+        if (canCredit(amount)) { // Prevent exceeding the credit limit
             System.out.println("Payment failed: Not enough credit available.");
             return false;
         }
@@ -85,6 +85,7 @@ public class CreditAccount extends Account implements Payment, Recompense {
      * @param amount The amount to recompense.
      * @return True if successful, false otherwise.
      */
+    @Override
     public synchronized boolean recompense(double amount) throws IllegalAccountType {
         return transactionService.recompense(this, amount);
     }
@@ -94,15 +95,34 @@ public class CreditAccount extends Account implements Payment, Recompense {
     }
 
     /**
-     * Gets the current loan statement.
+     * Provides a detailed loan statement for the credit account.
      *
-     * @return Formatted loan statement.
+     * @return A formatted loan statement string.
      */
     public String getLoanStatement() {
-        return "CreditAccount{" +
-                "Account Number='" + "CA" + accountNumber + '\'' +
-                ", Owner='" + ownerFname + " " + ownerLname + '\'' +
-                ", Loan Balance=$" + String.format("%.2f", loanBalance) +
-                '}';
+        return String.format(
+                """
+                        
+                        ====== Credit Account Loan Statement ======
+                        Account Number : CA%s
+                        Account Owner  : %s %s
+                        Bank           : %s
+                        Outstanding Loan Balance : $%.2f
+                        ===========================================""",
+                accountNumber, ownerFname, ownerLname, bank.getName(), loanBalance
+        );
+    }
+
+    /**
+     * Provides a compact string representation of the account details.
+     *
+     * @return Formatted account details.
+     */
+    @Override
+    public String toString() {
+        return String.format(
+                "Credit Account [CA%s] - %s %s | Bank: %s | Loan: $%.2f",
+                accountNumber, ownerFname, ownerLname, bank.getName(), loanBalance
+        );
     }
 }
