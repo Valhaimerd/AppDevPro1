@@ -7,25 +7,25 @@ import Main.Main;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Comparator;
-import Services.AccountService;
 import Services.ServiceProvider;
-import Services.BankService;
-import Launchers.BankLauncher;
+
 /**
  * The Bank class represents a banking institution that manages multiple accounts.
  * It enforces banking rules such as deposit/withdrawal limits and credit limits.
  */
 public class Bank {
-    private String bankName, passcode;
+    private final String bankName, passcode;
     private final int bankId;
     private final ArrayList<Account> bankAccounts;
 
-    // Banking Limits
     private final double depositLimit, withdrawLimit, creditLimit;
     private final double processingFee;
 
+    /**
+     * Loads accounts from the database and populates the bankAccounts list.
+     */
     public void loadAccountsFromDatabase() {
-        bankAccounts.clear(); // Clear any old data
+        bankAccounts.clear();
         List<Account> allAccounts = ServiceProvider.getAccountService().fetchAllAccounts();
         for (Account acc : allAccounts) {
             if (acc.getBank().getBankId() == this.bankId) {
@@ -34,11 +34,12 @@ public class Bank {
         }
         System.out.println("Loaded " + bankAccounts.size() + " accounts for bank " + getName() + " from the database.");
     }
+
     /**
-     * Constructor for Bank.
-     *
-     * @param bankName The name of the bank.
-     * @param bankId   The unique identifier for the bank.
+     * Default constructor with predefined banking limits.
+     * @param bankName Name of the bank.
+     * @param bankId Unique identifier for the bank.
+     * @param passcode Security passcode for the bank.
      */
     public Bank(int bankId, String bankName, String passcode) {
         this.bankId = bankId;
@@ -53,6 +54,16 @@ public class Bank {
         this.processingFee = 10.0;
     }
 
+    /**
+     * Custom constructor allowing custom banking limits.
+     * @param bankId Bank ID.
+     * @param bankName Bank name.
+     * @param passcode Bank passcode.
+     * @param depositLimit Deposit limit for the bank.
+     * @param withdrawLimit Withdrawal limit for the bank.
+     * @param creditLimit Credit limit for the bank.
+     * @param processingFee Processing fee for external transactions.
+     */
     public Bank(int bankId, String bankName, String passcode, double depositLimit, double withdrawLimit, double creditLimit, double processingFee) {
         this.bankId = bankId;
         this.bankName = bankName;
@@ -63,43 +74,6 @@ public class Bank {
         this.withdrawLimit = withdrawLimit;
         this.creditLimit = creditLimit;
         this.processingFee = processingFee;
-    }
-
-    public <T extends Account> void showAccounts(Class<T> accountType) {
-        if (bankAccounts.isEmpty()) {
-            System.out.println("No account(s) exist..");
-            return;
-        }
-
-        if (accountType == null) {
-            for (Account account : bankAccounts) {
-                System.out.println(account);
-            }
-        } else {
-            System.out.println("Showing accounts of type: " + accountType.getSimpleName());
-
-            for (Account account : bankAccounts) {
-                if (account.getClass().equals(accountType)) { // Fix: Use exact class matching
-                    System.out.println(account);
-                }
-            }
-        }
-    }
-
-    /**
-     * Retrieves an account from this bank using an account number.
-     *
-     * @param accountNum The account number to search for.
-     * @return The account if found, otherwise null.
-     */
-    public Account getBankAccount(String accountNum) {
-
-        for (Account account : bankAccounts) { // Assuming `accounts` is a list of accounts
-            if (account.getAccountNumber().equals(accountNum)) {
-                return account;
-            }
-        }
-        return null; // Return null if not found
     }
 
     /**
@@ -121,8 +95,6 @@ public class Bank {
 
         Field<String, String> emailField = new Field<String, String>("Email", String.class, null, new Field.StringFieldValidator());
 
-
-        // Array of fields to prompt user input
         Field<?, ?>[] fields = {accountNumberField, pinField, firstNameField, lastNameField, emailField};
 
         for (Field<?, ?> field : fields) {
@@ -184,6 +156,11 @@ public class Bank {
         return newAccount;
     }
 
+    /**
+     * Creates and registers a new StudentAccount using validated fields.
+     *
+     * @return The newly created StudentAcocunt.
+     */
     public StudentAccount createNewStudentAccount() {
         Main.showMenuHeader("Create New Students Account");
         ArrayList<Field<?, ?>> accountData = createNewAccount();
@@ -205,6 +182,11 @@ public class Bank {
         return newAccount;
     }
 
+    /**
+     * Creates and registers a new BusinessAccount using validated fields.
+     *
+     * @return The newly created BusinessAccount.
+     */
     public BusinessAccount createNewBusinessAccount() {
         Main.showMenuHeader("Create New Business Account");
         ArrayList<Field<?, ?>> accountData = createNewAccount();
@@ -259,7 +241,38 @@ public class Bank {
                 .anyMatch(account -> account.getAccountNumber().equals(accountNum));
     }
 
-    // ========================= GETTERS =========================
+    /**
+     * Displays all accounts registered under this bank.
+     * <p>
+     * If no accounts are registered, it will notify the user.
+     * The method can show either:
+     *  - All accounts (if accountType is null)
+     *  - Accounts of a specific type (SavingsAccount or CreditAccount), if specified.
+     *
+     * @param accountType The specific account type class to filter and display (e.g., SavingsAccount.class).
+     *                    If null, displays all account types.
+     * @param <T>         A generic type parameter that extends Account, used for type filtering.
+     */
+    public <T extends Account> void showAccounts(Class<T> accountType) {
+        if (bankAccounts.isEmpty()) {
+            System.out.println("No account(s) exist..");
+            return;
+        }
+
+        if (accountType == null) {
+            for (Account account : bankAccounts) {
+                System.out.println(account);
+            }
+        } else {
+            System.out.println("Showing accounts of type: " + accountType.getSimpleName());
+
+            for (Account account : bankAccounts) {
+                if (account.getClass().equals(accountType)) { // Fix: Use exact class matching
+                    System.out.println(account);
+                }
+            }
+        }
+    }
 
     public String getName() {
         return bankName;
@@ -274,7 +287,7 @@ public class Bank {
     }
 
     public ArrayList<Account> getBankAccounts() {
-        return new ArrayList<>(bankAccounts); // Return a copy to prevent external modification
+        return new ArrayList<>(bankAccounts);
     }
 
     public double getDepositLimit() {
@@ -282,7 +295,7 @@ public class Bank {
     }
 
     public double getWithdrawLimit() {
-        return withdrawLimit;
+        return this.withdrawLimit;
     }
 
     public double getCreditLimit() {
@@ -293,18 +306,37 @@ public class Bank {
         return processingFee;
     }
 
-    // ========================= COMPARATORS =========================
-
-    @Override
-    public String toString() {
-        return "Bank{" +
-                "Bank ID='" + bankId + '\'' +
-                "Bank Name='" + bankName + '\'' +
-                ", Bank Passcode='" + passcode + '\'' +
-                ", Accounts Registered=" + bankAccounts.size() +
-                '}';
+    /**
+     * Retrieves an account from this bank by its account number.
+     * @param accountNum Account number to search for.
+     * @return Account if found, otherwise null.
+     */
+    public Account getBankAccount(String accountNum) {
+        for (Account account : bankAccounts) {
+            if (account.getAccountNumber().equals(accountNum)) {
+                return account;
+            }
+        }
+        return null;
     }
 
+    /**
+     * Provides a string representation of the Bank details.
+     *
+     * @return Formatted Bank details.
+     */
+    @Override
+    public String toString() {
+        return String.format(
+                "Bank { Bank ID: '%s', Bank Name: '%s', Passcode: '%s', Deposit Limit: $%.2f, Withdraw Limit: $%.2f, Credit Limit: $%.2f, Processing Fee: $%.2f, Accounts Registered: %d }",
+                bankId, bankName, passcode, depositLimit, withdrawLimit, creditLimit, processingFee, bankAccounts.size()
+        );
+    }
+
+    /**
+     * Comparator class used to compare two Bank objects based on their name and passcode.
+     * Primarily used for verifying bank credentials during login or searches.
+     */
     public static class BankCredentialsComparator implements Comparator<Bank> {
         @Override
         public int compare(Bank b1, Bank b2) {
@@ -312,11 +344,14 @@ public class Bank {
             if (nameComparison != 0) {
                 return nameComparison;
             }
-            // If bank names are equal, compare by passcode
             return b1.getPasscode().compareTo(b2.getPasscode());
         }
     }
-
+    
+    /**
+     * Comparator class that compares two Bank objects based on their bank ID.
+     * Useful for identifying banks by their unique ID.
+     */
     public static class BankIdComparator implements Comparator<Bank> {
         @Override
         public int compare(Bank b1, Bank b2) {
@@ -324,6 +359,10 @@ public class Bank {
         }
     }
 
+    /**
+     * Comparator class used to compare two Bank objects by their bank name.
+     * Mainly used for sorting or searching banks alphabetically.
+     */
     public static class BankComparator implements Comparator<Bank> {
         @Override
         public int compare(Bank b1, Bank b2) {
