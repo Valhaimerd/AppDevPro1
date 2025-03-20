@@ -129,15 +129,12 @@ public class TestSavings {
             SavingsAccount bank1sa = (SavingsAccount) BankLauncher.findAccount("20010-00001");
             SavingsAccount bank2sa = (SavingsAccount) BankLauncher.findAccount("20011-00001");
             CreditAccount bank1ca = (CreditAccount) BankLauncher.findAccount("20010-00002");
-
             bank1sa.cashDeposit(5000.0);
             Assert.assertEquals(5500.0, bank1sa.getAccountBalance(), 0.00001);
             bank1sa.transfer(bank2sa.getBank(), bank2sa, 4000.0);
             Assert.assertEquals(9000.0, bank2sa.getAccountBalance(), 0.00001);
             Assert.assertEquals(5500.0 - 4000.0 - bdo.getProcessingFee(), bank1sa.getAccountBalance(), 0.00001);
-            Assert.assertThrows(IllegalAccountType.class, () -> {
-                bank1sa.transfer(bank1ca, 1000.0);
-            });
+            Assert.assertThrows(IllegalAccountType.class, () -> bank1sa.transfer(bank1ca, 1000.0));
 
             // Check logs
 
