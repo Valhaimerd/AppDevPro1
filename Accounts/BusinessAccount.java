@@ -1,13 +1,15 @@
 package Accounts;
 
 import Bank.Bank;
+import Services.Payment;
+import Services.Recompense;
 import Services.TransactionServices;
 
 /**
  * BusinessAccount class representing a business credit account with higher limits
  * and business-focused transactions.
  */
-public class BusinessAccount extends CreditAccount {
+public class BusinessAccount extends CreditAccount implements Payment, Recompense {
 
     private final TransactionServices transactionService = new TransactionServices();
     private static final double BUSINESS_CREDIT_LIMIT_MULTIPLIER = 2.0; // Business credit is usually higher
@@ -59,6 +61,7 @@ public class BusinessAccount extends CreditAccount {
      * @param amount    The amount to pay.
      * @return True if successful, false otherwise.
      */
+    @Override
     public synchronized boolean pay(Account recipient, double amount) throws IllegalAccountType {
         if (!(recipient instanceof SavingsAccount savingsRecipient)) {
             throw new IllegalArgumentException("Business accounts can only pay to Savings Accounts.");
@@ -83,6 +86,13 @@ public class BusinessAccount extends CreditAccount {
         return transactionService.recompense(this, amount);
     }
 
+    /**
+     * Adjusts the current loan amount for the business account.
+     * Ensures that the adjustment does not exceed the business credit limit.
+     * Displays appropriate messages based on whether the adjustment is successful or not.
+     *
+     * @param amount The amount to adjust the loan by (can be positive or negative).
+     */
     @Override
     public void adjustLoanAmount(double amount) {
         double currentLoan = getLoan();
@@ -96,5 +106,4 @@ public class BusinessAccount extends CreditAccount {
         super.adjustLoanAmount(amount);
         System.out.println("✅ Loan successfully adjusted. New Loan: " + getLoan());
     }
-
 }
