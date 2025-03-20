@@ -2,21 +2,17 @@ package Launchers;
 
 import Accounts.IllegalAccountType;
 import Accounts.SavingsAccount;
-import Accounts.StudentAccount;
 import Main.*;
 
 /**
  * StudentAccountLauncher handles user interactions for Student Accounts.
  */
-public class StudentAccountLauncher {
-
-    private static StudentAccount loggedAccount;
-
+public class StudentAccountLauncher extends SavingsAccountLauncher{
     /**
      * Initializes the Student Account menu after login.
      */
     public static void studentAccountInit() throws IllegalAccountType {
-        if (loggedAccount == null) {
+        if (!isLoggedIn()) {
             System.out.println("No account logged in.");
             return;
         }
@@ -27,10 +23,10 @@ public class StudentAccountLauncher {
             Main.setOption();
 
             switch (Main.getOption()) {
-                case 1 -> System.out.println(loggedAccount.getAccountBalanceStatement());
+                case 1 -> System.out.println(getLoggedAccount().getAccountBalanceStatement());
                 case 2 -> withdrawProcess();
                 case 3 -> transferProcess();
-                case 4 -> System.out.println(loggedAccount.getTransactionsInfo());
+                case 4 -> System.out.println(getLoggedAccount().getTransactionsInfo());
                 case 5 -> {
                     return;
                 }
@@ -42,11 +38,12 @@ public class StudentAccountLauncher {
     /**
      * Handles the withdrawal process with student restrictions.
      */
-    public static void withdrawProcess() throws IllegalAccountType {
+    public static void withdrawProcess() {
         Field<Double, Double> amountField = new Field<Double, Double>("Withdrawal Amount", Double.class, 1.0, new Field.DoubleFieldValidator());
         amountField.setFieldValue("Enter withdrawal amount: ");
-
         double amount = amountField.getFieldValue();
+
+        SavingsAccount loggedAccount = getLoggedAccount();
         if (loggedAccount.withdrawal(amount)) {
             System.out.println("✅ Withdrawal successful.");
         } else {
@@ -66,6 +63,7 @@ public class StudentAccountLauncher {
         amountField.setFieldValue("Enter transfer amount: ");
         double amount = amountField.getFieldValue();
 
+        SavingsAccount loggedAccount = getLoggedAccount();
         SavingsAccount recipient = (SavingsAccount) loggedAccount.getBank().getBankAccount(recipientAccountNum);
 
         if (recipient == null) {
@@ -80,11 +78,12 @@ public class StudentAccountLauncher {
         }
     }
 
-    public static void setLoggedAccount(StudentAccount account) {
-        loggedAccount = account;
-    }
-
-    public static StudentAccount getLoggedAccount() {
-        return loggedAccount;
+    /**
+     * Gets the currently logged-in Student Account.
+     *
+     * @return The logged-in StudentAccount.
+     */
+    protected static SavingsAccount getLoggedAccount() {
+        return (SavingsAccount) AccountLauncher.getLoggedAccount();
     }
 }
