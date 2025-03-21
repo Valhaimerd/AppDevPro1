@@ -50,17 +50,54 @@ The **Banking System Program** is designed to simulate a real-world banking syst
 
 ## **CLASS LAUNCHERS**  
 ### **Account Launcher Class**
-
+- **User Authentication** – Verifies user credentials by checking the entered account number and PIN against the selected bank's records.
+- **Bank Selection** – Allows users to choose a bank before logging into an account.
+- **Account Type Selection** – Provides an option to select between different account types such as savings, credit, student, or business accounts.
+- **Session Management** – Stores the logged-in account details, provides access to them, and enables users to log out when needed.
+- **Navigation to Account Menus** – Redirects authenticated users to the appropriate account-specific interface based on their account type.
 ### **Bank Launcher Class**
-
+- **Account Management** – Loads accounts from the database, displays different account types, and facilitates new account creation.
+- **Account Search** – Finds specific accounts across all banks using account numbers.
+- **Account Type Selection** – Allows users to choose between Credit, Savings, Student, or Business accounts.
+- **Bank Management** – Loads banks from the database, manages registered banks, and allows new bank creation with optional custom transaction limits.
+- **Bank Authentication** – Verifies bank credentials during login using the bank name and passcode.
+- **Bank Selection** – Displays a list of registered banks and allows users to select one for login.
+- **Navigation to Account Menus** – Directs authenticated users to account-specific menus for further actions.
+- **Session Management** – Maintains the current bank session, tracks if a bank is logged in, and enables logging out.
+- **Transaction Management** – Loads and manages transaction history for all accounts in registered banks.
 ### **Bussiness Account Launcher Class**
-
-### **Credit Account Launcher Class** 
-
+- **Business Account Menu Navigation** – Provides a menu interface for business account operations after login.
+- **Loan Statement Viewing** – Displays the current loan statement for the logged-in business account.
+- **Business Payment Processing** – Allows making payments from the business account to a recipient savings account, ensuring compliance with credit limits.
+- **Recompense Processing** – Facilitates loan repayment by validating amounts against the outstanding balance.
+- **Transaction History Viewing** – Displays all past transactions associated with the business account.
+- **Session Management** – Ensures that a business account is logged in before allowing access to features.
+### **Credit Account Launcher Class**
+- **Credit Account Menu Navigation** – Provides a menu interface for credit account operations after login.
+- **Loan Statement Viewing** – Displays the current loan statement for the logged-in credit account.
+- **Credit Payment Processing** – Allows making payments from the credit account to a recipient savings account, ensuring sufficient credit availability.
+- **Credit Recompense Processing** – Facilitates loan repayment by validating the entered amount against the outstanding loan balance.
+- **Transaction History Viewing** – Displays all past transactions associated with the credit account.
+- **Session Management** – Ensures that a credit account is logged in before allowing access to features.
 ### **Savings Account Launcher Class**
-
+- **Savings Account Menu Navigation** – Provides a menu interface for savings account operations after login.
+- **Account Balance Viewing** – Displays the current balance of the logged-in savings account.
+- **Deposit Processing** – Allows users to deposit money into their savings account while ensuring valid amounts.
+- **Withdrawal Processing** – Enables users to withdraw money, subject to available balance and withdrawal limits.
+- **Fund Transfer**
+   - **Internal Transfer** – Transfers funds between accounts within the same bank.
+   - **External Transfer** – Transfers funds to an account in a different bank, with a processing fee applied.
+- **Transaction History Viewing** – Displays all past transactions associated with the savings account.
+- **Session Management** – Ensures that a savings account is logged in before allowing access to features.
 ### **Student Account Launcher Class**
+- **Student Account Menu Navigation** – Provides a menu interface tailored for student accounts.
+- **Account Balance Viewing** – Displays the current balance of the logged-in student account.
+- **Restricted Withdrawals** – Enforces a student withdrawal limit of $1000 per transaction.
+- **Limited Fund Transfers** – Allows fund transfers but limits the transfer amount to $1000.
+- **Transaction History Viewing** – Displays past transactions related to the student account.
+- **Session Management** – Ensures that a student account is logged in before allowing access to features.
 
+- - -
 
 ## **SERVICES**  
 
@@ -79,23 +116,29 @@ The **Banking System Program** is designed to simulate a real-world banking syst
 - **Creates a bank (custom settings)** – Adds a new bank with extra settings like deposit, withdrawal, and credit limits, as well as processing fees.
 
 ### **Deposit**
-- an interface serves as a blueprint for deposit operations
+- It is an interface serves as a blueprint for deposit operations
 
 ### **FundTransfer**
+- It is an  interface defines the contract for transferring funds between bank accounts. It provides two methods to facilitate both intra-bank and inter-bank transfers while ensuring proper validation and error handling.
 
-### **LogServeice**
+### **LogService**
+- The LogService class provides functionalities for managing transaction logs within the banking system. It interacts with an ITransactionDAO implementation to fetch transaction records for a specific account and log new transactions.
 
 ### **Payment**
+- This interface defines a contact for processing payment between accounts in the banking system.
 
 ### **Recompense**
+- This  interface defines a mechanism for repaying a loan or reducing an outstanding credit balance in a banking system.
 
 ### **ServiceProvider**
+- This  class serves as a central access point for various banking services within the application. It initializes and provides singleton instances of key service classes, including BankService, AccountService, and LogService, ensuring that these services have a consistent and shared database provider through SQLiteDatabaseProvider.
 
 ### **Transaction**
-
+- This class represents a record of a financial transaction in the system. Each transaction captures key details, including the account that initiated it, the type of transaction, a brief description, and a timestamp indicating when it occurred.
 ### **TransactionServices**
-
+- This class handles various banking transactions, ensuring smooth and secure financial operations. It includes methods for transferring funds (both within the same bank and across different banks), depositing money, withdrawing funds, making credit payments, and repaying loans.
 ### **Withdrawal**
+- This interface defines a simple contract for withdrawing money from an account using a specified method.
 
 ---
 
