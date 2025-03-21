@@ -23,6 +23,8 @@ public abstract class Account {
     protected final String ownerFname, ownerLname, ownerEmail;   // Owner's first name
     protected final String pin;          // 4-digit security PIN (hashed for security in real-world apps)
 
+    protected final LogService logService = ServiceProvider.getTransactionService();
+
     public void loadTransactionsFromDatabase() {
         transactions.clear(); // Clear existing transactions
         LogService logService = ServiceProvider.getTransactionService();
@@ -65,6 +67,7 @@ public abstract class Account {
      */
     public void addNewTransaction(String sourceAccount, Transaction.Transactions type, String description) {
         transactions.add(new Transaction(sourceAccount, type, description));
+
     }
 
     /**
@@ -73,15 +76,17 @@ public abstract class Account {
      * @return A formatted string containing all transaction details.
      */
     public String getTransactionsInfo() {
-        if (transactions.isEmpty()) {
-            return "No transactions found for this account.";
-        }
+//        if (transactions.isEmpty()) {
+//            return "No transactions found for this account.";
+//        }
+//
+//        StringBuilder transactionLog = new StringBuilder("Transaction History:\n");
+//        for (Transaction transaction : transactions) {
+//            transactionLog.append(transaction.toString()).append("\n");
+//        }
+//        return transactionLog.toString();
 
-        StringBuilder transactionLog = new StringBuilder("Transaction History:\n");
-        for (Transaction transaction : transactions) {
-            transactionLog.append(transaction.toString()).append("\n");
-        }
-        return transactionLog.toString();
+        return logService.fetchTransaction(this.accountNumber);
     }
 
     public String getOwnerFname() {

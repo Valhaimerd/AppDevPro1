@@ -19,4 +19,5 @@ public interface IAccountDAO {
     double getBalance(String accountNumber);
     void updateBalance(String accountNumber, double newBalance);
     List<Account> getAllAccounts();
+    Account getDBAccountByNumber(String accountNumber);
 }

@@ -163,28 +163,24 @@ The **Banking System Program** is designed to simulate a real-world banking syst
 
 
 ### **CreditAccountLauncher**
-1.
+1. **setLoggedAccount()**
+   - updates the stored logged-in account with the provided _Account_ object, making sure that _getLoggedAccount()_ always returns the correct active user and allowing smooth session switching when needed.
+##### Why it was added
+   - to provide direct control over updating the currently logged-in account. This ensures that the system can properly track which account is active at any time.
 
 ### **SavingsAccountLauncher**
-1.
+1. **setLoggedAccount()**
+   -
+##### Why it was added
+   -
 
 ### **BankLauncher**
-1. **displayAllAccounts()**
-   - It calls loggedBank.showAccounts(null), which displays every account in the bank, regardless of whether it is a credit, savings, student, or business account.
-##### Why it was added
-   - This function was added to provide a quick way to view all accounts under the currently logged-in bank without filtering by account type.
-
-2. **displayAccounts(Class<? extends Account> accountType)**
-   - It takes a class type as a parameter (CreditAccount.class, SavingsAccount.class, etc.) and calls loggedBank.showAccounts(accountType), displaying only accounts of the given type.
-##### Why it was added
-   - This function allows filtering accounts by type (Credit, Savings, etc.), making it easier to manage and view specific types of accounts.
-
-3. **getBankByIndex(int index)**
+1. **getBankByIndex(int index)**
    - It checks if the given index is valid and returns the corresponding bank wrapped in an Optional. If the index is out of range, it returns an empty Optional.
 ##### Why it was added
    - This function simplifies retrieving a bank using an index, which is useful for menus where banks are listed numerically.
 
-4. **getBanks()**
+2. **getBanks()**
    - It returns the banks list, allowing other parts of the program to access and manipulate the registered banks.
 ##### Why it was added
    - This function was added to provide access to the full list of registered banks, making it easier to retrieve all banks when needed.
