@@ -16,6 +16,9 @@ public class AccountService {
         return accountDAO.getAllAccounts();
     }
 
+    public Account fetchAccountByNumber(String number) {
+        return accountDAO.getDBAccountByNumber(number);
+    }
     // Static fetch helper (optional, for use anywhere)
     public static List<Account> fetchAllAccountsStatic() {
         AccountService accountService = ServiceProvider.getAccountService();

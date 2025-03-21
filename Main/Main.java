@@ -22,10 +22,8 @@ public class Main
             Integer.class, -1, new Field.IntegerFieldValidator());
 
     public static void main(String[] args) throws IllegalAccountType {
+
         BankLauncher.loadBanksFromDatabase();
-        for (Bank bank : BankLauncher.getBanks()) {
-            bank.loadAccountsFromDatabase();
-        }
         BankLauncher.loadAccountsForAllBanks();
         BankLauncher.loadTransactionsForAllAccounts();
 

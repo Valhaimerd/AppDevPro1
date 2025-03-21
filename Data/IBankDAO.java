@@ -15,4 +15,6 @@ public interface IBankDAO {
                  double creditLimit, double processingFee);
 
     List<Bank> getAllBanksFull();
+    Bank getDBBankByID(int id);
+    Bank getDBBankByName(String name);
 }

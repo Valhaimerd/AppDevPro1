@@ -15,6 +15,12 @@ public class BankService {
         return bankService.fetchAllBanks();
     }
 
+    public Bank fetchBankByID(int id) {
+        return bankDAO.getDBBankByID(id);
+    }
+
+    public Bank fetchBankbyName(String name) {return bankDAO.getDBBankByName(name);}
+
     public BankService(IBankDAO bankDAO) {
         this.bankDAO = bankDAO;
     }

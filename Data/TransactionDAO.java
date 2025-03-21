@@ -57,4 +57,38 @@ public class TransactionDAO implements ITransactionDAO {
 
         return transactions;
     }
+
+    @Override
+    public String getTransaction(String accountNumber) {
+        StringBuilder transactionLog = new StringBuilder("Transaction History:\n");
+        String sql = "SELECT * FROM Transactions WHERE source_account = ? OR target_account = ?";
+
+        try (Connection conn = databaseProvider.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, accountNumber);
+            stmt.setString(2, accountNumber);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String source = rs.getString("source_account");
+                String type = rs.getString("transaction_type");
+                double amount = rs.getDouble("amount");
+                String description = rs.getString("description");
+
+                transactionLog.append(String.format("[%s] $%.2f - %s (Source: %s)%n", type, amount, description, source));
+            }
+
+        } catch (SQLException e) {
+            System.out.println("❌ Error retrieving transactions: " + e.getMessage());
+            return "Error retrieving transactions.";
+        }
+
+        if (transactionLog.toString().equals("Transaction History:\n")) {
+            return "No transactions found for this account.";
+        }
+
+        return transactionLog.toString();
+    }
 }

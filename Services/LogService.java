@@ -15,6 +15,10 @@ public class LogService {
         return transactionDAO.getTransactionsForAccount(accountNumber);
     }
 
+    public String fetchTransaction(String accountNumber) {
+        return transactionDAO.getTransaction(accountNumber);
+    }
+
     public void logTransaction(String sourceAccount, String targetAccount, String type, double amount, String description) {
         transactionDAO.logTransaction(sourceAccount, targetAccount, type, amount, description);
         System.out.println("Transaction logged: " + description);

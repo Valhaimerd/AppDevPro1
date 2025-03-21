@@ -87,6 +87,52 @@ public class BankDAO implements IBankDAO {
         }
         return banks;
     }
+    @Override
+    public Bank getDBBankByID(int id) {
+        String sql = "SELECT * FROM Bank WHERE bank_id = ?";
+        try (Connection conn = databaseProvider.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new Bank(
+                        rs.getInt("bank_id"),
+                        rs.getString("name"),
+                        rs.getString("passcode"),
+                        rs.getDouble("deposit_limit"),
+                        rs.getDouble("withdraw_limit"),
+                        rs.getDouble("credit_limit"),
+                        rs.getDouble("processing_fee")
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println("❌ Error fetching bank by ID: " + e.getMessage());
+        }
+        return null;
+    }
 
+    @Override
+    public Bank getDBBankByName(String name) {
+        String sql = "SELECT * FROM Bank WHERE name = ?";
+        try (Connection conn = databaseProvider.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, name);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new Bank(
+                        rs.getInt("bank_id"),
+                        rs.getString("name"),
+                        rs.getString("passcode"),
+                        rs.getDouble("deposit_limit"),
+                        rs.getDouble("withdraw_limit"),
+                        rs.getDouble("credit_limit"),
+                        rs.getDouble("processing_fee")
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println("❌ Error fetching bank by name: " + e.getMessage());
+        }
+        return null;
+    }
 
 }

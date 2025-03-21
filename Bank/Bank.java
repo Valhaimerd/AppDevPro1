@@ -7,6 +7,8 @@ import Main.Main;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Comparator;
+
+import Services.AccountService;
 import Services.ServiceProvider;
 
 /**
@@ -20,6 +22,8 @@ public class Bank {
 
     private final double depositLimit, withdrawLimit, creditLimit;
     private final double processingFee;
+
+    private final AccountService accountService = ServiceProvider.getAccountService();
 
     /**
      * Loads accounts from the database and populates the bankAccounts list.
@@ -312,12 +316,18 @@ public class Bank {
      * @return Account if found, otherwise null.
      */
     public Account getBankAccount(String accountNum) {
-        for (Account account : bankAccounts) {
-            if (account.getAccountNumber().equals(accountNum)) {
-                return account;
-            }
+
+//        for (Account account : bankAccounts) {
+//            if (account.getAccountNumber().equals(accountNum)) {
+//                return account;
+//            }
+//        }
+//        return null;
+        Account account = accountService.fetchAccountByNumber(accountNum);
+        if (account == null) {
+            System.out.println("⚠️ No account found for account number: " + accountNum);
         }
-        return null;
+        return account;
     }
 
     /**

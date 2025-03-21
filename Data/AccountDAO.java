@@ -144,5 +144,59 @@ public class AccountDAO implements IAccountDAO {
 
     }
 
+    @Override
+    public Account getDBAccountByNumber(String accountNumber) {
+        Account account = null;
+        String sql = "SELECT a.*, at.type_name, b.name as bank_name FROM Account a " +
+                "JOIN AccountType at ON a.account_type = at.type_id " +
+                "JOIN Bank b ON a.bank_id = b.bank_id " +
+                "WHERE a.account_number = ?";
+
+        try (Connection conn = databaseProvider.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, accountNumber);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String bankName = rs.getString("bank_name");
+                Bank bank = null;
+                for (Bank b : BankLauncher.getBanks()) {
+                    if (b.getName().equalsIgnoreCase(bankName)) {
+                        bank = b;
+                        break;
+                    }
+                }
+
+                String typeName = rs.getString("type_name");
+                account = switch (typeName) {
+                    case "Savings" -> new SavingsAccount(
+                            bank, rs.getString("account_number"), rs.getString("pin"),
+                            rs.getString("owner_fname"), rs.getString("owner_lname"), rs.getString("owner_email"),
+                            rs.getDouble("balance")
+                    );
+                    case "Credit" -> new CreditAccount(
+                            bank, rs.getString("account_number"), rs.getString("pin"),
+                            rs.getString("owner_fname"), rs.getString("owner_lname"), rs.getString("owner_email")
+                    );
+                    case "Business" -> new BusinessAccount(
+                            bank, rs.getString("account_number"), rs.getString("pin"),
+                            rs.getString("owner_fname"), rs.getString("owner_lname"), rs.getString("owner_email"),
+                            rs.getDouble("balance")
+                    );
+                    case "Student" -> new StudentAccount(
+                            bank, rs.getString("account_number"), rs.getString("pin"),
+                            rs.getString("owner_fname"), rs.getString("owner_lname"), rs.getString("owner_email"),
+                            rs.getDouble("balance")
+                    );
+                    default -> null;
+                };
+            }
+        } catch (SQLException e) {
+            System.out.println("❌ Error fetching account: " + e.getMessage());
+        }
+
+        return account;
+    }
+
 
 }
