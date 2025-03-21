@@ -163,10 +163,16 @@ The **Banking System Program** is designed to simulate a real-world banking syst
 
 
 ### **CreditAccountLauncher**
-1.
+1. **setLoggedAccount()**
+   - updates the stored logged-in account with the provided _Account_ object, making sure that _getLoggedAccount()_ always returns the correct active user and allowing smooth session switching when needed.
+##### Why it was added
+   - to provide direct control over updating the currently logged-in account. This ensures that the system can properly track which account is active at any time.
 
 ### **SavingsAccountLauncher**
-1.
+1. **setLoggedAccount()**
+   -
+##### Why it was added
+   -
 
 ### **BankLauncher**
 1. **getBankByIndex(int index)**
