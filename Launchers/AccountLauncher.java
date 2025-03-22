@@ -98,14 +98,28 @@ public class AccountLauncher {
      * @return The selected Bank instance.
      */
     public static Bank selectBank() {
+        if (BankLauncher.bankSize() == 0) {
+            System.out.println("❌ No banks are available.");
+            return null;
+        }
 
-        Main.showMenuHeader("Select a Bank");
+        Main.showMenuHeader("Select a Bank by Name");
         BankLauncher.showBanksMenu();
-        if (BankLauncher.bankSize() == 0) return null;
-        Main.setOption();
 
-        int bankIndex = Main.getOption();
-        return BankLauncher.getBankByIndex(bankIndex).orElse(null); // Unwrapping Optional
+        String inputBankName = Main.prompt("Enter Bank Name: ", false).trim().toLowerCase();
+
+        Bank foundBank = null;
+        for (Bank bank : BankLauncher.getBanks()) {
+            if (bank.getName().trim().toLowerCase().equals(inputBankName)) {
+                foundBank = bank;
+                break;
+            }
+        }
+
+        if (foundBank == null) {
+            System.out.println("❌ Bank with name '" + inputBankName + "' not found.");
+        }
+        return foundBank;
     }
 
     /**
