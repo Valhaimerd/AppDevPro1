@@ -163,7 +163,7 @@ public class Bank {
     /**
      * Creates and registers a new StudentAccount using validated fields.
      *
-     * @return The newly created StudentAcocunt.
+     * @return The newly created StudentAccount.
      */
     public StudentAccount createNewStudentAccount() {
         Main.showMenuHeader("Create New Students Account");
@@ -213,24 +213,6 @@ public class Bank {
     }
 
     /**
-     * Validate if the inputted AccountNumber and PIN has any letters. >>Helper Method when adding an Account
-     *
-     * @param accountNumber An account number of a newly created account.
-     * @param pin A pin of a newly created account.
-     * @return True if the string is convertable to integers else false.
-     */
-    public boolean areNumber(String accountNumber, String pin) {
-        try {
-            Integer.parseInt(accountNumber);
-            Integer.parseInt(pin);
-            return true;
-        } catch (NumberFormatException e) {
-            System.out.println("❌ Error: Account Number and PIN must be numbers.");
-            return false;
-        }
-    }
-
-    /**
      * Adds a new account to the bank if the account number is unique.
      *
      * @param account The account to add.
@@ -238,8 +220,7 @@ public class Bank {
     public boolean addNewAccount(Account account) {
         if (accountExists(this, account.getAccountNumber())) { // Only check within the same bank
             System.out.println("Account number already exists in this bank! Registration failed.");
-            return false;
-        } else if (!areNumber(account.getAccountNumber(), account.getPin())) return false;
+            return false;}
 
         bankAccounts.add(account);
         return true;
@@ -270,7 +251,7 @@ public class Bank {
      *  - All accounts (if accountType is null)
      *  - Accounts of a specific type (SavingsAccount or CreditAccount), if specified.
      *
-     * @param accountType The specific account type class to filter and display (e.g., SavingsAccount.class).
+     * @param accountType The specific account type class to filter and display (e.g., SavingsAccount. Class).
      *                    If null, displays all account types.
      * @param <T>         A generic type parameter that extends Account, used for type filtering.
      */
