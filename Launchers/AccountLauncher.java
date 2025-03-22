@@ -3,6 +3,7 @@ package Launchers;
 import Accounts.*;
 import Bank.Bank;
 import Main.*;
+import Services.SecurityUtils;
 
 /**
  * AccountLauncher handles user login and navigation to account-specific menus.
@@ -116,8 +117,14 @@ public class AccountLauncher {
      */
     private static boolean checkCredentials(String accountNumber, String pin) {
         if (assocBank == null) return false;
+
         Account account = assocBank.getBankAccount(accountNumber.trim());
-        return account != null && account.getPin().equals(pin.trim());
+        if (account == null) return false;
+
+        // Hash the input pin for comparison
+        String hashedInputPin = SecurityUtils.hashCode(pin.trim());
+
+        return account.getPin().equals(hashedInputPin);
     }
 
     /**

@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 
+import Services.SecurityUtils;
 import Services.ServiceProvider;
 import Services.BankService;
 /**
@@ -117,9 +118,11 @@ public class BankLauncher {
 
         // Request Passcode
         String passcode = Main.prompt("Enter Bank Passcode: ", true).trim();
+        // Hash the input passcode
+        String hashedInputPasscode = SecurityUtils.hashCode(passcode.trim());
 
-        // Validate Passcode
-        if (!selectedBank.getPasscode().equals(passcode)) {
+        // Validate passcode
+        if (!selectedBank.getPasscode().equals(hashedInputPasscode)) {
             System.out.println("❌ Error: Incorrect passcode. Access denied.");
             return;
         }
