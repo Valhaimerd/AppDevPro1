@@ -59,7 +59,9 @@ public class StudentAccount extends SavingsAccount implements FundTransfer, With
      */
     @Override
     public String toString() {
-        return String.format("Student Account | Owner: %s %s | Account No: ST%s | Balance: $%.2f | Max Withdrawal: $%.2f",
-                getOwnerFname(), getOwnerLname(), getAccountNumber(), getAccountBalance(), MAX_WITHDRAWAL_LIMIT);
+        return String.format(
+                "Student Account [ST%s] - %s | Bank: %s | Balance: $%.2f | Max Withdrawal: $%.2f",
+                accountNumber, getOwnerFullName(), getBank(), getAccountBalance(), MAX_WITHDRAWAL_LIMIT
+                );
     }
 }
