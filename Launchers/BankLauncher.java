@@ -201,7 +201,7 @@ public class BankLauncher {
                 default -> null;
             };
 
-            if (newAccount != null) {
+            if (newAccount != null && Bank.accountExists(newAccount.getBank(), newAccount.getAccountNumber())) {
                 System.out.println("✅ New account created: " + newAccount);
             } else {
                 System.out.println("Account creation failed or canceled.");

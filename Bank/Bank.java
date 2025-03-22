@@ -222,6 +222,13 @@ public class Bank {
             System.out.println("Account number already exists in this bank! Registration failed.");
             return false;}
 
+        try {
+            Integer.parseInt(account.getPin());
+        } catch (NumberFormatException e) {
+            System.out.println("PIN must be a number.");
+            return  false;
+        }
+
         bankAccounts.add(account);
         return true;
     }
