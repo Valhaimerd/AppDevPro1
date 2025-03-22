@@ -28,7 +28,7 @@ public class DatabaseSeeder {
         int businessTypeId = accountTypeDAO.getAccountTypeId("Business");
 
 
-        String pass = SecurityUtils.hashCode("12345678");
+        String pass = SecurityUtils.hashCode("1111");
         // Bank 1
         accountService.createAccount(2, "10001", 10000.0, creditTypeId, pass, "Alice", "Brown", "alice.brown@example.com");
         accountService.createAccount(2, "10002", 10000.0, creditTypeId, pass, "Bob", "Green", "bob.green@example.com");
@@ -113,7 +113,7 @@ public class DatabaseSeeder {
         BankService bankService = new BankService(bankDAO);
         AccountService accountService = new AccountService(accountDAO);
 
-        insertAccountTypes(accountTypeDAO);
+//        insertAccountTypes(accountTypeDAO);
         insertBank(bankService);
         insertAccounts(accountService, accountTypeDAO);
         insertSampleCreditPayments(transactionDAO);
