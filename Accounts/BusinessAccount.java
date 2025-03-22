@@ -107,6 +107,23 @@ public class BusinessAccount extends CreditAccount implements Payment, Recompens
         System.out.println("✅ Loan successfully adjusted. New Loan: " + getLoan());
     }
 
+    @Override
+    public String getLoanStatement() {
+        return String.format(
+                """
+                        
+                        ===== Business Account Loan Statement =====
+                        Account Number : CA%s
+                        Account Owner  : %s %s
+                        Bank           : %s
+                        Outstanding Loan Balance : $%.2f
+                        ===========================================""",
+                accountNumber, ownerFname, ownerLname, bank.getName(), loanBalance
+        );
+    }
+
+
+
     /**
      * Provides a string representation of the account details.
      *

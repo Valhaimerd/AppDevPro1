@@ -11,7 +11,7 @@ import Services.TransactionServices;
  */
 public class CreditAccount extends Account implements Payment, Recompense {
     private final TransactionServices transactionService = new TransactionServices();
-    private double loanBalance;  // The current outstanding loan
+    protected double loanBalance;  // The current outstanding loan
 
     /**
      * Constructor for CreditAccount.

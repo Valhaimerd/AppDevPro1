@@ -51,6 +51,11 @@ public class StudentAccount extends SavingsAccount implements FundTransfer, With
 
         return transactionService.transfer(this, recipient, amount);
     }
+    @Override
+    public String getAccountBalanceStatement() {
+        return String.format("Student Account | Owner: %s %s | Account No: SA%s | Balance: $%.2f",
+                ownerFname, ownerLname, accountNumber, balance);
+    }
 
     /**
      * Provides a string representation of the account details.

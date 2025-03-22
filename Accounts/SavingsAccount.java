@@ -9,7 +9,7 @@ import Services.*;
  */
 public class SavingsAccount extends Account implements Deposit, Withdrawal, FundTransfer {
 
-    private double balance;
+    protected double balance;
     private final TransactionServices transactionService = new TransactionServices();
 
     /**
