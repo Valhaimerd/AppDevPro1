@@ -7,7 +7,6 @@ import Main.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.Optional;
 
 
 import Services.SecurityUtils;
@@ -95,13 +94,10 @@ public class BankLauncher {
             return;
         }
 
-        // Show available banks
         showBanksMenu();
 
-        // Ask for Bank Name
         String bankName = Main.prompt("Enter Bank Name: ", false).trim();
 
-        // Find the bank based on Name
         Bank selectedBank = null;
         for (Bank bank : banks) {
             if (bank.getName().equalsIgnoreCase(bankName)) {
@@ -110,24 +106,19 @@ public class BankLauncher {
             }
         }
 
-        // If bank is not found
         if (selectedBank == null) {
             System.out.println("❌ Error: No bank found with the name \"" + bankName + "\".");
             return;
         }
 
-        // Request Passcode
         String passcode = Main.prompt("Enter Bank Passcode: ", true).trim();
-        // Hash the input passcode
         String hashedInputPasscode = SecurityUtils.hashCode(passcode.trim());
 
-        // Validate passcode
         if (!selectedBank.getPasscode().equals(hashedInputPasscode)) {
             System.out.println("❌ Error: Incorrect passcode. Access denied.");
             return;
         }
 
-        // Set logged-in session
         setLogSession(selectedBank);
         System.out.println("✅ Successfully logged into " + loggedBank.getName());
         bankInit();
@@ -329,19 +320,6 @@ public class BankLauncher {
      */
     public static int bankSize() {
         return banks.size();
-    }
-
-    /**
-     * Retrieves a bank by index.
-     *
-     * @param index The index of the bank.
-     * @return Optional of Bank.
-     */
-    public static Optional<Bank> getBankByIndex(int index) {
-        if (index > 0 && index <= banks.size()) {
-            return Optional.of(banks.get(index - 1));
-        }
-        return Optional.empty();
     }
 
     public static ArrayList<Bank> getBanks() {
