@@ -226,7 +226,7 @@ public class Bank {
             Integer.parseInt(account.getPin());
         } catch (NumberFormatException e) {
             System.out.println("PIN must be a number.");
-            return  false;
+            return false;
         }
 
         bankAccounts.add(account);
@@ -321,13 +321,6 @@ public class Bank {
      * @return Account if found, otherwise null.
      */
     public Account getBankAccount(String accountNum) {
-
-//        for (Account account : bankAccounts) {
-//            if (account.getAccountNumber().equals(accountNum)) {
-//                return account;
-//            }
-//        }
-//        return null;
         Account account = accountService.fetchAccountByNumber(accountNum);
         if (account == null) {
             System.out.println("⚠️ No account found for account number: " + accountNum);
