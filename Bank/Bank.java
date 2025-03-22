@@ -153,7 +153,7 @@ public class Bank {
         boolean verify = addNewAccount(newAccount);
         if (verify) {
             ServiceProvider.getAccountService().createAccount(
-                    this.bankId, accountNumber, 0.0, 2, pin, firstName, lastName, email
+                    this.bankId, accountNumber, 0.0, 1, pin, firstName, lastName, email
             );
         }
         return newAccount;
@@ -179,7 +179,7 @@ public class Bank {
         boolean verify = addNewAccount(newAccount);
         if (verify) {
             ServiceProvider.getAccountService().createAccount(
-                    this.bankId, accountNumber, initialDeposit, 2, pin, firstName, lastName, email
+                    this.bankId, accountNumber, initialDeposit, 3, pin, firstName, lastName, email
             );
         }
         return newAccount;
@@ -205,7 +205,7 @@ public class Bank {
         boolean verify = addNewAccount(newAccount);
         if (verify) {
             ServiceProvider.getAccountService().createAccount(
-                    this.bankId, accountNumber, initialLoan, 2, pin, firstName, lastName, email
+                    this.bankId, accountNumber, initialLoan, 4, pin, firstName, lastName, email
             );
         }
         return newAccount;
