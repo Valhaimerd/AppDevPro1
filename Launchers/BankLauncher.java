@@ -41,7 +41,6 @@ public class BankLauncher {
         System.out.println("✔ Transactions loaded for all accounts.");
     }
 
-
     /**
      * Initializes the banking module, allowing users to log in or create a new bank.
      */
@@ -63,8 +62,6 @@ public class BankLauncher {
             }
         }
     }
-
-
 
     /**
      * Checks if there is a currently logged-in bank session.
@@ -133,7 +130,6 @@ public class BankLauncher {
         bankInit();
     }
 
-
     /**
      * Displays a menu of all registered banks.
      */
@@ -143,10 +139,10 @@ public class BankLauncher {
             return;
         }
         System.out.println("\n📌 List of Registered Banks:");
-        System.out.printf("%-3s | %-30s | %s%n", "#", "Bank Name", "Bank ID");
-        System.out.println("-----------------------------------------------------");
+        System.out.printf("%-3s | %-30s%n", "#", "Bank Name");
+        System.out.println("----------------------------------");
         for (int i = 0; i < banks.size(); i++) {
-            System.out.printf("%-3d | %-30s | %s%n", i + 1, banks.get(i).getName(), banks.get(i).getBankId());
+            System.out.printf("%-3d | %-30s%n", i + 1, banks.get(i).getName());
         }
     }
 
@@ -202,7 +198,7 @@ public class BankLauncher {
                 default -> null;
             };
 
-            if (newAccount != null) {
+            if (newAccount != null && Bank.accountExists(newAccount.getBank(), newAccount.getAccountNumber())) {
                 System.out.println("✅ New account created: " + newAccount);
             } else {
                 System.out.println("Account creation failed or canceled.");
@@ -245,7 +241,7 @@ public class BankLauncher {
         bankPasscodeField.setFieldValue("Enter Bank Passcode: ");
 
         try {
-            Integer.parseInt(bankPasscodeField.getFieldValue()); // Use Integer.parseInt(str) for integers only
+            Integer.parseInt(bankPasscodeField.getFieldValue());
         } catch (NumberFormatException e) {
             System.out.println("❌ Error: Passcode must be numbers.");
             return;
