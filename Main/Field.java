@@ -27,6 +27,8 @@ public class Field<T, E> {
         return this.fieldValue;
     }
 
+    public Class<T> getFieldType() {return fieldType; }
+
     public String getFieldName() {
         return fieldName;
     }
@@ -59,41 +61,32 @@ public class Field<T, E> {
     public void setFieldValue(String phrase, boolean inlineInput)
             throws ClassCastException, NumberFormatException {
         String tempval = null;
-        while(true) {
+        while (true) {
             try {
-                // Prompt user to input
+                // Prompt user for input
                 tempval = Main.prompt(phrase, inlineInput);
-                // Cast String to a different type.
+                // Cast String to a different type
                 this.fieldValue = this.fieldType.cast(tempval);
-            }
-            // Happens when the field is of type Double, Integer, Number, etc.
-            catch(ClassCastException err) {
+            } catch (ClassCastException err) {
                 try {
-                    if(this.fieldType == Double.class) {
+                    if (this.fieldType == Double.class) {
                         this.fieldValue = (T) stringToDouble(tempval);
-                    }
-                    else if(this.fieldType == Integer.class) {
+                    } else if (this.fieldType == Integer.class) {
                         this.fieldValue = (T) stringToInteger(tempval);
                     }
+                } catch (NumberFormatException err2) {
+                    // No print statement here
                 }
-                // This is run whenever casting is impossible as input string cannot be cast into Integer or Double
-                catch(NumberFormatException err2) {
-                    //
-                }
-            }
-            finally {
-                // Precautionary measure especially when NumberFormatException happens...
-                if(this.fieldValue != null) {
+            } finally {
+                // Only validate, do not print errors here
+                if (this.fieldValue != null) {
                     String result = this.fieldValidator.validate(this.fieldValue, threshold);
-                    if(result == null) break;
-                    else System.out.println(result);
-                }
-                else {
-                    System.out.println("Invalid input given!");
+                    if (result == null) break;
                 }
             }
         }
     }
+
 
     private Double stringToDouble(String value) {
         return Double.parseDouble(value);
