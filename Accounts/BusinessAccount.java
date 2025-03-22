@@ -106,4 +106,17 @@ public class BusinessAccount extends CreditAccount implements Payment, Recompens
         super.adjustLoanAmount(amount);
         System.out.println("✅ Loan successfully adjusted. New Loan: " + getLoan());
     }
+
+    /**
+     * Provides a string representation of the account details.
+     *
+     * @return Formatted account details.
+     */
+    @Override
+    public String toString() {
+        return String.format(
+                "Business Account [BA%s] - %s | Bank: %s | Loan: $%.2f | Business Credit Limit: $%.2f",
+                accountNumber, getOwnerFullName(), getBank(), getLoan(), getBusinessCreditLimit()
+        );
+    }
 }
