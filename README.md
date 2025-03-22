@@ -55,6 +55,7 @@ The **Banking System Program** is designed to simulate a real-world banking syst
 - **Account Type Selection** – Provides an option to select between different account types such as savings, credit, student, or business accounts.
 - **Session Management** – Stores the logged-in account details, provides access to them, and enables users to log out when needed.
 - **Navigation to Account Menus** – Redirects authenticated users to the appropriate account-specific interface based on their account type.
+
 ### **Bank Launcher Class**
 - **Account Management** – Loads accounts from the database, displays different account types, and facilitates new account creation.
 - **Account Search** – Finds specific accounts across all banks using account numbers.
@@ -65,6 +66,7 @@ The **Banking System Program** is designed to simulate a real-world banking syst
 - **Navigation to Account Menus** – Directs authenticated users to account-specific menus for further actions.
 - **Session Management** – Maintains the current bank session, tracks if a bank is logged in, and enables logging out.
 - **Transaction Management** – Loads and manages transaction history for all accounts in registered banks.
+
 ### **Bussiness Account Launcher Class**
 - **Business Account Menu Navigation** – Provides a menu interface for business account operations after login.
 - **Loan Statement Viewing** – Displays the current loan statement for the logged-in business account.
@@ -72,6 +74,7 @@ The **Banking System Program** is designed to simulate a real-world banking syst
 - **Recompense Processing** – Facilitates loan repayment by validating amounts against the outstanding balance.
 - **Transaction History Viewing** – Displays all past transactions associated with the business account.
 - **Session Management** – Ensures that a business account is logged in before allowing access to features.
+  
 ### **Credit Account Launcher Class**
 - **Credit Account Menu Navigation** – Provides a menu interface for credit account operations after login.
 - **Loan Statement Viewing** – Displays the current loan statement for the logged-in credit account.
@@ -79,6 +82,7 @@ The **Banking System Program** is designed to simulate a real-world banking syst
 - **Credit Recompense Processing** – Facilitates loan repayment by validating the entered amount against the outstanding loan balance.
 - **Transaction History Viewing** – Displays all past transactions associated with the credit account.
 - **Session Management** – Ensures that a credit account is logged in before allowing access to features.
+  
 ### **Savings Account Launcher Class**
 - **Savings Account Menu Navigation** – Provides a menu interface for savings account operations after login.
 - **Account Balance Viewing** – Displays the current balance of the logged-in savings account.
@@ -89,6 +93,7 @@ The **Banking System Program** is designed to simulate a real-world banking syst
    - **External Transfer** – Transfers funds to an account in a different bank, with a processing fee applied.
 - **Transaction History Viewing** – Displays all past transactions associated with the savings account.
 - **Session Management** – Ensures that a savings account is logged in before allowing access to features.
+
 ### **Student Account Launcher Class**
 - **Student Account Menu Navigation** – Provides a menu interface tailored for student accounts.
 - **Account Balance Viewing** – Displays the current balance of the logged-in student account.
@@ -135,99 +140,12 @@ The **Banking System Program** is designed to simulate a real-world banking syst
 
 ### **Transaction**
 - This class represents a record of a financial transaction in the system. Each transaction captures key details, including the account that initiated it, the type of transaction, a brief description, and a timestamp indicating when it occurred.
+  
 ### **TransactionServices**
 - This class handles various banking transactions, ensuring smooth and secure financial operations. It includes methods for transferring funds (both within the same bank and across different banks), depositing money, withdrawing funds, making credit payments, and repaying loans.
+  
 ### **Withdrawal**
 - This interface defines a simple contract for withdrawing money from an account using a specified method.
-
----
-
-## **Documentation**  
-
-### **Added Methods/Functions**  
-
-### **Account.java**  
-1. **loadTransactionsFromDatabase()**  
-   - It clears the existing transaction list to avoid duplicates, fetches transactions from a log service using the account number, adds them back into the list, and prints the number of transactions loaded.
-##### Why it was Added
-   - To keep an account’s transaction history updated by automatically retrieving past transactions from a database. This amkes sure that it has accurate financial records without manual entry.
-
-### **CreditAccount.java**  
-1. **pay()**  
-   -  allows a CreditAccount to send money to a SavingsAccount by checking if the credit limit allows the transaction. If the limit is exceeded, the payment fails. Otherwise, it processes the transfer through transactionService.creditPayment().
-##### Why it was Added
-   -  To allow credit accounts to make controlled payments while ensuring they do not exceed their borrowing limit.
-
-2. **recompense()**  
-   - It enables the CreditAccount to repay its loan balance by calling transactionService.recompense().
-##### Why it was Added
-   - To provide a way for users to settle their debts and restore available credit.
-
-### **SavingsAccount.java**  
-1. **transfer(account: Account, amount: double)**  
-   -  allows a **SavingsAccount** to send money to another account within the same bank. It calls _transactionService.transferFunds()_ to process the transaction.
-##### Why it was Added
-   -  It was added so users can transafer funds between accounts without needing to withdraw cash manually.
-
-2. **transfer(bank: Bank, account: Account, amount: double)**  
-   -  enables a **SavingsAccount** to send money to an account in a different bank, applying a processing fee. It also calls _transactionService.transferFunds()_.
-##### Why it was Added
-   -  We added it to support interbank transfers, allowing users to send money outside their bank while ensuring feeas are applied.
-
-3. **cashDeposit()**  
-   -  allows a **SavingsAccount** to receive money by calling _transactionService.deposit()_.
-##### Why it was Added
-   -  So users can increase their account balance by depositing cash into their savings account.
-
-4. **withdrawal()**
-   - lets a **SavingsAccount** take out money by calling _transactionService.withdraw()_.
-##### Why it was Added
-   - was added so users can access their funds when needed, ensuring they can withdraw cash from their account.
-5. **getAccountBalance()** 
-   - returns the current balance of a **SavingsAccount**.
-##### Why it was Added
-   - was added to let users check how much money they have in their account.
-
-### **Bank.java**  
-1. **passcode** (Attribute)
-   - Prevents unauthorized access to the bank’s data.
-##### Why it was Added
-   - is added to provide a security layer for the bank and to ensure only authorized users can access or modify bank details.
-
-2. **withdrawLimit** (Attribute)
-   - Helps regulate cash flow in the bank and it also ensures users to not withdraw excessive amounts that could lead to insufficient funds.
-##### Why it was Added
-   - is added to set a maximum amount a user can withdraw from their account at a time. To prevent large withdrawals that could cause financial instability.
-
-3. **creditLimit** (Attribute)
-   - it helps manage the bank’s risk by limiting excessive credit borrowing.
-##### Why it was Added
-   - was added to define the maximum credit (loan) a user can borrow. To prevent users from borrowing beyond what the bank can handle.
-
-
-### **CreditAccountLauncher**
-1. **setLoggedAccount()**
-   - updates the stored logged-in account with the provided _Account_ object, making sure that _getLoggedAccount()_ always returns the correct active user and allowing smooth session switching when needed.
-##### Why it was added
-   - to provide direct control over updating the currently logged-in account. This ensures that the system can properly track which account is active at any time.
-
-### **SavingsAccountLauncher**
-1. **setLoggedAccount()**
-   -
-##### Why it was added
-   -
-
-### **BankLauncher**
-1. **getBankByIndex(int index)**
-   - It checks if the given index is valid and returns the corresponding bank wrapped in an Optional. If the index is out of range, it returns an empty Optional.
-##### Why it was added
-   - This function simplifies retrieving a bank using an index, which is useful for menus where banks are listed numerically.
-
-2. **getBanks()**
-   - It returns the banks list, allowing other parts of the program to access and manipulate the registered banks.
-##### Why it was added
-   - This function was added to provide access to the full list of registered banks, making it easier to retrieve all banks when needed.
-
 
 ---
 

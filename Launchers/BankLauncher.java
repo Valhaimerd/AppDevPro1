@@ -244,7 +244,14 @@ public class BankLauncher {
         Field<String, Integer> bankPasscodeField = new Field<String, Integer>("Bank Passcode", String.class, 4, new Field.StringFieldLengthValidator());
         bankPasscodeField.setFieldValue("Enter Bank Passcode: ");
 
-        if (bankPasscodeField.getFieldValue() == null || bankPasscodeField.getFieldValue().length() < 4) {
+        try {
+            Integer.parseInt(bankPasscodeField.getFieldValue()); // Use Integer.parseInt(str) for integers only
+        } catch (NumberFormatException e) {
+            System.out.println("❌ Error: Passcode must be numbers.");
+            return;
+        }
+
+        if (bankPasscodeField.getFieldValue() == null || bankPasscodeField.getFieldValue().length() < 4 ) {
             System.out.println("❌ Error: Passcode must be at least 4 characters long.");
             return;
         }
