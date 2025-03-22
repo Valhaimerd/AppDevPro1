@@ -125,7 +125,7 @@ public class AccountLauncher {
      *
      * @param account The account that successfully logged in.
      */
-    public static void setLogSession(Account account) {
+    protected static void setLogSession(Account account) {
         loggedAccount = account;
     }
 
@@ -136,7 +136,7 @@ public class AccountLauncher {
     /**
      * Destroys the current account session.
      */
-    public static void destroyLogSession() {
+    protected static void destroyLogSession() {
         System.out.println("Logging out of " + loggedAccount.getAccountNumber());
         loggedAccount = null;
     }

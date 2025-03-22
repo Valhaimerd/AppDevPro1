@@ -71,7 +71,7 @@ public class BankLauncher {
      *
      * @return true if a bank is logged in, false otherwise.
      */
-    public static boolean isLogged() {
+    protected static boolean isLogged() {
         return loggedBank != null;
     }
 
@@ -215,7 +215,7 @@ public class BankLauncher {
      *
      * @param bank The bank to log into.
      */
-    public static void setLogSession(Bank bank) {
+    private static void setLogSession(Bank bank) {
         loggedBank = bank;
     }
 
@@ -297,12 +297,12 @@ public class BankLauncher {
 
         Bank sameName = getBank(new Bank.BankComparator(), newBank);
         Bank samePasscode = getBank(new Bank.BankCredentialsComparator(), newBank);
-        if (samePasscode == null || sameName == null) {
-            addBank(newBank);
-            System.out.println("✅ Bank created successfully: " + newBank);
+        if (samePasscode != null || sameName != null) {
+            System.out.println("❌ Bank already exists...");
             return;
         }
-        System.out.println("❌ Bank already exists...");
+        addBank(newBank);
+        System.out.println("✅ Bank created successfully: " + newBank);
     }
 
     /**

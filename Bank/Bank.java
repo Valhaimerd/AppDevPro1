@@ -7,6 +7,7 @@ import Main.Main;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Comparator;
+import java.util.Scanner;
 
 import Services.AccountService;
 import Services.ServiceProvider;
@@ -87,11 +88,12 @@ public class Bank {
      */
     public ArrayList<Field<?, ?>> createNewAccount() {
         ArrayList<Field<?, ?>> accountFields = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
 
         // Create fields with appropriate validation
-        Field<String, Integer> accountNumberField = new Field<String, Integer>("Account Number", String.class, 5, new Field.StringFieldLengthValidator());
+        Field<Integer, Integer> accountNumberField = new Field<Integer, Integer>("Account Number", Integer.class, 5, new Field.IntegerFieldValidator());
 
-        Field<String, Integer> pinField = new Field<String, Integer>("PIN", String.class, 3, new Field.StringFieldLengthValidator());
+        Field<Integer, Integer> pinField = new Field<Integer, Integer>("PIN", Integer.class, 4, new Field.IntegerFieldValidator());
 
         Field<String, String> firstNameField = new Field<String, String>("First Name", String.class, null, new Field.StringFieldValidator());
 
@@ -102,18 +104,33 @@ public class Bank {
         Field<?, ?>[] fields = {accountNumberField, pinField, firstNameField, lastNameField, emailField};
 
         for (Field<?, ?> field : fields) {
-            field.setFieldValue("Enter " + field.getFieldName() + ": ");
+            while (true) { // Keep looping until valid input is entered
+                field.setFieldValue("Enter " + field.getFieldName() + ": ");
+                String input = scanner.nextLine();
+
+                if (field.getFieldType() == Integer.class) {
+                    try {
+                        field.setFieldValue(String.valueOf(Integer.parseInt(input))); // Convert input to Integer
+                        break; // Exit loop if input is valid
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid input. Please enter a valid number.");
+                    }
+                } else {
+                    field.setFieldValue(input); // Store String fields directly
+                    break; // Exit loop for valid String input
+                }
+            }
             accountFields.add(field);
         }
-
         return accountFields;
     }
 
-    /**
-     * Creates and registers a new SavingsAccount using validated fields.
-     *
-     * @return The newly created SavingsAccount.
-     */
+
+        /**
+         * Creates and registers a new SavingsAccount using validated fields.
+         *
+         * @return The newly created SavingsAccount.
+         */
     public SavingsAccount createNewSavingsAccount() {
         Main.showMenuHeader("Create New Savings Account");
         ArrayList<Field<?, ?>> accountData = createNewAccount();
@@ -357,7 +374,7 @@ public class Bank {
             return b1.getPasscode().compareTo(b2.getPasscode());
         }
     }
-    
+
     /**
      * Comparator class that compares two Bank objects based on their bank ID.
      * Useful for identifying banks by their unique ID.
