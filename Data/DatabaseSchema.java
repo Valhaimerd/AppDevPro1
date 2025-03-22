@@ -6,7 +6,10 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 
 public class DatabaseSchema {
+
+
     public static void createTables() {
+        IDatabaseProvider databaseProvider = new SQLiteDatabaseProvider();
         String accountTypeTable = "CREATE TABLE IF NOT EXISTS AccountType ("
                 + "type_id INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + "type_name TEXT UNIQUE NOT NULL)";
@@ -46,7 +49,7 @@ public class DatabaseSchema {
                 + "FOREIGN KEY (target_account) REFERENCES Account(account_number)"
                 + ")";
 
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = databaseProvider.getConnection();
              Statement stmt = conn.createStatement()) {
 
             stmt.execute(accountTypeTable);

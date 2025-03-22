@@ -4,14 +4,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import Accounts.Account;
+
 
 public class AccountTypeDAO {
+    private final IDatabaseProvider databaseProvider;
+
+    public AccountTypeDAO(IDatabaseProvider databaseProvider) {
+        this.databaseProvider = databaseProvider;
+    }
+
     public void insertAccountType(String typeName) {
         String sql = "INSERT INTO AccountType (type_name) VALUES (?) ON CONFLICT(type_name) DO NOTHING";
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = databaseProvider.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, typeName);
             stmt.executeUpdate();
@@ -22,7 +26,7 @@ public class AccountTypeDAO {
 
     public int getAccountTypeId(String typeName) {
         String sql = "SELECT type_id FROM AccountType WHERE type_name = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = databaseProvider.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, typeName);
             ResultSet rs = stmt.executeQuery();

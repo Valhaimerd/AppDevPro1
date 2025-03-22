@@ -20,6 +20,7 @@ public class BankDAO implements IBankDAO {
 
     @Override
     public void addBank(int bankId, String name, String passcode) {
+        String hash = SecurityUtils.hashCode(passcode);
         String sql = "INSERT INTO Bank (bank_id, name, passcode) VALUES (?, ?, ?)";
 
         try (Connection conn = databaseProvider.getConnection();
@@ -27,7 +28,7 @@ public class BankDAO implements IBankDAO {
 
             stmt.setInt(1, bankId);
             stmt.setString(2, name);
-            stmt.setString(3, passcode);
+            stmt.setString(3, hash);
             stmt.executeUpdate();
 
             System.out.println("Bank added successfully.");

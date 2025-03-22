@@ -21,6 +21,7 @@ public class AccountDAO implements IAccountDAO {
 
     @Override
     public void addAccount(int bankId, String accountNumber, double balance, int accountTypeId, String pin, String ownerFname, String ownerLname, String ownerEmail) {
+        String hash = SecurityUtils.hashCode(pin);
         String sql = "INSERT INTO Account (bank_id, account_number, balance, account_type, pin, owner_fname, owner_lname, owner_email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = databaseProvider.getConnection();
@@ -29,7 +30,7 @@ public class AccountDAO implements IAccountDAO {
             stmt.setString(2, accountNumber);
             stmt.setDouble(3, balance);
             stmt.setInt(4, accountTypeId);
-            stmt.setString(5, pin);
+            stmt.setString(5, hash);
             stmt.setString(6, ownerFname);
             stmt.setString(7, ownerLname);
             stmt.setString(8, ownerEmail);
@@ -197,6 +198,8 @@ public class AccountDAO implements IAccountDAO {
 
         return account;
     }
+
+
 
 
 }
