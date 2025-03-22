@@ -92,39 +92,43 @@ public class AccountLauncher {
     }
 
 
-    /**
-     * Allows the user to select a bank before logging into an account.
-     *
-     * @return The selected Bank instance.
-     */
     public static Bank selectBank() {
+        if (BankLauncher.bankSize() == 0) {
+            System.out.println("❌ No banks are available.");
+            return null;
+        } else {
+            Main.showMenuHeader("Select a Bank by Name");
+            BankLauncher.showBanksMenu();
+            String inputBankName = Main.prompt("Enter Bank Name: ", false).trim().toLowerCase();
+            Bank foundBank = null;
 
-        Main.showMenuHeader("Select a Bank");
-        BankLauncher.showBanksMenu();
-        if (BankLauncher.bankSize() == 0) return null;
-        Main.setOption();
+            for(Bank bank : BankLauncher.getBanks()) {
+                if (bank.getName().trim().toLowerCase().equals(inputBankName)) {
+                    foundBank = bank;
+                    break;
+                }
+            }
 
-        int bankIndex = Main.getOption();
-        return BankLauncher.getBankByIndex(bankIndex).orElse(null); // Unwrapping Optional
+            if (foundBank == null) {
+                System.out.println("❌ Bank with name '" + inputBankName + "' not found.");
+            }
+
+            return foundBank;
+        }
     }
 
-    /**
-     * Validates the login credentials.
-     *
-     * @param accountNumber The account number being verified.
-     * @param pin           The entered PIN.
-     * @return True if the credentials match, false otherwise.
-     */
     private static boolean checkCredentials(String accountNumber, String pin) {
-        if (assocBank == null) return false;
-
-        Account account = assocBank.getBankAccount(accountNumber.trim());
-        if (account == null) return false;
-
-        // Hash the input pin for comparison
-        String hashedInputPin = SecurityUtils.hashCode(pin.trim());
-
-        return account.getPin().equals(hashedInputPin);
+        if (assocBank == null) {
+            return false;
+        } else {
+            Account account = assocBank.getBankAccount(accountNumber.trim());
+            if (account == null) {
+                return false;
+            } else {
+                String hashedInputPin = SecurityUtils.hashCode(pin.trim());
+                return account.getPin().equals(hashedInputPin);
+            }
+        }
     }
 
     /**
