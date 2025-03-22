@@ -243,17 +243,18 @@ public class BankLauncher {
         Field<String, Integer> bankPasscodeField = new Field<String, Integer>("Bank Passcode", String.class, 4, new Field.StringFieldLengthValidator());
         bankPasscodeField.setFieldValue("Enter Bank Passcode: ");
 
-        try {
-            Integer.parseInt(bankPasscodeField.getFieldValue());
-        } catch (NumberFormatException e) {
-            System.out.println("❌ Error: Passcode must be numbers.");
-            return;
-        }
 
-        if (bankPasscodeField.getFieldValue() == null || bankPasscodeField.getFieldValue().length() < 4 ) {
-            System.out.println("❌ Error: Passcode must be at least 4 characters long.");
-            return;
-        }
+//        try {
+//            Integer.parseInt(bankPasscodeField.getFieldValue());
+//        } catch (NumberFormatException e) {
+//            System.out.println("❌ Error: Passcode must be numbers.");
+//            return;
+//        }
+
+//        if (bankPasscodeField.getFieldValue() == null || bankPasscodeField.getFieldValue().length() < 4 ) {
+//            System.out.println("❌ Error: Passcode must be at least 4 characters long.");
+//            return;
+//        }
 
         System.out.println("Do you want to set custom deposit, withdrawal, and credit limits? (Y/N): ");
         String choice = Main.prompt("", true).trim().toUpperCase();
@@ -276,7 +277,7 @@ public class BankLauncher {
             newBank = new Bank(
                     bankSize(),
                     bankNameField.getFieldValue(),
-                    bankPasscodeField.getFieldValue(),
+                    SecurityUtils.hashCode(bankPasscodeField.getFieldValue()),
                     depositLimitField.getFieldValue(),
                     withdrawLimitField.getFieldValue(),
                     creditLimitField.getFieldValue(),
@@ -286,7 +287,7 @@ public class BankLauncher {
             bankService.createBank(
                     bankSize(),
                     bankNameField.getFieldValue(),
-                    bankPasscodeField.getFieldValue(),
+                    SecurityUtils.hashCode(bankPasscodeField.getFieldValue()),
                     depositLimitField.getFieldValue(),
                     withdrawLimitField.getFieldValue(),
                     creditLimitField.getFieldValue(),
@@ -297,7 +298,7 @@ public class BankLauncher {
             newBank = new Bank(
                     bankSize(),
                     bankNameField.getFieldValue(),
-                    bankPasscodeField.getFieldValue()
+                    SecurityUtils.hashCode(bankPasscodeField.getFieldValue())
             );
         }
 

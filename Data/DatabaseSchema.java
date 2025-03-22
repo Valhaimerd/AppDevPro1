@@ -16,7 +16,7 @@ public class DatabaseSchema {
 
         String bankTable = "CREATE TABLE IF NOT EXISTS Bank ("
                 + "bank_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "name TEXT NOT NULL, "
+                + "name TEXT UNIQUE NOT NULL, "
                 + "passcode TEXT NOT NULL, " // New passcode column added
                 + "deposit_limit REAL DEFAULT 50000, "
                 + "withdraw_limit REAL DEFAULT 50000, "
@@ -68,12 +68,14 @@ public class DatabaseSchema {
 
         try (Connection conn = databaseProvider.getConnection();
              PreparedStatement clearTransactions = conn.prepareStatement("DELETE FROM Transactions");
-             PreparedStatement clearAccounts = conn.prepareStatement("DELETE FROM Account");
-             PreparedStatement clearBanks = conn.prepareStatement("DELETE FROM Bank")) {
+//             PreparedStatement clearAccounts = conn.prepareStatement("DELETE FROM Account");
+//             PreparedStatement clearBanks = conn.prepareStatement("DELETE FROM Bank")
+        )
+        {
 
             clearTransactions.executeUpdate();
-            clearAccounts.executeUpdate();
-            clearBanks.executeUpdate();
+//            clearAccounts.executeUpdate();
+//            clearBanks.executeUpdate();
 
             System.out.println("All tables cleared successfully.");
         } catch (SQLException e) {
