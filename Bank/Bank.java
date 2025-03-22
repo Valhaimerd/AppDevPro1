@@ -7,7 +7,6 @@ import Main.Main;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Comparator;
-import java.util.Scanner;
 
 import Services.AccountService;
 import Services.ServiceProvider;
@@ -88,12 +87,11 @@ public class Bank {
      */
     public ArrayList<Field<?, ?>> createNewAccount() {
         ArrayList<Field<?, ?>> accountFields = new ArrayList<>();
-        Scanner scanner = new Scanner(System.in);
 
         // Create fields with appropriate validation
-        Field<Integer, Integer> accountNumberField = new Field<Integer, Integer>("Account Number", Integer.class, 5, new Field.IntegerFieldValidator());
+        Field<String, Integer> accountNumberField = new Field<String, Integer>("Account Number", String.class, 5, new Field.StringFieldLengthValidator());
 
-        Field<Integer, Integer> pinField = new Field<Integer, Integer>("PIN", Integer.class, 4, new Field.IntegerFieldValidator());
+        Field<String, Integer> pinField = new Field<String, Integer>("PIN", String.class, 4, new Field.StringFieldLengthValidator());
 
         Field<String, String> firstNameField = new Field<String, String>("First Name", String.class, null, new Field.StringFieldValidator());
 
@@ -104,27 +102,12 @@ public class Bank {
         Field<?, ?>[] fields = {accountNumberField, pinField, firstNameField, lastNameField, emailField};
 
         for (Field<?, ?> field : fields) {
-            while (true) { // Keep looping until valid input is entered
-                field.setFieldValue("Enter " + field.getFieldName() + ": ");
-                String input = scanner.nextLine();
-
-                if (field.getFieldType() == Integer.class) {
-                    try {
-                        field.setFieldValue(String.valueOf(Integer.parseInt(input))); // Convert input to Integer
-                        break; // Exit loop if input is valid
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid input. Please enter a valid number.");
-                    }
-                } else {
-                    field.setFieldValue(input); // Store String fields directly
-                    break; // Exit loop for valid String input
-                }
-            }
+            field.setFieldValue("Enter " + field.getFieldName() + ": ");
             accountFields.add(field);
         }
+
         return accountFields;
     }
-
 
         /**
          * Creates and registers a new SavingsAccount using validated fields.
@@ -229,6 +212,23 @@ public class Bank {
         return newAccount;
     }
 
+    /**
+     * Validate if the inputted AccountNumber and PIN has any letters. >>Helper Method when adding an Account
+     *
+     * @param accountNumber An account number of a newly created account.
+     * @param pin A pin of a newly created account.
+     * @return True if the string is convertable to integers else false.
+     */
+    public boolean areNumber(String accountNumber, String pin) {
+        try {
+            Integer.parseInt(accountNumber);
+            Integer.parseInt(pin);
+            return true;
+        } catch (NumberFormatException e) {
+            System.out.println("❌ Error: Account Number and PIN must be numbers.");
+            return false;
+        }
+    }
 
     /**
      * Adds a new account to the bank if the account number is unique.
@@ -239,9 +239,9 @@ public class Bank {
         if (accountExists(this, account.getAccountNumber())) { // Only check within the same bank
             System.out.println("Account number already exists in this bank! Registration failed.");
             return false;
-        }
+        } else if (!areNumber(account.getAccountNumber(), account.getPin())) return false;
+
         bankAccounts.add(account);
-        System.out.println("✅ Account successfully registered.");
         return true;
     }
 
@@ -355,7 +355,7 @@ public class Bank {
     @Override
     public String toString() {
         return String.format(
-                "Bank { Bank ID: '%s', Bank Name: '%s', Passcode: '%s', Deposit Limit: $%.2f, Withdraw Limit: $%.2f, Credit Limit: $%.2f, Processing Fee: $%.2f, Accounts Registered: %d }",
+                "Bank ID: '%s', Bank Name: '%s', Passcode: '%s', Deposit Limit: $%.2f, Withdraw Limit: $%.2f, Credit Limit: $%.2f, Processing Fee: $%.2f, Accounts Registered: %d",
                 bankId, bankName, passcode, depositLimit, withdrawLimit, creditLimit, processingFee, bankAccounts.size()
         );
     }
