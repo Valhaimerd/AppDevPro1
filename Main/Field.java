@@ -27,8 +27,6 @@ public class Field<T, E> {
         return this.fieldValue;
     }
 
-    public Class<T> getFieldType() {return fieldType; }
-
     public String getFieldName() {
         return fieldName;
     }
@@ -61,27 +59,37 @@ public class Field<T, E> {
     public void setFieldValue(String phrase, boolean inlineInput)
             throws ClassCastException, NumberFormatException {
         String tempval = null;
-        while (true) {
+        while(true) {
             try {
-                // Prompt user for input
+                // Prompt user to input
                 tempval = Main.prompt(phrase, inlineInput);
-                // Cast String to a different type
+                // Cast String to a different type.
                 this.fieldValue = this.fieldType.cast(tempval);
-            } catch (ClassCastException err) {
+            }
+            // Happens when the field is of type Double, Integer, Number, etc.
+            catch(ClassCastException err) {
                 try {
-                    if (this.fieldType == Double.class) {
+                    if(this.fieldType == Double.class) {
                         this.fieldValue = (T) stringToDouble(tempval);
-                    } else if (this.fieldType == Integer.class) {
+                    }
+                    else if(this.fieldType == Integer.class) {
                         this.fieldValue = (T) stringToInteger(tempval);
                     }
-                } catch (NumberFormatException err2) {
-                    // No print statement here
                 }
-            } finally {
-                // Only validate, do not print errors here
-                if (this.fieldValue != null) {
+                // This is run whenever casting is impossible as input string cannot be cast into Integer or Double
+                catch(NumberFormatException err2) {
+                    //
+                }
+            }
+            finally {
+                // Precautionary measure especially when NumberFormatException happens...
+                if(this.fieldValue != null) {
                     String result = this.fieldValidator.validate(this.fieldValue, threshold);
-                    if (result == null) break;
+                    if(result == null) break;
+                    else System.out.println(result);
+                }
+                else {
+                    System.out.println("Invalid input given!");
                 }
             }
         }
@@ -154,16 +162,6 @@ public class Field<T, E> {
                 return "Field must have at least " + threshold + " characters";
             }
             return null;
-        }
-    }
-
-    public static class PinFieldValidator implements FieldValidator<String, Integer> {
-        @Override
-        public String validate(String value, Integer threshold) {
-            if (value == null || !value.matches("\\d{" + threshold + "}")) {
-                return "Invalid PIN! Please enter exactly " + threshold + " digits.";
-            }
-            return null; // Valid PIN
         }
     }
 }

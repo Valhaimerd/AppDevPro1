@@ -297,21 +297,21 @@ public class BankLauncher {
 
         Bank sameName = getBank(new Bank.BankComparator(), newBank);
         Bank samePasscode = getBank(new Bank.BankCredentialsComparator(), newBank);
-        if (samePasscode != null || sameName != null) {
-            System.out.println("❌ Bank already exists...");
+        if (samePasscode == null || sameName == null) {
+            addBank(newBank);
+            System.out.println("✅ Bank created successfully: " + newBank);
             return;
         }
-        addBank(newBank);
-        System.out.println("✅ Bank created successfully: " + newBank);
+        System.out.println("❌ Bank already exists...");
     }
 
-    /**
-     * Retrieves a bank that matches the given comparator.
-     *
-     * @param bankComparator Comparator to determine the matching criteria.
-     * @param bank Bank object to be compared.
-     * @return The matching Bank object, or null if no match is found.
-     */
+        /**
+         * Retrieves a bank that matches the given comparator.
+         *
+         * @param bankComparator Comparator to determine the matching criteria.
+         * @param bank Bank object to be compared.
+         * @return The matching Bank object, or null if no match is found.
+         */
     public static Bank getBank(Comparator<Bank> bankComparator, Bank bank) {
         return banks.stream().filter(b -> bankComparator.compare(b, bank) == 0).findFirst().orElse(null);
     }
