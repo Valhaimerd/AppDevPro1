@@ -119,7 +119,7 @@ public class Bank {
         Main.showMenuHeader("Create New Savings Account");
         ArrayList<Field<?, ?>> accountData = createNewAccount();
         String accountNumber = (String) accountData.get(0).getFieldValue();
-        String pin = (String) accountData.get(1).getFieldValue();
+        String pin = SecurityUtils.hashCode((String) accountData.get(1).getFieldValue());
         String firstName = (String) accountData.get(2).getFieldValue();
         String lastName = (String) accountData.get(3).getFieldValue();
         String email = (String) accountData.get(4).getFieldValue();
@@ -146,7 +146,7 @@ public class Bank {
         Main.showMenuHeader("Create New Credit Account");
         ArrayList<Field<?, ?>> accountData = createNewAccount();
         String accountNumber = (String) accountData.get(0).getFieldValue();
-        String pin = (String) accountData.get(1).getFieldValue();
+        String pin = SecurityUtils.hashCode((String) accountData.get(1).getFieldValue());
         String firstName = (String) accountData.get(2).getFieldValue();
         String lastName = (String) accountData.get(3).getFieldValue();
         String email = (String) accountData.get(4).getFieldValue();
@@ -155,7 +155,7 @@ public class Bank {
         boolean verify = addNewAccount(newAccount);
         if (verify) {
             ServiceProvider.getAccountService().createAccount(
-                    this.bankId, accountNumber, 0.0, 2, pin, firstName, lastName, email
+                    this.bankId, accountNumber, 0.0, 1, pin, firstName, lastName, email
             );
         }
         return newAccount;
@@ -170,7 +170,7 @@ public class Bank {
         Main.showMenuHeader("Create New Students Account");
         ArrayList<Field<?, ?>> accountData = createNewAccount();
         String accountNumber = (String) accountData.get(0).getFieldValue();
-        String pin = (String) accountData.get(1).getFieldValue();
+        String pin = SecurityUtils.hashCode((String) accountData.get(1).getFieldValue());
         String firstName = (String) accountData.get(2).getFieldValue();
         String lastName = (String) accountData.get(3).getFieldValue();
         String email = (String) accountData.get(4).getFieldValue();
@@ -181,7 +181,7 @@ public class Bank {
         boolean verify = addNewAccount(newAccount);
         if (verify) {
             ServiceProvider.getAccountService().createAccount(
-                    this.bankId, accountNumber, initialDeposit, 2, pin, firstName, lastName, email
+                    this.bankId, accountNumber, initialDeposit, 3, pin, firstName, lastName, email
             );
         }
         return newAccount;
@@ -196,7 +196,7 @@ public class Bank {
         Main.showMenuHeader("Create New Business Account");
         ArrayList<Field<?, ?>> accountData = createNewAccount();
         String accountNumber = (String) accountData.get(0).getFieldValue();
-        String pin = (String) accountData.get(1).getFieldValue();
+        String pin = SecurityUtils.hashCode((String) accountData.get(1).getFieldValue());
         String firstName = (String) accountData.get(2).getFieldValue();
         String lastName = (String) accountData.get(3).getFieldValue();
         String email = (String) accountData.get(4).getFieldValue();
@@ -207,7 +207,7 @@ public class Bank {
         boolean verify = addNewAccount(newAccount);
         if (verify) {
             ServiceProvider.getAccountService().createAccount(
-                    this.bankId, accountNumber, initialLoan, 2, pin, firstName, lastName, email
+                    this.bankId, accountNumber, initialLoan, 4, pin, firstName, lastName, email
             );
         }
         return newAccount;
@@ -223,12 +223,12 @@ public class Bank {
             System.out.println("Account number already exists in this bank! Registration failed.");
             return false;}
 
-        try {
-            Integer.parseInt(account.getPin());
-        } catch (NumberFormatException e) {
-            System.out.println("PIN must be a number.");
-            return false;
-        }
+//        try {
+//            Integer.parseInt(account.getPin());
+//        } catch (NumberFormatException e) {
+//            System.out.println("PIN must be a number.");
+//            return false;
+//        }
 
         bankAccounts.add(account);
         return true;
@@ -327,6 +327,11 @@ public class Bank {
                 return account;
             }
         }
+        //        Account account = accountService.fetchAccountByNumber(accountNum);
+        //        if (account == null) {
+        //            System.out.println("⚠️ No account found for account number: " + accountNum);
+        //        }
+        //        return account;
         return null;
     }
 

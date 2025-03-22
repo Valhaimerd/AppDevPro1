@@ -3,12 +3,15 @@ package Data;
 import Services.BankService;
 import Services.AccountService;
 import Services.Transaction;
+import Services.SecurityUtils;
 
 public class DatabaseSeeder {
     public static void insertBank(BankService bankService) {
-        bankService.createBank(2, "BDO", "12345678");
-        bankService.createBank(3, "Metro Bank", "12345678");
-        bankService.createBank(4, "BPI", "12345678");
+        String pass = SecurityUtils.hashCode("12345678");
+
+        bankService.createBank(2, "BDO", pass);
+        bankService.createBank(3, "Metro Bank", pass);
+        bankService.createBank(4, "BPI", pass);
     }
 
     public static void insertAccountTypes(AccountTypeDAO accountTypeDAO) {
@@ -24,35 +27,37 @@ public class DatabaseSeeder {
         int studentTypeId = accountTypeDAO.getAccountTypeId("Student");
         int businessTypeId = accountTypeDAO.getAccountTypeId("Business");
 
+
+        String pass = SecurityUtils.hashCode("12345678");
         // Bank 1
-        accountService.createAccount(2, "10001", 10000.0, creditTypeId, "1111", "Alice", "Brown", "alice.brown@example.com");
-        accountService.createAccount(2, "10002", 10000.0, creditTypeId, "1111", "Bob", "Green", "bob.green@example.com");
-        accountService.createAccount(2, "10003", 5000.0, savingsTypeId, "1111", "Charlie", "White", "charlie.white@example.com");
-        accountService.createAccount(2, "10004", 7500.0, savingsTypeId, "1111", "Daisy", "Blue", "daisy.blue@example.com");
-        accountService.createAccount(2, "10005", 3000.0, studentTypeId, "1111", "Ethan", "Gray", "ethan.gray@example.com");
-        accountService.createAccount(2, "10006", 4000.0, studentTypeId, "1111", "Fiona", "Black", "fiona.black@example.com");
-        accountService.createAccount(2, "10007", 20000.0, businessTypeId, "1111", "George", "Red", "george.red@example.com");
-        accountService.createAccount(2, "10008", 20000.0, businessTypeId, "1111", "Hannah", "Yellow", "hannah.yellow@example.com");
+        accountService.createAccount(2, "10001", 10000.0, creditTypeId, pass, "Alice", "Brown", "alice.brown@example.com");
+        accountService.createAccount(2, "10002", 10000.0, creditTypeId, pass, "Bob", "Green", "bob.green@example.com");
+        accountService.createAccount(2, "10003", 5000.0, savingsTypeId, pass, "Charlie", "White", "charlie.white@example.com");
+        accountService.createAccount(2, "10004", 7500.0, savingsTypeId, pass, "Daisy", "Blue", "daisy.blue@example.com");
+        accountService.createAccount(2, "10005", 3000.0, studentTypeId, pass, "Ethan", "Gray", "ethan.gray@example.com");
+        accountService.createAccount(2, "10006", 4000.0, studentTypeId, pass, "Fiona", "Black", "fiona.black@example.com");
+        accountService.createAccount(2, "10007", 20000.0, businessTypeId, pass, "George", "Red", "george.red@example.com");
+        accountService.createAccount(2, "10008", 20000.0, businessTypeId, pass, "Hannah", "Yellow", "hannah.yellow@example.com");
 
         // Bank 2
-        accountService.createAccount(3, "20001", 10000.0, creditTypeId, "1111", "Ian", "Gray", "ian.gray@example.com");
-        accountService.createAccount(3, "20002", 10000.0, creditTypeId, "1111", "Julia", "Stone", "julia.stone@example.com");
-        accountService.createAccount(3, "20003", 6000.0, savingsTypeId, "1111", "Kevin", "Brown", "kevin.brown@example.com");
-        accountService.createAccount(3, "20004", 8500.0, savingsTypeId, "1111", "Lara", "White", "lara.white@example.com");
-        accountService.createAccount(3, "20005", 2500.0, studentTypeId, "1111", "Mark", "Black", "mark.black@example.com");
-        accountService.createAccount(3, "20006", 3500.0, studentTypeId, "1111", "Nina", "Blue", "nina.blue@example.com");
-        accountService.createAccount(3, "20007", 20000.0, businessTypeId, "1111", "Oscar", "Red", "oscar.red@example.com");
-        accountService.createAccount(3, "20008", 20000.0, businessTypeId, "1111", "Paula", "Yellow", "paula.yellow@example.com");
+        accountService.createAccount(3, "20001", 10000.0, creditTypeId, pass, "Ian", "Gray", "ian.gray@example.com");
+        accountService.createAccount(3, "20002", 10000.0, creditTypeId, pass, "Julia", "Stone", "julia.stone@example.com");
+        accountService.createAccount(3, "20003", 6000.0, savingsTypeId, pass, "Kevin", "Brown", "kevin.brown@example.com");
+        accountService.createAccount(3, "20004", 8500.0, savingsTypeId, pass, "Lara", "White", "lara.white@example.com");
+        accountService.createAccount(3, "20005", 2500.0, studentTypeId, pass, "Mark", "Black", "mark.black@example.com");
+        accountService.createAccount(3, "20006", 3500.0, studentTypeId, pass, "Nina", "Blue", "nina.blue@example.com");
+        accountService.createAccount(3, "20007", 20000.0, businessTypeId, pass, "Oscar", "Red", "oscar.red@example.com");
+        accountService.createAccount(3, "20008", 20000.0, businessTypeId, pass, "Paula", "Yellow", "paula.yellow@example.com");
 
         // Bank 3
-        accountService.createAccount(4, "30001", 10000.0, creditTypeId, "1111", "Quinn", "Black", "quinn.black@example.com");
-        accountService.createAccount(4, "30002", 10000.0, creditTypeId, "1111", "Rachel", "Gray", "rachel.gray@example.com");
-        accountService.createAccount(4, "30003", 5500.0, savingsTypeId, "1111", "Steve", "Brown", "steve.brown@example.com");
-        accountService.createAccount(4, "30004", 9000.0, savingsTypeId, "1111", "Tina", "White", "tina.white@example.com");
-        accountService.createAccount(4, "30005", 3200.0, studentTypeId, "1111", "Ulysses", "Green", "ulysses.green@example.com");
-        accountService.createAccount(4, "30006", 4100.0, studentTypeId, "1111", "Vera", "Blue", "vera.blue@example.com");
-        accountService.createAccount(4, "30007", 20000.0, businessTypeId, "1111", "Will", "Red", "will.red@example.com");
-        accountService.createAccount(4, "30008", 20000.0, businessTypeId, "1111", "Xena", "Yellow", "xena.yellow@example.com");
+        accountService.createAccount(4, "30001", 10000.0, creditTypeId, pass, "Quinn", "Black", "quinn.black@example.com");
+        accountService.createAccount(4, "30002", 10000.0, creditTypeId, pass, "Rachel", "Gray", "rachel.gray@example.com");
+        accountService.createAccount(4, "30003", 5500.0, savingsTypeId, pass, "Steve", "Brown", "steve.brown@example.com");
+        accountService.createAccount(4, "30004", 9000.0, savingsTypeId, pass, "Tina", "White", "tina.white@example.com");
+        accountService.createAccount(4, "30005", 3200.0, studentTypeId, pass, "Ulysses", "Green", "ulysses.green@example.com");
+        accountService.createAccount(4, "30006", 4100.0, studentTypeId, pass, "Vera", "Blue", "vera.blue@example.com");
+        accountService.createAccount(4, "30007", 20000.0, businessTypeId, pass, "Will", "Red", "will.red@example.com");
+        accountService.createAccount(4, "30008", 20000.0, businessTypeId, pass, "Xena", "Yellow", "xena.yellow@example.com");
     }
 
     public static void insertSampleCreditPayments(TransactionDAO transactionDAO) {
@@ -108,7 +113,7 @@ public class DatabaseSeeder {
         BankService bankService = new BankService(bankDAO);
         AccountService accountService = new AccountService(accountDAO);
 
-//        insertAccountTypes(accountTypeDAO);
+        insertAccountTypes(accountTypeDAO);
         insertBank(bankService);
         insertAccounts(accountService, accountTypeDAO);
         insertSampleCreditPayments(transactionDAO);
